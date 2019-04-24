@@ -18,7 +18,7 @@ allprojects {
  Add these dependencies:
 ```
 dependencies {
-  implementation 'com.github.theosato:inspetor-android:v1.0'
+  implementation 'com.github.inspetor:inspetor-android:v1.0'
   implementation 'com.snowplowanalytics:snowplow-android-tracker:1.0.0@aar'
   implementation 'com.squareup.okhttp3:okhttp:3.4.1'
 }
