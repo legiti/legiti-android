@@ -5,7 +5,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'com.github.dcendents.android-maven'
-group = 'com.github.theosato'
+group = 'com.github.inspetor'
 
 android {
     compileSdkVersion 28
