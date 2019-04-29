@@ -20,7 +20,7 @@ import com.snowplowanalytics.snowplow.tracker.events.Structured
 import com.snowplowanalytics.snowplow.tracker.payload.SelfDescribingJson
 import kotlin.collections.HashMap
 
-class InspetorResource(var context: Context): InspetorService {
+class InspetorResource: InspetorService {
     override var trackerName: String = ""
     override var appId: String = ""
     override var base64Encoded: Boolean = false
@@ -29,9 +29,19 @@ class InspetorResource(var context: Context): InspetorService {
     override var protocolType: RequestSecurity? = null
     override var bufferOption: BufferOption? = null
 
+    private var tracker: Tracker? = null
     private var subject: Subject? = null
     private var clientName: String? = null
-    internal var tracker: Tracker? = null
+
+    override fun setContext(context: Context){
+        setupTracker(context)
+    }
+
+    override fun verifyTracker(): Boolean {
+        require(verifySetup())
+
+        return (tracker != null)
+    }
 
     override fun setup(dependencies: InspetorDependencies) {
         require(validateTrackerName(dependencies.trackerName))
@@ -49,19 +59,19 @@ class InspetorResource(var context: Context): InspetorService {
     }
 
     override fun setActiveUser(userId: String) {
-        require(verifySetupTracker())
+        require(verifyTracker())
         tracker?.subject?.setUserId(userId)
     }
 
     override fun unsetActiveUser() {
-        if (!verifySetupTracker()) {
+        if (!verifyTracker()) {
             return
         }
         tracker?.subject?.setUserId("")
     }
 
     override fun trackLogin(userId: String) {
-        require(verifySetupTracker())
+        require(verifyTracker())
 
         setActiveUser(userId)
         val data: HashMap<String, String> = HashMap<String, String>()
@@ -70,7 +80,7 @@ class InspetorResource(var context: Context): InspetorService {
     }
 
     override fun trackLogout(userId: String) {
-        require(verifySetupTracker())
+        require(verifyTracker())
 
         val data: HashMap<String, String> = HashMap<String, String>()
         data["userId"] = userId
@@ -79,7 +89,7 @@ class InspetorResource(var context: Context): InspetorService {
     }
 
     override fun trackAccountCreation(userId: String) {
-        require(verifySetupTracker())
+        require(verifyTracker())
 
         val data: HashMap<String, String> = HashMap<String, String>()
         data["userId"] = userId
@@ -87,7 +97,7 @@ class InspetorResource(var context: Context): InspetorService {
     }
 
     override fun trackAccountUpdate(userId: String) {
-        require(verifySetupTracker())
+        require(verifyTracker())
 
         val data: HashMap<String, String> = HashMap<String, String>()
         data["userId"] = userId
@@ -95,7 +105,7 @@ class InspetorResource(var context: Context): InspetorService {
     }
 
     override fun trackCreateOrder(transactionId: String) {
-        require(verifySetupTracker())
+        require(verifyTracker())
 
         val data: HashMap<String, String> = HashMap<String, String>()
         data["transactionId"] = transactionId
@@ -103,7 +113,7 @@ class InspetorResource(var context: Context): InspetorService {
     }
 
     override fun trackPayOrder(transactionId: String) {
-        require(verifySetupTracker())
+        require(verifyTracker())
 
         val data: HashMap<String, String> = HashMap<String, String>()
         data["transactionId"] = transactionId
@@ -111,7 +121,7 @@ class InspetorResource(var context: Context): InspetorService {
     }
 
     override fun trackCancelOrder(transactionId: String) {
-        require(verifySetupTracker())
+        require(verifyTracker())
 
         val data: HashMap<String, String> = HashMap<String, String>()
         data["transactionId"] = transactionId
@@ -119,7 +129,7 @@ class InspetorResource(var context: Context): InspetorService {
     }
 
     override fun trackTicketTransfer(ticketId: String, userId: String, recipient: String) {
-        require(verifySetupTracker())
+        require(verifyTracker())
 
         val data: HashMap<String, String> = HashMap<String, String>()
         data["ticketId"] = ticketId
@@ -129,7 +139,7 @@ class InspetorResource(var context: Context): InspetorService {
     }
 
     override fun trackRecoverPasswordRequest(email: String) {
-        require(verifySetupTracker())
+        require(verifyTracker())
 
         val data: HashMap<String, String> = HashMap<String, String>()
         data["email"] = email
@@ -137,14 +147,14 @@ class InspetorResource(var context: Context): InspetorService {
     }
 
     override fun trackChangePassword(email: String) {
-        require(verifySetupTracker())
+        require(verifyTracker())
 
         val data: HashMap<String, String> = HashMap<String, String>()
         data["email"] = email
         trackUnstructuredEvent(InspetorConfig.FRONTEND_CHANGE_PASSWORD_SCHEMA_VERSION, data)
     }
 
-    private fun initializeTracker(): Tracker? {
+    private fun initializeTracker(context: Context): Tracker? {
         val emitter = Emitter.EmitterBuilder(collectorUri, context)
             .method(httpMethodType)
             .option(bufferOption)
@@ -188,28 +198,21 @@ class InspetorResource(var context: Context): InspetorService {
         )
     }
 
-    fun setupTracker() {
+    private fun setupTracker(context: Context) {
         require(verifySetup())
 
-        tracker = initializeTracker()
+        tracker = initializeTracker(context)
         tracker?.subject = if (subject == null) Subject.SubjectBuilder().build() else subject
 
-        require(verifySetupTracker())
+        require(verifyTracker())
     }
 
-    internal fun verifySetup(): Boolean {
-        return (appId != null && trackerName != null)
+    private fun verifySetup(): Boolean {
+        return (appId != "" && trackerName != "")
     }
 
-    internal fun verifySetupTracker(): Boolean {
-        require(verifySetup())
-
-        return (tracker != null)
-    }
-
-    internal fun validateTrackerName(trackerName: String): Boolean {
-        var trackerNameArray = trackerName.split(InspetorConfig.DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR)
-        print(trackerNameArray.count())
+    private fun validateTrackerName(trackerName: String): Boolean {
+        val trackerNameArray = trackerName.split(InspetorConfig.DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR)
         return (trackerNameArray.count() == 2 &&
                 trackerNameArray[0].count() > 1 &&
                 trackerNameArray[1].count() > 1)

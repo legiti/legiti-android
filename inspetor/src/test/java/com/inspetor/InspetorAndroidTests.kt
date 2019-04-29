@@ -10,29 +10,26 @@ class InspetorAndroidTests {
     private val UNIT_TEST_DEFAULT_TRACKER_NAME = "inspetor.test-tracker"
     private val UNIT_TEST_DEFAULT_APP_ID = "0123456789"
 
-    private var context = Mockito.mock(Context::class.java)
-
-    var validDataSource = InspetorDependencies(
-        appId = "123",
-        trackerName = "ingresse.test"
+    private var validDataSource = InspetorDependencies(
+        appId = UNIT_TEST_DEFAULT_APP_ID,
+        trackerName = UNIT_TEST_DEFAULT_TRACKER_NAME
     )
 
-    var invalidDataSource = InspetorDependencies(
-        appId = "",
-        trackerName = "ingresse.test"
+    private var invalidDataSource = InspetorDependencies(
+        appId = UNIT_TEST_DEFAULT_APP_ID,
+        trackerName = "ingresse"
     )
 
     @Test
     fun testVerifySetup() {
-        val inspetorTestVerifySetup = InspetorResource(context)
-
+        val inspetorTestVerifySetup = InspetorResource()
         inspetorTestVerifySetup.setup(validDataSource)
-        assertTrue(inspetorTestVerifySetup.verifySetup())
+        assertTrue(inspetorTestVerifySetup.appId != "" && inspetorTestVerifySetup.trackerName != "")
     }
 
     @Test
     fun testSupportsOptionalParams() {
-        val inspetorTestOptionalParams = InspetorResource(context)
+        val inspetorTestOptionalParams = InspetorResource()
         val nonDefaultUri = "random.uri.com"
 
         validDataSource.apply { collectorUri = nonDefaultUri }
@@ -52,22 +49,31 @@ class InspetorAndroidTests {
 
     @Test
     fun testTrackerNameFormatValidation() {
-        var inspetor = InspetorResource(context)
-
         val invalidTrackerNameTooManyFields = "improper.tracker.name.format"
-        assertFalse(inspetor.validateTrackerName(invalidTrackerNameTooManyFields))
+        invalidDataSource.apply { trackerName = invalidTrackerNameTooManyFields}
+        assertFalse(validateTrackerName(invalidTrackerNameTooManyFields))
 
         val invalidTrackerNameTooFewFields = "improper_tracker_name_format"
-        assertFalse(inspetor.validateTrackerName(invalidTrackerNameTooFewFields))
+        invalidDataSource.apply { trackerName = invalidTrackerNameTooFewFields}
+        assertFalse(validateTrackerName(invalidTrackerNameTooFewFields))
 
         val invalidTrackerNameNoClientName = ".improper_tracker_name_format"
-        assertFalse(inspetor.validateTrackerName(invalidTrackerNameNoClientName))
+        invalidDataSource.apply { trackerName = invalidTrackerNameNoClientName}
+        assertFalse(validateTrackerName(invalidTrackerNameNoClientName))
 
         val invalidTrackerNameNoProductName = "improper_tracker_name_format."
-        assertFalse(inspetor.validateTrackerName(invalidTrackerNameNoProductName))
+        invalidDataSource.apply { trackerName = invalidTrackerNameNoProductName}
+        assertFalse(validateTrackerName(invalidTrackerNameNoProductName))
 
         val validTrackerName = "valid.tracker_name"
-        assertTrue(inspetor.validateTrackerName(validTrackerName))
+        invalidDataSource.apply { trackerName = validTrackerName}
+        assertTrue(validateTrackerName(validTrackerName))
     }
 
+    private fun validateTrackerName(trackerName: String): Boolean {
+        val trackerNameArray = trackerName.split(InspetorConfig.DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR)
+        return (trackerNameArray.count() == 2 &&
+                trackerNameArray[0].count() > 1 &&
+                trackerNameArray[1].count() > 1)
+    }
 }

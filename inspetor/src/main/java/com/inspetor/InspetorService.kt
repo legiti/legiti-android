@@ -7,6 +7,8 @@
 //
 package com.inspetor
 
+import android.content.Context
+import com.snowplowanalytics.snowplow.tracker.Tracker
 import com.snowplowanalytics.snowplow.tracker.emitter.BufferOption
 import com.snowplowanalytics.snowplow.tracker.emitter.HttpMethod
 import com.snowplowanalytics.snowplow.tracker.emitter.RequestSecurity
@@ -45,4 +47,8 @@ interface InspetorService {
     fun trackRecoverPasswordRequest(email: String)
 
     fun trackChangePassword(email: String)
+
+    fun setContext(context: Context)
+
+    fun verifyTracker(): Boolean
 }
