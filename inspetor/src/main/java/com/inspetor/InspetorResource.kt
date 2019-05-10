@@ -21,14 +21,13 @@ import com.snowplowanalytics.snowplow.tracker.payload.SelfDescribingJson
 import kotlin.collections.HashMap
 
 class InspetorResource: InspetorService {
-    override var trackerName: String = ""
-    override var appId: String = ""
-    override var base64Encoded: Boolean = false
-    override var collectorUri: String = ""
-    override var httpMethodType: HttpMethod? = null
-    override var protocolType: RequestSecurity? = null
-    override var bufferOption: BufferOption? = null
-
+    private var trackerName: String = ""
+    private var appId: String = ""
+    private var base64Encoded: Boolean = false
+    private var collectorUri: String = ""
+    private var httpMethod: HttpMethod? = null
+    private var protocolType: RequestSecurity? = null
+    private var bufferOption: BufferOption? = null
     private var tracker: Tracker? = null
     private var subject: Subject? = null
     private var clientName: String? = null
@@ -49,11 +48,11 @@ class InspetorResource: InspetorService {
         trackerName = dependencies.trackerName
         appId = dependencies.appId
         clientName = dependencies.trackerName.split(InspetorConfig.DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR)[0]
-        bufferOption = dependencies.bufferOption
         base64Encoded = dependencies.base64Encoded
         collectorUri = dependencies.collectorUri
-        httpMethodType = dependencies.httpMethodType
-        protocolType = dependencies.protocolType
+        switchBufferOptionSize(dependencies.bufferOptionSize)
+        switchHttpMethod(dependencies.httpMethodType)
+        switchSecurityProtocol(dependencies.requestSecurityProtocol)
 
         require(verifySetup())
     }
@@ -156,20 +155,24 @@ class InspetorResource: InspetorService {
 
     private fun initializeTracker(context: Context): Tracker? {
         val emitter = Emitter.EmitterBuilder(collectorUri, context)
-            .method(httpMethodType)
+            .method(httpMethod)
             .option(bufferOption)
             .security(protocolType)
             .build()
 
-        return init(
-            Tracker.TrackerBuilder(emitter, trackerName, appId, context)
-                .base64(base64Encoded)
-                .platform(DevicePlatforms.Mobile)
-                .sessionContext(true)
-                .sessionCheckInterval(10)
-                .foregroundTimeout(300)
-                .backgroundTimeout(120).build()
-        )
+        if (tracker == null) {
+           return init(
+                Tracker.TrackerBuilder(emitter, trackerName, appId, context)
+                    .base64(base64Encoded)
+                    .platform(DevicePlatforms.Mobile)
+                    .sessionContext(true)
+                    .sessionCheckInterval(10)
+                    .foregroundTimeout(300)
+                    .backgroundTimeout(120).build()
+            )
+        }
+
+        return tracker
     }
 
     private fun trackUnstructuredEvent(schema: String, data: HashMap<String, String>) {
@@ -216,6 +219,28 @@ class InspetorResource: InspetorService {
         return (trackerNameArray.count() == 2 &&
                 trackerNameArray[0].count() > 1 &&
                 trackerNameArray[1].count() > 1)
+    }
+
+    private fun switchBufferOptionSize (bufferOptionSize: BufferOptionSize) {
+        bufferOption = when(bufferOptionSize) {
+            BufferOptionSize.SINGLE -> BufferOption.Single
+            BufferOptionSize.HEAVY -> BufferOption.HeavyGroup
+            else -> BufferOption.DefaultGroup
+        }
+    }
+
+    private fun switchSecurityProtocol (requestSecurityProtocol: RequestSecurityProtocol) {
+        protocolType = when (requestSecurityProtocol) {
+            RequestSecurityProtocol.HTTP -> RequestSecurity.HTTP
+            else -> RequestSecurity.HTTPS
+        }
+    }
+
+    private fun switchHttpMethod (httpMethodType: HttpMethodType) {
+         httpMethod = when (httpMethodType) {
+            HttpMethodType.GET -> HttpMethod.GET
+            else -> HttpMethod.POST
+        }
     }
 }
 
