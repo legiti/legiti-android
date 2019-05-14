@@ -54,9 +54,9 @@ class InspetorResource: InspetorService {
         clientName = dependencies.trackerName.split(InspetorConfig.DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR)[0]
         base64Encoded = dependencies.base64Encoded
         collectorUri = dependencies.collectorUri
-        switchBufferOptionSize(dependencies.bufferOptionSize)
-        switchHttpMethod(dependencies.httpMethodType)
-        switchSecurityProtocol(dependencies.requestSecurityProtocol)
+        bufferOption = switchBufferOptionSize(dependencies.bufferOptionSize)
+        httpMethod = switchHttpMethod(dependencies.httpMethodType)
+        protocolType = switchSecurityProtocol(dependencies.requestSecurityProtocol)
 
         require(verifySetup())
     }
@@ -225,25 +225,25 @@ class InspetorResource: InspetorService {
                 trackerNameArray[1].count() > 1)
     }
 
-    private fun switchBufferOptionSize (bufferOptionSize: BufferOptionSize) {
-        bufferOption = when(bufferOptionSize) {
+    private fun switchBufferOptionSize (bufferOptionSize: BufferOptionSize): BufferOption? {
+        return when (bufferOptionSize) {
             BufferOptionSize.SINGLE -> BufferOption.Single
-            BufferOptionSize.HEAVY -> BufferOption.HeavyGroup
-            else -> BufferOption.DefaultGroup
+            BufferOptionSize.DEFAULT -> BufferOption.DefaultGroup
+            BufferOptionSize.HEAVY -> BufferOption.DefaultGroup
         }
     }
 
-    private fun switchSecurityProtocol (requestSecurityProtocol: RequestSecurityProtocol) {
-        protocolType = when (requestSecurityProtocol) {
+    private fun switchSecurityProtocol (requestSecurityProtocol: RequestSecurityProtocol): RequestSecurity? {
+        return when (requestSecurityProtocol) {
             RequestSecurityProtocol.HTTP -> RequestSecurity.HTTP
-            else -> RequestSecurity.HTTPS
+            RequestSecurityProtocol.HTTPS -> RequestSecurity.HTTPS
         }
     }
 
-    private fun switchHttpMethod (httpMethodType: HttpMethodType) {
-         httpMethod = when (httpMethodType) {
+    private fun switchHttpMethod (httpMethodType: HttpMethodType): HttpMethod? {
+        return when (httpMethodType) {
             HttpMethodType.GET -> HttpMethod.GET
-            else -> HttpMethod.POST
+            HttpMethodType.POST -> HttpMethod.POST
         }
     }
 }
