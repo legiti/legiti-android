@@ -32,6 +32,10 @@ class InspetorResource: InspetorService {
     private var subject: Subject? = null
     private var clientName: String? = null
 
+    companion object {
+        @JvmStatic fun main(args: Array<String>) {}
+    }
+
     override fun setContext(context: Context){
         setupTracker(context)
     }

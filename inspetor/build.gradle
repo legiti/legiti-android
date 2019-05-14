@@ -1,20 +1,21 @@
 apply plugin: 'com.android.library'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
-
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'com.github.dcendents.android-maven'
-group = 'com.github.inspetor'
+
+def artifactId = 'inspetor'
+def groupId = 'com.inspetor'
 
 android {
     compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 15
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName "0.0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -41,34 +42,41 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:support-v4:28.0.0'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.squareup.okhttp3:okhttp:3.4.1'
     implementation 'com.google.android.gms:play-services-analytics:7.5.0'
-
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    testImplementation "org.mockito:mockito-core:2.15.0"
-    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0-RC3'
     testImplementation 'org.assertj:assertj-core:1.7.1'
     testImplementation 'org.jetbrains.kotlin:kotlin-stdlib:1.0.6'
     testImplementation 'junit:junit:4.12'
     testImplementation 'com.android.support.test:runner:1.0.2'
-
-    api 'com.snowplowanalytics:snowplow-android-tracker:1.0.0@aar' //Snowplow Required
+    implementation 'com.android.support:support-annotations:27.1.1'
+    implementation 'com.snowplowanalytics:snowplow-android-tracker:1.0.0@aar'
 }
 
 task deleteJar(type: Delete) {
-    delete 'libs/inspetor-android-1.0.2.jar'
+    delete 'libs/inspetor-android-0.0.1.jar'
 }
 
 task createJar(type: Copy) {
     from('build/intermediates/intermediate-jars/release/')
     into('libs/')
     include('classes.jar')
-    rename('classes.jar', 'inspetor-android-1.0.2.jar')
+    rename('classes.jar', 'inspetor-android-0.0.1.jar')
+}
+
+publishing {
+    publications {
+        library(MavenPublication) {
+            setGroupId(groupId)
+            setArtifactId(artifactId)
+            version android.defaultConfig.versionName
+
+            artifact(bundleReleaseAar)
+        }
+    }
 }
 
 //task fatJar(type: Jar) {
@@ -78,29 +86,29 @@ task createJar(type: Copy) {
 //}
 
 createJar.dependsOn(deleteJar, build)
-
-task jarTask(type: Jar) {
-    baseName="inspetor"
-    from 'build'
-}
-
-task createJarWithDependencies(type: Jar) {
-    baseName = "my-sdk-android-jar-with-dependencies"
-
-    from {
-        configurations.compile.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-
-    }
-
-    with jarTask
-}
-
-configurations {
-    jarConfiguration
-}
-
-artifacts {
-    jarConfiguration jarTask
-}
+//
+//task jarTask(type: Jar) {
+//    baseName="inspetor"
+//    from 'build'
+//}
+//
+//task createJarWithDependencies(type: Jar) {
+//    baseName = "my-sdk-android-jar-with-dependencies"
+//
+//    from {
+//        configurations.compile.collect {
+//            it.isDirectory() ? it : zipTree(it)
+//        }
+//
+//    }
+//
+//    with jarTask
+//}
+//
+//configurations {
+//    jarConfiguration
+//}
+//
+//artifacts {
+//    jarConfiguration jarTask
+//}
