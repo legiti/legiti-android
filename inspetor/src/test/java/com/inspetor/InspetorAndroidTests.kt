@@ -1,13 +1,14 @@
 package com.inspetor
 
-import android.content.Context
+import com.snowplowanalytics.snowplow.tracker.emitter.BufferOption
+import com.snowplowanalytics.snowplow.tracker.emitter.HttpMethod
+import com.snowplowanalytics.snowplow.tracker.emitter.RequestSecurity
 import org.junit.Test
 import org.junit.Assert.*
-import org.mockito.Mockito
 
 class InspetorAndroidTests {
 
-    private val UNIT_TEST_DEFAULT_TRACKER_NAME = "inspetor.test-tracker"
+    private val UNIT_TEST_DEFAULT_TRACKER_NAME = "inspetor.test"
     private val UNIT_TEST_DEFAULT_APP_ID = "0123456789"
 
     private var validDataSource = InspetorDependencies(
@@ -21,30 +22,45 @@ class InspetorAndroidTests {
     )
 
     @Test
-    fun testVerifySetup() {
+    fun testIncorrectVerifySetup() {
         val inspetorTestVerifySetup = InspetorResource()
-        inspetorTestVerifySetup.setup(validDataSource)
-        assertTrue(inspetorTestVerifySetup.appId != "" && inspetorTestVerifySetup.trackerName != "")
+        var invalid = false
+        try {
+            inspetorTestVerifySetup.setup(invalidDataSource)
+        } catch (e: Throwable) {
+            invalid = true
+        }
+
+        assertTrue(invalid)
+    }
+
+    @Test
+    fun testCorrectVerifySetup() {
+        val inspetorTestVerifySetup = InspetorResource()
+        var invalid = false
+        try{
+            inspetorTestVerifySetup.setup(validDataSource)
+        } catch (e: Throwable) {
+            invalid = true
+        }
+
+        assertFalse(invalid)
     }
 
     @Test
     fun testSupportsOptionalParams() {
         val inspetorTestOptionalParams = InspetorResource()
         val nonDefaultUri = "random.uri.com"
+        var invalid = false
 
-        validDataSource.apply { collectorUri = nonDefaultUri }
+        try {
+            validDataSource.apply { collectorUri = nonDefaultUri }
+            inspetorTestOptionalParams.setup(validDataSource)
+        } catch (e: Throwable) {
+            invalid = true
+        }
 
-        inspetorTestOptionalParams.setup(validDataSource)
-
-        // Provided values are altered
-        assertNotEquals(inspetorTestOptionalParams.collectorUri, InspetorConfig.DEFAULT_COLLECTOR_URI)
-        assertEquals(inspetorTestOptionalParams.collectorUri, nonDefaultUri)
-
-        // Nil values remain default
-        assertEquals(inspetorTestOptionalParams.base64Encoded, InspetorConfig.DEFAULT_BASE64_OPTION)
-        assertEquals(inspetorTestOptionalParams.httpMethodType, InspetorConfig.DEFAULT_HTTP_METHOD_TYPE)
-        assertEquals(inspetorTestOptionalParams.protocolType, InspetorConfig.DEFAULT_PROTOCOL_TYPE)
-        assertEquals(inspetorTestOptionalParams.bufferOption, InspetorConfig.DEFAULT_BUFFERSIZE_OPTION)
+        assertFalse(invalid)
     }
 
     @Test
@@ -75,5 +91,27 @@ class InspetorAndroidTests {
         return (trackerNameArray.count() == 2 &&
                 trackerNameArray[0].count() > 1 &&
                 trackerNameArray[1].count() > 1)
+    }
+
+    private fun switchBufferOptionSize (bufferOptionSize: BufferOptionSize): BufferOption {
+        return when(bufferOptionSize) {
+            BufferOptionSize.SINGLE -> BufferOption.Single
+            BufferOptionSize.HEAVY -> BufferOption.HeavyGroup
+            else -> BufferOption.DefaultGroup
+        }
+    }
+
+    private fun switchSecurityProtocol (protocolType: RequestSecurityProtocol): RequestSecurity {
+        return when (protocolType) {
+            RequestSecurityProtocol.HTTP -> RequestSecurity.HTTP
+            else -> RequestSecurity.HTTPS
+        }
+    }
+
+    private fun switchHttpMethod (httpMethodType: HttpMethodType): HttpMethod {
+        return when (httpMethodType) {
+            HttpMethodType.GET -> HttpMethod.GET
+            else -> HttpMethod.POST
+        }
     }
 }

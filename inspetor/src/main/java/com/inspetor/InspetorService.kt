@@ -8,20 +8,11 @@
 package com.inspetor
 
 import android.content.Context
-import com.snowplowanalytics.snowplow.tracker.Tracker
 import com.snowplowanalytics.snowplow.tracker.emitter.BufferOption
 import com.snowplowanalytics.snowplow.tracker.emitter.HttpMethod
 import com.snowplowanalytics.snowplow.tracker.emitter.RequestSecurity
 
 interface InspetorService {
-    var base64Encoded: Boolean
-    var trackerName: String
-    var appId: String
-    var bufferOption: BufferOption?
-    var collectorUri : String
-    var httpMethodType : HttpMethod?
-    var protocolType : RequestSecurity?
-
     fun setup(dependencies: InspetorDependencies)
 
     fun setActiveUser(userId: String)

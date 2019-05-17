@@ -7,18 +7,14 @@
 //
 package com.inspetor
 
-import com.snowplowanalytics.snowplow.tracker.emitter.BufferOption
-import com.snowplowanalytics.snowplow.tracker.emitter.HttpMethod
-import com.snowplowanalytics.snowplow.tracker.emitter.RequestSecurity
-
 object InspetorConfig {
     //Emitter and Tracker basic config
     const val DEFAULT_BASE64_OPTION: Boolean = true
-    const val DEFAULT_COLLECTOR_URI: String = "analytics-staging.useinspetor.com"
+    const val DEFAULT_COLLECTOR_URI: String = "analytics.useinspetor.com"
     const val DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR: String = "."
-    val DEFAULT_HTTP_METHOD_TYPE: HttpMethod = HttpMethod.POST
-    val DEFAULT_PROTOCOL_TYPE: RequestSecurity = RequestSecurity.HTTPS
-    val DEFAULT_BUFFERSIZE_OPTION: BufferOption = BufferOption.Single //25
+    val DEFAULT_HTTP_METHOD_TYPE: HttpMethodType = HttpMethodType.POST
+    val DEFAULT_PROTOCOL_TYPE: RequestSecurityProtocol = RequestSecurityProtocol.HTTPS
+    val DEFAULT_BUFFERSIZE_OPTION: BufferOptionSize = BufferOptionSize.HEAVY //25
 
     // Schema versions
     const val FRONTEND_PAY_ORDER_SCHEMA_VERSION: String = "iglu:com.inspetor/frontend_pay_order/jsonschema/1-0-0"
