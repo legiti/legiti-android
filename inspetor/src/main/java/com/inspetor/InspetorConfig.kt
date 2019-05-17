@@ -14,7 +14,7 @@ object InspetorConfig {
     const val DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR: String = "."
     val DEFAULT_HTTP_METHOD_TYPE: HttpMethodType = HttpMethodType.POST
     val DEFAULT_PROTOCOL_TYPE: RequestSecurityProtocol = RequestSecurityProtocol.HTTPS
-    val DEFAULT_BUFFERSIZE_OPTION: BufferOptionSize = BufferOptionSize.HEAVY //25
+    val DEFAULT_BUFFERSIZE_OPTION: BufferOptionSize = BufferOptionSize.SINGLE //1
 
     // Schema versions
     const val FRONTEND_PAY_ORDER_SCHEMA_VERSION: String = "iglu:com.inspetor/frontend_pay_order/jsonschema/1-0-0"

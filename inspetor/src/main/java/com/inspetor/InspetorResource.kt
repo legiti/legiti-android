@@ -7,6 +7,7 @@
 //
 package com.inspetor
 
+import android.app.Application
 import android.content.Context
 import com.snowplowanalytics.snowplow.tracker.*;
 import com.snowplowanalytics.snowplow.tracker.Emitter
@@ -23,8 +24,8 @@ import kotlin.collections.HashMap
 class InspetorResource: InspetorService {
     private var trackerName: String = ""
     private var appId: String = ""
-    private var base64Encoded: Boolean = false
     private var collectorUri: String = ""
+    private var base64Encoded: Boolean = false
     private var httpMethod: HttpMethod? = null
     private var protocolType: RequestSecurity? = null
     private var bufferOption: BufferOption? = null
@@ -32,18 +33,8 @@ class InspetorResource: InspetorService {
     private var subject: Subject? = null
     private var clientName: String? = null
 
-    companion object {
-        @JvmStatic fun main(args: Array<String>) {}
-    }
-
     override fun setContext(context: Context){
-        setupTracker(context)
-    }
-
-    override fun verifyTracker(): Boolean {
-        require(verifySetup())
-
-        return (tracker != null)
+        if (!verifyTracker()) setupTracker(context)
     }
 
     override fun setup(dependencies: InspetorDependencies) {
@@ -63,14 +54,16 @@ class InspetorResource: InspetorService {
 
     override fun setActiveUser(userId: String) {
         require(verifyTracker())
-        tracker?.subject?.setUserId(userId)
+        subject?.setUserId(userId)
+        tracker?.subject = subject
     }
 
     override fun unsetActiveUser() {
         if (!verifyTracker()) {
             return
         }
-        tracker?.subject?.setUserId("")
+        subject = null
+        tracker?.subject = subject
     }
 
     override fun trackLogin(userId: String) {
@@ -157,6 +150,26 @@ class InspetorResource: InspetorService {
         trackUnstructuredEvent(InspetorConfig.FRONTEND_CHANGE_PASSWORD_SCHEMA_VERSION, data)
     }
 
+    private fun verifySetup(): Boolean {
+        return (appId != "" && trackerName != "")
+    }
+
+    private fun verifyTracker(): Boolean {
+        return (tracker != null)
+    }
+
+    private fun setupTracker(context: Context) {
+        require(verifySetup())
+
+        if (!verifyTracker()) {
+            tracker = initializeTracker(context)
+            tracker?.subject = subject
+        }
+
+        require(verifyTracker())
+    }
+
+
     private fun initializeTracker(context: Context): Tracker? {
         val emitter = Emitter.EmitterBuilder(collectorUri, context)
             .method(httpMethod)
@@ -165,14 +178,21 @@ class InspetorResource: InspetorService {
             .build()
 
         if (tracker == null) {
-           return init(
+            return init(
                 Tracker.TrackerBuilder(emitter, trackerName, appId, context)
                     .base64(base64Encoded)
                     .platform(DevicePlatforms.Mobile)
+                    .subject(Subject.SubjectBuilder().build())
                     .sessionContext(true)
                     .sessionCheckInterval(10)
                     .foregroundTimeout(300)
-                    .backgroundTimeout(120).build()
+                    .backgroundTimeout(120)
+                    .geoLocationContext(true)
+                    .lifecycleEvents(true)
+                    .mobileContext(true)
+                    .applicationContext(true)
+                    .screenContext(true)
+                    .build()
             )
         }
 
@@ -205,19 +225,6 @@ class InspetorResource: InspetorService {
         )
     }
 
-    private fun setupTracker(context: Context) {
-        require(verifySetup())
-
-        tracker = initializeTracker(context)
-        tracker?.subject = if (subject == null) Subject.SubjectBuilder().build() else subject
-
-        require(verifyTracker())
-    }
-
-    private fun verifySetup(): Boolean {
-        return (appId != "" && trackerName != "")
-    }
-
     private fun validateTrackerName(trackerName: String): Boolean {
         val trackerNameArray = trackerName.split(InspetorConfig.DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR)
         return (trackerNameArray.count() == 2 &&
@@ -225,22 +232,22 @@ class InspetorResource: InspetorService {
                 trackerNameArray[1].count() > 1)
     }
 
-    private fun switchBufferOptionSize (bufferOptionSize: BufferOptionSize): BufferOption? {
-        return when (bufferOptionSize) {
+    private fun switchBufferOptionSize (bufferOptionSize: BufferOptionSize): BufferOption {
+        return when(bufferOptionSize) {
             BufferOptionSize.SINGLE -> BufferOption.Single
             BufferOptionSize.DEFAULT -> BufferOption.DefaultGroup
-            BufferOptionSize.HEAVY -> BufferOption.DefaultGroup
+            BufferOptionSize.HEAVY -> BufferOption.HeavyGroup
         }
     }
 
-    private fun switchSecurityProtocol (requestSecurityProtocol: RequestSecurityProtocol): RequestSecurity? {
+    private fun switchSecurityProtocol (requestSecurityProtocol: RequestSecurityProtocol): RequestSecurity {
         return when (requestSecurityProtocol) {
             RequestSecurityProtocol.HTTP -> RequestSecurity.HTTP
             RequestSecurityProtocol.HTTPS -> RequestSecurity.HTTPS
         }
     }
 
-    private fun switchHttpMethod (httpMethodType: HttpMethodType): HttpMethod? {
+    private fun switchHttpMethod (httpMethodType: HttpMethodType): HttpMethod {
         return when (httpMethodType) {
             HttpMethodType.GET -> HttpMethod.GET
             HttpMethodType.POST -> HttpMethod.POST

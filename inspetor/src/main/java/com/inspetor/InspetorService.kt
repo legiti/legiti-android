@@ -40,6 +40,4 @@ interface InspetorService {
     fun trackChangePassword(email: String)
 
     fun setContext(context: Context)
-
-    fun verifyTracker(): Boolean
 }
