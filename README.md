@@ -16,6 +16,6 @@ allprojects {
  Add these dependencies:
 ```
 dependencies {
-  implementation 'com.inspetor:inspetor:0.0.1'
+  implementation 'com.github.inspetor:inspetor:0.0.1'
 }
  ```
