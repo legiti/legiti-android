@@ -3,12 +3,12 @@
 Kotlin framework for incorporating Inspetor antifraud monitoring into Android applications
 
 ## To Run
-Add it in your root build.gradle at the end of repositories:
+Add it in your root build.gradle at the end of repositories (if it's not there yet):
 ```
 allprojects {
   repositories {
     	...
-    	maven { url 'https://jitpack.io' }
+    	jcenter()
     }
 }
 ```
@@ -16,8 +16,6 @@ allprojects {
  Add these dependencies:
 ```
 dependencies {
-  implementation 'com.github.inspetor:inspetor-android:v1.0'
-  implementation 'com.snowplowanalytics:snowplow-android-tracker:1.0.0@aar'
-  implementation 'com.squareup.okhttp3:okhttp:3.4.1'
+  implementation 'com.inspetor:inspetor:0.0.1'
 }
  ```
