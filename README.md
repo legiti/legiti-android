@@ -1,5 +1,7 @@
 # inspetor-android
 
+[ ![Download](https://api.bintray.com/packages/theosato/inspetor-android/inspetor/images/download.svg) ](https://bintray.com/theosato/inspetor-android/inspetor/_latestVersion)
+
 Kotlin framework for incorporating Inspetor antifraud monitoring into Android applications
 
 ## To Run
