@@ -190,8 +190,6 @@ class InspetorResource: InspetorService {
                     .geoLocationContext(true)
                     .lifecycleEvents(true)
                     .mobileContext(true)
-                    .applicationContext(true)
-                    .screenContext(true)
                     .build()
             )
         }
