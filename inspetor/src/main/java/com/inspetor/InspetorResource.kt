@@ -188,7 +188,6 @@ class InspetorResource: InspetorService {
                     .foregroundTimeout(300)
                     .backgroundTimeout(120)
                     .geoLocationContext(true)
-                    .lifecycleEvents(true)
                     .mobileContext(true)
                     .build()
             )
