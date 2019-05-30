@@ -1,5 +1,5 @@
 //
-//  InspetorResource.kt
+//  InspetorReso urce.kt
 //  inspetor-android-sdk
 //
 //  Created by Matheus Sato on 12/4/19.
@@ -7,7 +7,6 @@
 //
 package com.inspetor
 
-import android.app.Application
 import android.content.Context
 import com.snowplowanalytics.snowplow.tracker.*;
 import com.snowplowanalytics.snowplow.tracker.Emitter
@@ -30,15 +29,15 @@ class InspetorResource: InspetorService {
     private var protocolType: RequestSecurity? = null
     private var bufferOption: BufferOption? = null
     private var tracker: Tracker? = null
-    private var subject: Subject? = null
     private var clientName: String? = null
 
     override fun setContext(context: Context){
-        if (!verifyTracker()) setupTracker(context)
+        setupTracker(context)
     }
 
     override fun setup(dependencies: InspetorDependencies) {
         require(validateTrackerName(dependencies.trackerName))
+
 
         trackerName = dependencies.trackerName
         appId = dependencies.appId
@@ -54,16 +53,15 @@ class InspetorResource: InspetorService {
 
     override fun setActiveUser(userId: String) {
         require(verifyTracker())
-        subject?.setUserId(userId)
-        tracker?.subject = subject
+
+        tracker?.subject?.setUserId(userId)
     }
 
     override fun unsetActiveUser() {
         if (!verifyTracker()) {
             return
         }
-        subject = null
-        tracker?.subject = subject
+        tracker?.subject?.setUserId("")
     }
 
     override fun trackLogin(userId: String) {
@@ -161,10 +159,7 @@ class InspetorResource: InspetorService {
     private fun setupTracker(context: Context) {
         require(verifySetup())
 
-        if (!verifyTracker()) {
-            tracker = initializeTracker(context)
-            tracker?.subject = subject
-        }
+        tracker = initializeTracker(context)
 
         require(verifyTracker())
     }
@@ -177,23 +172,17 @@ class InspetorResource: InspetorService {
             .security(protocolType)
             .build()
 
-        if (tracker == null) {
-            return init(
-                Tracker.TrackerBuilder(emitter, trackerName, appId, context)
-                    .base64(base64Encoded)
-                    .platform(DevicePlatforms.Mobile)
-                    .subject(Subject.SubjectBuilder().build())
-                    .sessionContext(true)
-                    .sessionCheckInterval(10)
-                    .foregroundTimeout(300)
-                    .backgroundTimeout(120)
-                    .geoLocationContext(true)
-                    .mobileContext(true)
-                    .build()
-            )
-        }
-
-        return tracker
+        return init(Tracker.TrackerBuilder(emitter, trackerName, appId, context)
+                .base64(base64Encoded)
+                .platform(DevicePlatforms.Mobile)
+                .subject(Subject.SubjectBuilder().build())
+                .sessionContext(true)
+                .sessionCheckInterval(10)
+                .foregroundTimeout(300)
+                .backgroundTimeout(120)
+                .geoLocationContext(true)
+                .mobileContext(true)
+                .build())
     }
 
     private fun trackUnstructuredEvent(schema: String, data: HashMap<String, String>) {
