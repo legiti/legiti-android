@@ -192,6 +192,7 @@ class InspetorResource: InspetorService {
                 .eventData(eventData)
                 .build()
         )
+        tracker?.emitter?.flush()
     }
 
     private fun structuredEventBuilderHelper(
