@@ -1,0 +1,125 @@
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+apply from: 'keystore.gradle'
+
+ext {
+    groupId = 'com.github.inspetor'
+    artifactId = "inspetor"
+    libVersion = "1.0.0"
+}
+
+version = libVersion
+group = groupId
+
+if (project.hasProperty("kotlin")) { //Kotlin libraries
+    task sourcesJar(type: Jar) {
+        archiveClassifier.set("sources")
+        from android.sourceSets.main.java.srcDirs
+    }
+
+    task javadoc(type: Javadoc, dependsOn: dokka) {
+
+    }
+} else if (project.hasProperty("android")) { // Android libraries
+    task sourcesJar(type: Jar) {
+        archiveClassifier.set("sources")
+        from android.sourceSets.main.java.srcDirs
+    }
+
+    task javadoc(type: Javadoc) {
+        source = android.sourceSets.main.java.srcDirs
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    }
+} else { // Java libraries
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        archiveClassifier.set("sources")
+        from sourceSets.main.allSource
+    }
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier.set("javadoc")
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+
+bintray {
+    user = bintray_user
+    key = bintray_key
+    configurations = ['archives']
+    publish = true
+    override = true
+
+    pkg {
+        repo = "inspetor-android"
+        name = "inspetor"
+        version {
+            name = libVersion
+            desc = 'This is updated version 1.0.0 of Inspetor Android Library.'
+            released = new Date()
+            vcsTag = '1.0.0'
+        }
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            name 'Inspetor'
+            description 'Inspetor is an antifraud library that works tracking events from applications.'
+            url 'https://github.com/inspetor/inspetor-android'
+            inceptionYear '2019'
+            packaging 'aar'
+            groupId groupId
+            artifactId artifactId
+            version libVersion
+            name artifactId
+
+            licenses {
+                license {
+                    name 'The MIT License (MIT)'
+                    url 'https://opensource.org/licenses/MIT'
+                }
+            }
+
+            scm {
+                connection 'https://github.com/inspetor/inspetor-android.git'
+                url 'https://github.com/inspetor/inspetor-android'
+            }
+
+            developers {
+                developer {
+                    id = 'theosato'
+                    name 'Matheus Sato'
+                }
+            }
+        }
+
+        pom.withXml {
+            final dependenciesNode = asNode().appendNode('dependencies')
+
+            ext.addDependency = { Dependency dep, String scope ->
+                if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
+                    return // ignore invalid dependencies
+
+                final dependencyNode = dependenciesNode.appendNode('dependency')
+                dependencyNode.appendNode('groupId', dep.group)
+                dependencyNode.appendNode('artifactId', dep.name)
+                dependencyNode.appendNode('version', dep.version)
+                dependencyNode.appendNode('scope', scope)
+            }
+
+            // List all "compile" dependencies (for old Gradle)
+            configurations.compile.getDependencies().all { dep -> addDependency(dep, "compile") }
+            // List all "api" dependencies (for new Gradle) as "compile" dependencies
+            configurations.api.getDependencies().all { dep -> addDependency(dep, "compile") }
+            // List all "implementation" dependencies (for new Gradle) as "runtime" dependencies
+            configurations.implementation.getDependencies().all { dep -> addDependency(dep, "runtime") }
+        }
+    }
+}

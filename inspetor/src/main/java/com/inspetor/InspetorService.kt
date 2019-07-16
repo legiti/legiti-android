@@ -8,36 +8,142 @@
 package com.inspetor
 
 import android.content.Context
-import com.snowplowanalytics.snowplow.tracker.emitter.BufferOption
-import com.snowplowanalytics.snowplow.tracker.emitter.HttpMethod
-import com.snowplowanalytics.snowplow.tracker.emitter.RequestSecurity
 
 interface InspetorService {
-    fun setup(dependencies: InspetorDependencies)
 
-    fun setActiveUser(userId: String)
+    /**
+     * Send account creation data to Inspetor
+     *
+     * @param account_id
+     * @return void
+     */
+    fun trackAccountCreation(account_id: String)
 
-    fun unsetActiveUser()
+    /**
+     * Send account update data to Inspetor
+     *
+     * @param account_id
+     * @return void
+     */
+    fun trackAccountUpdate(account_id: String)
 
-    fun trackLogin(userId: String)
+    /**
+     * Send account deletion data to Inspetor
+     *
+     * @param account_id
+     * @return void
+     */
+    fun trackAccountDeletion(account_id: String)
 
-    fun trackLogout(userId: String)
+    /**
+     * Send event creation data to Inspetor
+     *
+     * @param event_id
+     * @return void
+     */
+    fun trackEventCreation(event_id: String)
 
-    fun trackAccountCreation(userId: String)
+    /**
+     * Send event update data to Inspetor
+     *
+     * @param event_id
+     * @return void
+     */
+    fun trackEventUpdate(event_id: String)
 
-    fun trackAccountUpdate(userId: String)
+    /**
+     * Send event deletion data to Inspetor
+     *
+     * @param event_id
+     * @return void
+     */
+    fun trackEventDeletion(event_id: String)
 
-    fun trackCreateOrder(transactionId: String)
+    /**
+     * Send item transfer creation data to Inspetor
+     *
+     * @param transfer_id
+     * @return void
+     */
+    fun trackItemTransferCreation(transfer_id: String)
 
-    fun trackPayOrder(transactionId: String)
+    /**
+     * Send item transfer update data to Inspetor
+     *
+     * @param transfer_id
+     * @return void
+     */
+    fun trackItemTransferUpdate(transfer_id: String)
 
-    fun trackCancelOrder(transactionId: String)
 
-    fun trackTicketTransfer(ticketId: String, userId: String, recipient: String)
+    /**
+     * Send account login data to Inspetor
+     *
+     * @param account_id
+     * @return void
+     */
+    fun trackLogin(account_id: String)
 
-    fun trackRecoverPasswordRequest(email: String)
+    /**
+     * Send account logout data to Inspetor
+     *
+     * @param account_id
+     * @return void
+     */
+    fun trackLogout(account_id: String)
 
-    fun trackChangePassword(email: String)
+    /**
+     * Send password reset data to Inspetor
+     *
+     * @param account_email
+     * @return void
+     */
+    fun trackPasswordReset(account_email: String)
 
-    fun setContext(context: Context)
+    /**
+     * Send password recovery data to Inspetor
+     *
+     * @param account_email
+     * @return void
+     */
+    fun trackPasswordRecovery(account_email: String)
+
+    /**
+     * Send sale creation data to Inspetor
+     *
+     * @param sale_id
+     * @return void
+     */
+    fun trackSaleCreation(sale_id: String)
+
+    /**
+     * Send sale update data to Inspetor
+     *
+     * @param sale_id
+     * @return void
+     */
+    fun trackSaleUpdate(sale_id: String)
+
+    /**
+     * Send context to InspetorClient
+     *
+     * @param context
+     * @return void
+     */
+    fun collect(context: Context)
+
+    /**
+     * Set config to InspetorClient
+     *
+     * @param config
+     * @return void
+     */
+    fun setup(config: InspetorConfig)
+
+    /**
+     * Verify if config exists
+     *
+     * @return boolean
+     */
+    fun hasConfig(): Boolean
 }

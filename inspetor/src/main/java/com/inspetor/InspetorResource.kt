@@ -1,5 +1,5 @@
 //
-//  InspetorReso urce.kt
+//  InspetorResource.kt
 //  inspetor-android-sdk
 //
 //  Created by Matheus Sato on 12/4/19.
@@ -8,214 +8,119 @@
 package com.inspetor
 
 import android.content.Context
-import com.snowplowanalytics.snowplow.tracker.*;
-import com.snowplowanalytics.snowplow.tracker.Emitter
+import android.os.Build
+import android.util.Base64
 import com.snowplowanalytics.snowplow.tracker.DevicePlatforms
+import com.snowplowanalytics.snowplow.tracker.Emitter
+import com.snowplowanalytics.snowplow.tracker.Subject
+import com.snowplowanalytics.snowplow.tracker.Tracker
 import com.snowplowanalytics.snowplow.tracker.Tracker.init
 import com.snowplowanalytics.snowplow.tracker.emitter.BufferOption
 import com.snowplowanalytics.snowplow.tracker.emitter.HttpMethod
 import com.snowplowanalytics.snowplow.tracker.emitter.RequestSecurity
 import com.snowplowanalytics.snowplow.tracker.events.SelfDescribing
-import com.snowplowanalytics.snowplow.tracker.events.Structured
 import com.snowplowanalytics.snowplow.tracker.payload.SelfDescribingJson
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class InspetorResource: InspetorService {
-    private var trackerName: String = ""
-    private var appId: String = ""
-    private var collectorUri: String = ""
-    private var base64Encoded: Boolean = false
-    private var httpMethod: HttpMethod? = null
-    private var protocolType: RequestSecurity? = null
-    private var bufferOption: BufferOption? = null
-    private var tracker: Tracker? = null
-    private var clientName: String? = null
+internal class InspetorResource(_config: InspetorConfig): InspetorResourceService {
+    private var trackerName: String
+    private var appId: String
+    private var base64Encoded: Boolean
+    private var collectorUri: String
+    private var clientName: String
+    private var httpMethod: HttpMethod
+    private var protocolType: RequestSecurity
+    private var bufferOption: BufferOption
+    private var tracker: Tracker?
 
-    override fun setContext(context: Context){
-        setupTracker(context)
-    }
-
-    override fun setup(dependencies: InspetorDependencies) {
-        require(validateTrackerName(dependencies.trackerName))
-
-
-        trackerName = dependencies.trackerName
-        appId = dependencies.appId
-        clientName = dependencies.trackerName.split(InspetorConfig.DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR)[0]
-        base64Encoded = dependencies.base64Encoded
-        collectorUri = dependencies.collectorUri
-        bufferOption = switchBufferOptionSize(dependencies.bufferOptionSize)
-        httpMethod = switchHttpMethod(dependencies.httpMethodType)
-        protocolType = switchSecurityProtocol(dependencies.requestSecurityProtocol)
+    init {
+        this.trackerName = _config.trackerName
+        this.appId = _config.appId
+        this.clientName = _config.trackerName.split(InspetorDependencies.DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR)[0]
+        this.base64Encoded = _config.base64Encoded
+        this.collectorUri = _config.collectorUri
+        this.bufferOption = switchBufferOptionSize(_config.bufferOptionSize)
+        this.httpMethod = switchHttpMethod(_config.httpMethodType)
+        this.protocolType = switchSecurityProtocol(_config.requestSecurityProtocol)
+        this.tracker = null
 
         require(verifySetup())
     }
 
-    override fun setActiveUser(userId: String) {
-        require(verifyTracker())
-
-        tracker?.subject?.setUserId(userId)
+    override fun setContext(context: Context) {
+        tracker = setupTracker(context)
     }
 
-    override fun unsetActiveUser() {
-        if (!verifyTracker()) {
-            return
+    override fun trackAccountAction(account_id: String, action: AccountAction): Boolean {
+        val datamap: HashMap<String, String>? = hashMapOf()
+        datamap?.set("account_id", encodeData(account_id))
+        datamap?.set("account_timestamp", getNormalizedTimestamp())
+        if (datamap != null) {
+            trackUnstructuredEvent(InspetorDependencies.FRONTEND_ACCOUNT_SCHEMA_VERSION, datamap, action.rawValue())
         }
-        tracker?.subject?.setUserId("")
+
+        return true
     }
 
-    override fun trackLogin(userId: String) {
-        require(verifyTracker())
+    override fun trackAccountAuthAction(account_id: String, action: AuthAction): Boolean {
+        val datamap: HashMap<String, String>? = hashMapOf()
+        datamap?.set("auth_account_id", encodeData(account_id))
+        datamap?.set("auth_account_timestamp", encodeData(getNormalizedTimestamp()))
+        if (datamap != null) {
+            trackUnstructuredEvent(InspetorDependencies.FRONTEND_AUTH_SCHEMA_VERSION, datamap, action.rawValue())
+        }
 
-        setActiveUser(userId)
-        val data: HashMap<String, String> = HashMap<String, String>()
-        data["userId"] = userId
-        trackUnstructuredEvent(InspetorConfig.FRONTEND_LOGIN_SCHEMA_VERSION, data)
+        return true
     }
 
-    override fun trackLogout(userId: String) {
-        require(verifyTracker())
+    override fun trackEventAction(event_id: String, action: EventAction): Boolean {
+        val datamap: HashMap<String, String>? = hashMapOf()
+        datamap?.set("event_id", encodeData(event_id))
+        datamap?.set("event_timestamp", encodeData(getNormalizedTimestamp()))
+        if (datamap != null) {
+            trackUnstructuredEvent(InspetorDependencies.FRONTEND_EVENT_SCHEMA_VERSION, datamap, action.rawValue())
+        }
 
-        val data: HashMap<String, String> = HashMap<String, String>()
-        data["userId"] = userId
-        trackUnstructuredEvent(InspetorConfig.FRONTEND_LOGOUT_SCHEMA_VERSION, data)
-        unsetActiveUser()
+        return true
     }
 
-    override fun trackAccountCreation(userId: String) {
-        require(verifyTracker())
+    override fun trackPasswordRecoveryAction(account_email: String, action: PassRecoveryAction): Boolean {
+        val datamap: HashMap<String, String>? = hashMapOf()
+        datamap?.set("pass_recovey_email", encodeData(account_email))
+        datamap?.set("pass_recovey_timestamp", encodeData(getNormalizedTimestamp()))
+        if (datamap != null) {
+            trackUnstructuredEvent(InspetorDependencies.FRONTEND_PASS_RECOVERY_SCHEMA_VERSION, datamap, action.rawValue())
+        }
 
-        val data: HashMap<String, String> = HashMap<String, String>()
-        data["userId"] = userId
-        trackUnstructuredEvent(InspetorConfig.FRONTEND_ACCOUNT_CREATION_SCHEMA_VERSION, data)
+        return true
     }
 
-    override fun trackAccountUpdate(userId: String) {
-        require(verifyTracker())
+    override fun trackItemTransferAction(transfer_id: String, action: TransferAction): Boolean {
+        val datamap: HashMap<String, String>? = hashMapOf()
+        datamap?.set("transfer_id", encodeData(transfer_id))
+        datamap?.set("transfer_timestamp", encodeData(getNormalizedTimestamp()))
+        if (datamap != null) {
+            trackUnstructuredEvent(InspetorDependencies.FRONTEND_TRANSFER_SCHEMA_VERSION, datamap, action.rawValue())
+        }
 
-        val data: HashMap<String, String> = HashMap<String, String>()
-        data["userId"] = userId
-        trackUnstructuredEvent(InspetorConfig.FRONTEND_ACCOUNT_UPDATE_SCHEMA_VERSION, data)
+        return true
     }
 
-    override fun trackCreateOrder(transactionId: String) {
-        require(verifyTracker())
+    override fun trackSaleAction(sale_id: String, action: SaleAction): Boolean {
+        val datamap: HashMap<String, String>? = hashMapOf()
+        datamap?.set("sale_id", encodeData(sale_id))
+        datamap?.set("sale_timestamp", encodeData(getNormalizedTimestamp()))
+        if (datamap != null) {
+            trackUnstructuredEvent(InspetorDependencies.FRONTEND_SALE_SCHEMA_VERSION, datamap, action.rawValue())
+        }
 
-        val data: HashMap<String, String> = HashMap<String, String>()
-        data["transactionId"] = transactionId
-        trackUnstructuredEvent(InspetorConfig.FRONTEND_CREATE_ORDER_SCHEMA_VERSION, data)
-    }
-
-    override fun trackPayOrder(transactionId: String) {
-        require(verifyTracker())
-
-        val data: HashMap<String, String> = HashMap<String, String>()
-        data["transactionId"] = transactionId
-        trackUnstructuredEvent(InspetorConfig.FRONTEND_PAY_ORDER_SCHEMA_VERSION, data)
-    }
-
-    override fun trackCancelOrder(transactionId: String) {
-        require(verifyTracker())
-
-        val data: HashMap<String, String> = HashMap<String, String>()
-        data["transactionId"] = transactionId
-        trackUnstructuredEvent(InspetorConfig.FRONTEND_CANCEL_ORDER_SCHEMA_VERSION, data)
-    }
-
-    override fun trackTicketTransfer(ticketId: String, userId: String, recipient: String) {
-        require(verifyTracker())
-
-        val data: HashMap<String, String> = HashMap<String, String>()
-        data["ticketId"] = ticketId
-        data["user"] = userId
-        data["recipient"] = recipient
-        trackUnstructuredEvent(InspetorConfig.FRONTEND_TICKET_TRANSFER_SCHEMA_VERSION, data)
-    }
-
-    override fun trackRecoverPasswordRequest(email: String) {
-        require(verifyTracker())
-
-        val data: HashMap<String, String> = HashMap<String, String>()
-        data["email"] = email
-        trackUnstructuredEvent(InspetorConfig.FRONTEND_RECOVER_PASSWORD_SCHEMA_VERSION, data)
-    }
-
-    override fun trackChangePassword(email: String) {
-        require(verifyTracker())
-
-        val data: HashMap<String, String> = HashMap<String, String>()
-        data["email"] = email
-        trackUnstructuredEvent(InspetorConfig.FRONTEND_CHANGE_PASSWORD_SCHEMA_VERSION, data)
-    }
-
-    private fun verifySetup(): Boolean {
-        return (appId != "" && trackerName != "")
-    }
-
-    private fun verifyTracker(): Boolean {
-        return (tracker != null)
-    }
-
-    private fun setupTracker(context: Context) {
-        require(verifySetup())
-
-        tracker = initializeTracker(context)
-
-        require(verifyTracker())
-    }
-
-
-    private fun initializeTracker(context: Context): Tracker? {
-        val emitter = Emitter.EmitterBuilder(collectorUri, context)
-            .method(httpMethod)
-            .option(bufferOption)
-            .security(protocolType)
-            .build()
-
-        return init(Tracker.TrackerBuilder(emitter, trackerName, appId, context)
-                .base64(base64Encoded)
-                .platform(DevicePlatforms.Mobile)
-                .subject(Subject.SubjectBuilder().build())
-                .sessionContext(true)
-                .sessionCheckInterval(10)
-                .foregroundTimeout(300)
-                .backgroundTimeout(120)
-                .geoLocationContext(true)
-                .mobileContext(true)
-                .build())
-    }
-
-    private fun trackUnstructuredEvent(schema: String, data: HashMap<String, String>) {
-        val eventData: SelfDescribingJson = SelfDescribingJson(schema, data)
-        tracker?.track(
-            SelfDescribing.builder()
-                .eventData(eventData)
-                .build()
-        )
-    }
-
-    private fun structuredEventBuilderHelper(
-        category: String,
-        action: String,
-        label: String,
-        property: String
-    ): Unit? {
-
-        return tracker?.track(
-            Structured.builder()
-                .category(category)
-                .action(action)
-                .label(label)
-                .property(property)
-                .build()
-        )
-    }
-
-    private fun validateTrackerName(trackerName: String): Boolean {
-        val trackerNameArray = trackerName.split(InspetorConfig.DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR)
-        return (trackerNameArray.count() == 2 &&
-                trackerNameArray[0].count() > 1 &&
-                trackerNameArray[1].count() > 1)
+        return true
     }
 
     private fun switchBufferOptionSize (bufferOptionSize: BufferOptionSize): BufferOption {
@@ -239,5 +144,60 @@ class InspetorResource: InspetorService {
             HttpMethodType.POST -> HttpMethod.POST
         }
     }
-}
 
+    private fun verifySetup(): Boolean {
+        return (appId != "" && trackerName != "")
+    }
+
+    private fun setupTracker(context: Context): Tracker? {
+        val emitter = Emitter.EmitterBuilder(collectorUri, context)
+            .method(httpMethod)
+            .option(bufferOption)
+            .security(protocolType)
+            .build()
+
+        return init(Tracker.TrackerBuilder(emitter, trackerName, appId, context)
+                .base64(base64Encoded)
+                .platform(DevicePlatforms.Mobile)
+                .subject(Subject.SubjectBuilder().build())
+                .sessionContext(true)
+                .sessionCheckInterval(10)
+                .foregroundTimeout(300)
+                .backgroundTimeout(120)
+                .geoLocationContext(true)
+                .mobileContext(true)
+                .build())
+    }
+
+    private fun trackUnstructuredEvent(schema: String, data: HashMap<String, String>, action: String) {
+        val inspetorData = SelfDescribingJson(schema, data)
+        val inspetorContext = SelfDescribingJson(
+            InspetorDependencies.FRONTEND_CONTEXT_SCHEMA_VERSION, action)
+        val contexts: ArrayList<SelfDescribingJson>? = null
+        contexts?.add(inspetorContext)
+
+        tracker?.track(
+            SelfDescribing.builder()
+                .eventData(inspetorData)
+//                .customContext(contexts)
+                .build()
+        )
+        tracker?.emitter?.flush()
+    }
+
+    private fun getNormalizedTimestamp(): String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            val dateTime = LocalDateTime.now(ZoneId.of("UTC"))
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'+00:00'")
+            dateTime.format(formatter)
+        } else {
+            val dateFormat = SimpleDateFormat("yyyy/MM/dd'T'HH:mm:ss'+00:00'", Locale.US)
+            val date = Date()
+            dateFormat.format(date)
+        }
+    }
+
+    private fun encodeData(data: String): String {
+        return Base64.encodeToString(data.toByteArray(), Base64.DEFAULT)
+    }
+}
