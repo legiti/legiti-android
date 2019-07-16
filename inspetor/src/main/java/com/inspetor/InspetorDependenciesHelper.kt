@@ -1,6 +1,5 @@
 //
-//  InspetorDependencies.kt
-//  inspetor-android-sdk
+//  InspetorConfig  inspetor-android-sdk
 //
 //  Created by Matheus Sato on 8/5/19.
 //  Copyright © 2019 Inspetor. All rights reserved.

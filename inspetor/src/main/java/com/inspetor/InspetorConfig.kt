@@ -1,30 +1,17 @@
 //
-//  InspetorConfig.kt
-//  inspetor-android-sdk
+//  InspetorConfig.ktnspetor-android-sdk
 //
 //  Created by Matheus Sato on 12/4/19.
 //  Copyright © 2019 Inspetor. All rights reserved.
 //
 package com.inspetor
 
-object InspetorConfig {
-    //Emitter and Tracker basic config
-    const val DEFAULT_BASE64_OPTION: Boolean = true
-    const val DEFAULT_COLLECTOR_URI: String = "analytics.useinspetor.com"
-    const val DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR: String = "."
-    val DEFAULT_HTTP_METHOD_TYPE: HttpMethodType = HttpMethodType.POST
-    val DEFAULT_PROTOCOL_TYPE: RequestSecurityProtocol = RequestSecurityProtocol.HTTPS
-    val DEFAULT_BUFFERSIZE_OPTION: BufferOptionSize = BufferOptionSize.SINGLE //1
-
-    // Schema versions
-    const val FRONTEND_PAY_ORDER_SCHEMA_VERSION: String = "iglu:com.inspetor/frontend_pay_order/jsonschema/1-0-0"
-    const val FRONTEND_CANCEL_ORDER_SCHEMA_VERSION: String = "iglu:com.inspetor/frontend_cancel_order/jsonschema/1-0-0"
-    const val FRONTEND_CREATE_ORDER_SCHEMA_VERSION: String = "iglu:com.inspetor/frontend_create_order/jsonschema/1-0-0"
-    const val FRONTEND_TICKET_TRANSFER_SCHEMA_VERSION: String = "iglu:com.inspetor/frontend_ticket_transfer/jsonschema/1-0-1"
-    const val FRONTEND_CHANGE_PASSWORD_SCHEMA_VERSION: String = "iglu:com.inspetor/frontend_change_password/jsonschema/1-0-1"
-    const val FRONTEND_ACCOUNT_UPDATE_SCHEMA_VERSION: String = "iglu:com.inspetor/frontend_account_update/jsonschema/1-0-1"
-    const val FRONTEND_ACCOUNT_CREATION_SCHEMA_VERSION: String = "iglu:com.inspetor/frontend_account_creation/jsonschema/1-0-1"
-    const val FRONTEND_LOGIN_SCHEMA_VERSION: String = "iglu:com.inspetor/frontend_login/jsonschema/1-0-1"
-    const val FRONTEND_LOGOUT_SCHEMA_VERSION: String = "iglu:com.inspetor/frontend_logout/jsonschema/1-0-1"
-    const val FRONTEND_RECOVER_PASSWORD_SCHEMA_VERSION: String = "iglu:com.inspetor/frontend_recover_password/jsonschema/1-0-2"
-}
+data class InspetorConfig(
+    var trackerName: String,
+    var appId: String,
+    var base64Encoded: Boolean = InspetorDependencies.DEFAULT_BASE64_OPTION,
+    var collectorUri: String = InspetorDependencies.DEFAULT_COLLECTOR_URI,
+    var httpMethodType: HttpMethodType = InspetorDependencies.DEFAULT_HTTP_METHOD_TYPE,
+    var requestSecurityProtocol: RequestSecurityProtocol = InspetorDependencies.DEFAULT_PROTOCOL_TYPE,
+    var bufferOptionSize: BufferOptionSize = InspetorDependencies.DEFAULT_BUFFERSIZE_OPTION
+)
