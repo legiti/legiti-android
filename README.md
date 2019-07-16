@@ -21,6 +21,6 @@ allprojects {
 ```
 dependencies {
   ...
-  implementation 'com.github.inspetor:inspetor:0.0.1@aar', { transitive = true }
+  implementation 'com.github.inspetor:inspetor:0.0.2@aar', { transitive = true }
 }
  ```
