@@ -10,12 +10,14 @@ class InspetorAndroidTests {
 
     private var validDataSource = InspetorConfig(
         appId = UNIT_TEST_DEFAULT_APP_ID,
-        trackerName = UNIT_TEST_DEFAULT_TRACKER_NAME
+        trackerName = UNIT_TEST_DEFAULT_TRACKER_NAME,
+        devEnv = true
     )
 
     private var invalidDataSource = InspetorConfig(
         appId = UNIT_TEST_DEFAULT_APP_ID,
-        trackerName = "ingresse"
+        trackerName = "ingresse",
+        devEnv = true
     )
 
     @Test
@@ -23,21 +25,6 @@ class InspetorAndroidTests {
         val inspetorClient = InspetorClient()
         var invalid = false
         try{
-            inspetorClient.setup(validDataSource)
-        } catch (e: Throwable) {
-            invalid = true
-        }
-
-        assertFalse(invalid)
-    }
-
-    @Test
-    fun testSupportsOptionalParams() {
-        val inspetorClient = InspetorClient()
-        val nonDefaultUri = "random.uri.com"
-        var invalid = false
-        validDataSource.apply { collectorUri = nonDefaultUri }
-        try {
             inspetorClient.setup(validDataSource)
         } catch (e: Throwable) {
             invalid = true

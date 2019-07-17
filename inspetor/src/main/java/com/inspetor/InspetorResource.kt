@@ -7,9 +7,13 @@
 //
 package com.inspetor
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Base64
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.checkSelfPermission
 import com.snowplowanalytics.snowplow.tracker.DevicePlatforms
 import com.snowplowanalytics.snowplow.tracker.Emitter
 import com.snowplowanalytics.snowplow.tracker.Subject
@@ -43,24 +47,34 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
         this.trackerName = _config.trackerName
         this.appId = _config.appId
         this.clientName = _config.trackerName.split(InspetorDependencies.DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR)[0]
-        this.base64Encoded = _config.base64Encoded
-        this.collectorUri = _config.collectorUri
-        this.bufferOption = switchBufferOptionSize(_config.bufferOptionSize)
-        this.httpMethod = switchHttpMethod(_config.httpMethodType)
-        this.protocolType = switchSecurityProtocol(_config.requestSecurityProtocol)
+        this.collectorUri = InspetorDependencies.DEFAULT_COLLECTOR_URI
+        this.base64Encoded = InspetorDependencies.DEFAULT_BASE64_OPTION
+        this.bufferOption = switchBufferOptionSize(InspetorDependencies.DEFAULT_BUFFERSIZE_OPTION)
+        this.httpMethod = switchHttpMethod(InspetorDependencies.DEFAULT_HTTP_METHOD_TYPE)
+        this.protocolType = switchSecurityProtocol(InspetorDependencies.DEFAULT_PROTOCOL_TYPE)
+
+        if (_config.devEnv) {
+            this.collectorUri = InspetorDependencies.DEFAULT_COLLECTOR_DEV_URI
+        }
+
         this.tracker = null
 
         require(verifySetup())
     }
 
     override fun setContext(context: Context) {
-        tracker = setupTracker(context)
+        tracker = setupTracker(context) ?: throw fail("Inspetor Exception 9000: Internal error.")
+    }
+
+    private fun fail(message: String): Throwable {
+        throw Exception(message)
     }
 
     override fun trackAccountAction(account_id: String, action: AccountAction): Boolean {
-        val datamap: HashMap<String, String>? = hashMapOf()
-        datamap?.set("account_id", encodeData(account_id))
-        datamap?.set("account_timestamp", getNormalizedTimestamp())
+        val datamap: HashMap<String, String>? = hashMapOf(
+            "account_id" to encodeData(account_id),
+            "account_timestamp" to encodeData(getNormalizedTimestamp())
+        )
         if (datamap != null) {
             trackUnstructuredEvent(InspetorDependencies.FRONTEND_ACCOUNT_SCHEMA_VERSION, datamap, action.rawValue())
         }
@@ -69,9 +83,10 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
     }
 
     override fun trackAccountAuthAction(account_id: String, action: AuthAction): Boolean {
-        val datamap: HashMap<String, String>? = hashMapOf()
-        datamap?.set("auth_account_id", encodeData(account_id))
-        datamap?.set("auth_account_timestamp", encodeData(getNormalizedTimestamp()))
+        val datamap: HashMap<String, String>? = hashMapOf(
+            "auth_account_id" to encodeData(account_id),
+            "auth_account_timestamp" to encodeData(getNormalizedTimestamp())
+        )
         if (datamap != null) {
             trackUnstructuredEvent(InspetorDependencies.FRONTEND_AUTH_SCHEMA_VERSION, datamap, action.rawValue())
         }
@@ -80,9 +95,10 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
     }
 
     override fun trackEventAction(event_id: String, action: EventAction): Boolean {
-        val datamap: HashMap<String, String>? = hashMapOf()
-        datamap?.set("event_id", encodeData(event_id))
-        datamap?.set("event_timestamp", encodeData(getNormalizedTimestamp()))
+        val datamap: HashMap<String, String>? = hashMapOf(
+            "event_id" to encodeData(event_id),
+            "event_timestamp" to encodeData(getNormalizedTimestamp())
+        )
         if (datamap != null) {
             trackUnstructuredEvent(InspetorDependencies.FRONTEND_EVENT_SCHEMA_VERSION, datamap, action.rawValue())
         }
@@ -91,9 +107,10 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
     }
 
     override fun trackPasswordRecoveryAction(account_email: String, action: PassRecoveryAction): Boolean {
-        val datamap: HashMap<String, String>? = hashMapOf()
-        datamap?.set("pass_recovey_email", encodeData(account_email))
-        datamap?.set("pass_recovey_timestamp", encodeData(getNormalizedTimestamp()))
+        val datamap: HashMap<String, String>? = hashMapOf(
+            "pass_recovey_email" to encodeData(account_email),
+            "pass_recovey_timestamp" to encodeData(getNormalizedTimestamp())
+        )
         if (datamap != null) {
             trackUnstructuredEvent(InspetorDependencies.FRONTEND_PASS_RECOVERY_SCHEMA_VERSION, datamap, action.rawValue())
         }
@@ -102,9 +119,10 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
     }
 
     override fun trackItemTransferAction(transfer_id: String, action: TransferAction): Boolean {
-        val datamap: HashMap<String, String>? = hashMapOf()
-        datamap?.set("transfer_id", encodeData(transfer_id))
-        datamap?.set("transfer_timestamp", encodeData(getNormalizedTimestamp()))
+        val datamap: HashMap<String, String>? = hashMapOf(
+            "transfer_id" to encodeData(transfer_id),
+            "transfer_timestamp" to encodeData(getNormalizedTimestamp())
+        )
         if (datamap != null) {
             trackUnstructuredEvent(InspetorDependencies.FRONTEND_TRANSFER_SCHEMA_VERSION, datamap, action.rawValue())
         }
@@ -113,9 +131,10 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
     }
 
     override fun trackSaleAction(sale_id: String, action: SaleAction): Boolean {
-        val datamap: HashMap<String, String>? = hashMapOf()
-        datamap?.set("sale_id", encodeData(sale_id))
-        datamap?.set("sale_timestamp", encodeData(getNormalizedTimestamp()))
+        val datamap: HashMap<String, String>? = hashMapOf(
+            "sale_id" to encodeData(sale_id),
+            "sale_timestamp" to encodeData(getNormalizedTimestamp())
+        )
         if (datamap != null) {
             trackUnstructuredEvent(InspetorDependencies.FRONTEND_SALE_SCHEMA_VERSION, datamap, action.rawValue())
         }
@@ -150,11 +169,12 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
     }
 
     private fun setupTracker(context: Context): Tracker? {
+        val geoContext = verifyPermission(context)
         val emitter = Emitter.EmitterBuilder(collectorUri, context)
             .method(httpMethod)
             .option(bufferOption)
             .security(protocolType)
-            .build()
+            .build() ?: throw fail("Inspetor Exception 9000: Internal error.")
 
         return init(Tracker.TrackerBuilder(emitter, trackerName, appId, context)
                 .base64(base64Encoded)
@@ -164,25 +184,24 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
                 .sessionCheckInterval(10)
                 .foregroundTimeout(300)
                 .backgroundTimeout(120)
-                .geoLocationContext(true)
+                .geoLocationContext(geoContext)
                 .mobileContext(true)
-                .build())
+                .build()) ?: throw fail("Inspetor Exception 9000: Internal error.")
     }
 
     private fun trackUnstructuredEvent(schema: String, data: HashMap<String, String>, action: String) {
         val inspetorData = SelfDescribingJson(schema, data)
         val inspetorContext = SelfDescribingJson(
             InspetorDependencies.FRONTEND_CONTEXT_SCHEMA_VERSION, action)
-        val contexts: ArrayList<SelfDescribingJson>? = null
-        contexts?.add(inspetorContext)
+        val contexts: ArrayList<SelfDescribingJson>? = arrayListOf(inspetorContext)
 
         tracker?.track(
             SelfDescribing.builder()
                 .eventData(inspetorData)
-//                .customContext(contexts)
-                .build()
+                .customContext(contexts)
+                .build() ?: throw fail("Inspetor Exception 9000: Internal error.")
         )
-        tracker?.emitter?.flush()
+        tracker?.emitter?.flush() ?: throw fail("Inspetor Exception 9000: Internal error.")
     }
 
     private fun getNormalizedTimestamp(): String {
@@ -198,6 +217,15 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
     }
 
     private fun encodeData(data: String): String {
-        return Base64.encodeToString(data.toByteArray(), Base64.DEFAULT)
+        return Base64.encodeToString(data.toByteArray(), Base64.NO_WRAP)
+    }
+
+    private fun verifyPermission(context: Context): Boolean {
+        if (checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return false
+        }
+
+        return true
     }
 }

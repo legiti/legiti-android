@@ -9,8 +9,10 @@ package com.inspetor
 
 object InspetorDependencies {
     //Emitter and Tracker basic config
+    const val DEFAULT_DEV_MODE: Boolean = false
     const val DEFAULT_BASE64_OPTION: Boolean = true
-    const val DEFAULT_COLLECTOR_URI: String = "analytics-dev.useinspetor.com"
+    const val DEFAULT_COLLECTOR_URI: String = "analytics.useinspetor.com"
+    const val DEFAULT_COLLECTOR_DEV_URI: String = "analytics-dev.useinspetor.com"
     const val DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR: String = "."
     val DEFAULT_HTTP_METHOD_TYPE: HttpMethodType = HttpMethodType.POST
     val DEFAULT_PROTOCOL_TYPE: RequestSecurityProtocol = RequestSecurityProtocol.HTTPS

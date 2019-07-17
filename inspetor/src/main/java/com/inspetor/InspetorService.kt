@@ -17,7 +17,7 @@ interface InspetorService {
      * @param account_id
      * @return void
      */
-    fun trackAccountCreation(account_id: String)
+    fun trackAccountCreation(account_id: String): Boolean?
 
     /**
      * Send account update data to Inspetor
@@ -25,7 +25,7 @@ interface InspetorService {
      * @param account_id
      * @return void
      */
-    fun trackAccountUpdate(account_id: String)
+    fun trackAccountUpdate(account_id: String): Boolean?
 
     /**
      * Send account deletion data to Inspetor
@@ -33,7 +33,7 @@ interface InspetorService {
      * @param account_id
      * @return void
      */
-    fun trackAccountDeletion(account_id: String)
+    fun trackAccountDeletion(account_id: String): Boolean?
 
     /**
      * Send event creation data to Inspetor
@@ -41,7 +41,7 @@ interface InspetorService {
      * @param event_id
      * @return void
      */
-    fun trackEventCreation(event_id: String)
+    fun trackEventCreation(event_id: String): Boolean?
 
     /**
      * Send event update data to Inspetor
@@ -49,7 +49,7 @@ interface InspetorService {
      * @param event_id
      * @return void
      */
-    fun trackEventUpdate(event_id: String)
+    fun trackEventUpdate(event_id: String): Boolean?
 
     /**
      * Send event deletion data to Inspetor
@@ -57,7 +57,7 @@ interface InspetorService {
      * @param event_id
      * @return void
      */
-    fun trackEventDeletion(event_id: String)
+    fun trackEventDeletion(event_id: String): Boolean?
 
     /**
      * Send item transfer creation data to Inspetor
@@ -65,7 +65,7 @@ interface InspetorService {
      * @param transfer_id
      * @return void
      */
-    fun trackItemTransferCreation(transfer_id: String)
+    fun trackItemTransferCreation(transfer_id: String): Boolean?
 
     /**
      * Send item transfer update data to Inspetor
@@ -73,7 +73,7 @@ interface InspetorService {
      * @param transfer_id
      * @return void
      */
-    fun trackItemTransferUpdate(transfer_id: String)
+    fun trackItemTransferUpdate(transfer_id: String): Boolean?
 
 
     /**
@@ -82,7 +82,7 @@ interface InspetorService {
      * @param account_id
      * @return void
      */
-    fun trackLogin(account_id: String)
+    fun trackLogin(account_id: String): Boolean?
 
     /**
      * Send account logout data to Inspetor
@@ -90,7 +90,7 @@ interface InspetorService {
      * @param account_id
      * @return void
      */
-    fun trackLogout(account_id: String)
+    fun trackLogout(account_id: String): Boolean?
 
     /**
      * Send password reset data to Inspetor
@@ -98,7 +98,7 @@ interface InspetorService {
      * @param account_email
      * @return void
      */
-    fun trackPasswordReset(account_email: String)
+    fun trackPasswordReset(account_email: String): Boolean?
 
     /**
      * Send password recovery data to Inspetor
@@ -106,7 +106,7 @@ interface InspetorService {
      * @param account_email
      * @return void
      */
-    fun trackPasswordRecovery(account_email: String)
+    fun trackPasswordRecovery(account_email: String): Boolean?
 
     /**
      * Send sale creation data to Inspetor
@@ -114,7 +114,7 @@ interface InspetorService {
      * @param sale_id
      * @return void
      */
-    fun trackSaleCreation(sale_id: String)
+    fun trackSaleCreation(sale_id: String): Boolean?
 
     /**
      * Send sale update data to Inspetor
@@ -122,7 +122,7 @@ interface InspetorService {
      * @param sale_id
      * @return void
      */
-    fun trackSaleUpdate(sale_id: String)
+    fun trackSaleUpdate(sale_id: String): Boolean?
 
     /**
      * Send context to InspetorClient

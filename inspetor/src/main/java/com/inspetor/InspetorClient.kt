@@ -23,14 +23,14 @@ class InspetorClient() : InspetorService {
 
         require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
 
-        require(validateTrackerName(config.trackerName)) { "Exception 9002: trackerName should have 2 terms (e.g. \"tracker.name\")." }
+        require(validateTrackerName(config.trackerName)) { "Inspetor Exception 9002: trackerName should have 2 terms (e.g. \"tracker.name\")." }
 
     }
 
     override fun collect(context: Context) {
         val config = inspetor_config ?: return
 
-        require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
         inspetor_resource = InspetorResource(config)
 
@@ -41,88 +41,88 @@ class InspetorClient() : InspetorService {
         return (!inspetor_config?.appId.isNullOrBlank() && !inspetor_config?.trackerName.isNullOrBlank())
     }
 
-    override fun trackLogin(account_id: String) {
-        require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
+    override fun trackLogin(account_id: String): Boolean? {
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        inspetor_resource?.trackAccountAuthAction(account_id, AuthAction.ACCOUNT_LOGIN_ACTION)
+        return inspetor_resource?.trackAccountAuthAction(account_id, AuthAction.ACCOUNT_LOGIN_ACTION)
     }
 
-    override fun trackLogout(account_id: String) {
-        require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
+    override fun trackLogout(account_id: String): Boolean? {
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        inspetor_resource?.trackAccountAuthAction(account_id, AuthAction.ACCOUNT_LOGOUT_ACTION)
+        return inspetor_resource?.trackAccountAuthAction(account_id, AuthAction.ACCOUNT_LOGOUT_ACTION)
     }
 
-    override fun trackAccountCreation(account_id: String) {
-        require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
+    override fun trackAccountCreation(account_id: String): Boolean? {
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        inspetor_resource?.trackAccountAction(account_id, AccountAction.ACCOUNT_CREATE_ACTION)
+        return inspetor_resource?.trackAccountAction(account_id, AccountAction.ACCOUNT_CREATE_ACTION)
     }
 
-    override fun trackAccountUpdate(account_id: String) {
-        require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
+    override fun trackAccountUpdate(account_id: String): Boolean? {
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        inspetor_resource?.trackAccountAction(account_id, AccountAction.ACCOUNT_UPDATE_ACTION)
+        return inspetor_resource?.trackAccountAction(account_id, AccountAction.ACCOUNT_UPDATE_ACTION)
     }
 
-    override fun trackAccountDeletion(account_id: String) {
-        require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
+    override fun trackAccountDeletion(account_id: String): Boolean? {
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        inspetor_resource?.trackAccountAction(account_id, AccountAction.ACCOUNT_DELETE_ACTION)
+        return inspetor_resource?.trackAccountAction(account_id, AccountAction.ACCOUNT_DELETE_ACTION)
     }
 
-    override fun trackSaleCreation(sale_id: String) {
-        require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
+    override fun trackSaleCreation(sale_id: String): Boolean? {
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        inspetor_resource?.trackSaleAction(sale_id, SaleAction.SALE_CREATE_ACTION)
+        return inspetor_resource?.trackSaleAction(sale_id, SaleAction.SALE_CREATE_ACTION)
     }
 
-    override fun trackSaleUpdate(sale_id: String) {
-        require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
+    override fun trackSaleUpdate(sale_id: String): Boolean? {
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        inspetor_resource?.trackSaleAction(sale_id, SaleAction.SALE_UPDATE_STATUS_ACTION)
+        return inspetor_resource?.trackSaleAction(sale_id, SaleAction.SALE_UPDATE_STATUS_ACTION)
     }
 
-    override fun trackEventCreation(event_id: String) {
-        require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
+    override fun trackEventCreation(event_id: String): Boolean? {
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        inspetor_resource?.trackEventAction(event_id, EventAction.EVENT_CREATE_ACTION)
+        return inspetor_resource?.trackEventAction(event_id, EventAction.EVENT_CREATE_ACTION)
     }
 
-    override fun trackEventUpdate(event_id: String) {
-        require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
+    override fun trackEventUpdate(event_id: String): Boolean? {
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        inspetor_resource?.trackEventAction(event_id, EventAction.EVENT_UPDATE_ACTION)
+        return inspetor_resource?.trackEventAction(event_id, EventAction.EVENT_UPDATE_ACTION)
     }
 
-    override fun trackEventDeletion(event_id: String) {
-        require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
+    override fun trackEventDeletion(event_id: String): Boolean? {
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        inspetor_resource?.trackEventAction(event_id, EventAction.EVENT_DELETE_ACTION)
+        return inspetor_resource?.trackEventAction(event_id, EventAction.EVENT_DELETE_ACTION)
     }
 
-    override fun trackItemTransferCreation(transfer_id: String) {
-        require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
+    override fun trackItemTransferCreation(transfer_id: String): Boolean? {
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        inspetor_resource?.trackItemTransferAction(transfer_id, TransferAction.TRANSFER_CREATE_ACTION)
+        return inspetor_resource?.trackItemTransferAction(transfer_id, TransferAction.TRANSFER_CREATE_ACTION)
     }
 
-    override fun trackItemTransferUpdate(transfer_id: String) {
-        require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
+    override fun trackItemTransferUpdate(transfer_id: String): Boolean? {
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        inspetor_resource?.trackItemTransferAction(transfer_id, TransferAction.TRANSFER_UPDATE_STATUS_ACTION)
+        return inspetor_resource?.trackItemTransferAction(transfer_id, TransferAction.TRANSFER_UPDATE_STATUS_ACTION)
     }
 
-    override fun trackPasswordReset(account_email: String) {
-        require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
+    override fun trackPasswordReset(account_email: String): Boolean? {
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        inspetor_resource?.trackPasswordRecoveryAction(account_email, PassRecoveryAction.PASSWORD_RESET_ACTION)
+        return inspetor_resource?.trackPasswordRecoveryAction(account_email, PassRecoveryAction.PASSWORD_RESET_ACTION)
     }
 
-    override fun trackPasswordRecovery(account_email: String) {
-        require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
+    override fun trackPasswordRecovery(account_email: String): Boolean? {
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        inspetor_resource?.trackPasswordRecoveryAction(account_email, PassRecoveryAction.PASSWORD_RECOVERY_ACTION)
+        return inspetor_resource?.trackPasswordRecoveryAction(account_email, PassRecoveryAction.PASSWORD_RECOVERY_ACTION)
     }
 
     private fun validateTrackerName(trackerName: String): Boolean {
