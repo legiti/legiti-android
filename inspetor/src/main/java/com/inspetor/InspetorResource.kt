@@ -85,7 +85,7 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
     override fun trackAccountAuthAction(account_id: String, action: AuthAction): Boolean {
         val datamap: HashMap<String, String>? = hashMapOf(
             "auth_account_id" to encodeData(account_id),
-            "auth_account_timestamp" to encodeData(getNormalizedTimestamp())
+            "auth_timestamp" to encodeData(getNormalizedTimestamp())
         )
         if (datamap != null) {
             trackUnstructuredEvent(InspetorDependencies.FRONTEND_AUTH_SCHEMA_VERSION, datamap, action.rawValue())
@@ -191,8 +191,11 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
 
     private fun trackUnstructuredEvent(schema: String, data: HashMap<String, String>, action: String) {
         val inspetorData = SelfDescribingJson(schema, data)
+        val contextMap: HashMap<String, String>? = hashMapOf(
+            "action" to action
+        )
         val inspetorContext = SelfDescribingJson(
-            InspetorDependencies.FRONTEND_CONTEXT_SCHEMA_VERSION, action)
+            InspetorDependencies.FRONTEND_CONTEXT_SCHEMA_VERSION, contextMap)
         val contexts: ArrayList<SelfDescribingJson>? = arrayListOf(inspetorContext)
 
         tracker?.track(
