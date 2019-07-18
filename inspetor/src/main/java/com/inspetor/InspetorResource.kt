@@ -7,21 +7,10 @@
 //
 package com.inspetor
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Base64
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.checkSelfPermission
-import com.snowplowanalytics.snowplow.tracker.DevicePlatforms
-import com.snowplowanalytics.snowplow.tracker.Emitter
-import com.snowplowanalytics.snowplow.tracker.Subject
 import com.snowplowanalytics.snowplow.tracker.Tracker
-import com.snowplowanalytics.snowplow.tracker.Tracker.init
-import com.snowplowanalytics.snowplow.tracker.emitter.BufferOption
-import com.snowplowanalytics.snowplow.tracker.emitter.HttpMethod
-import com.snowplowanalytics.snowplow.tracker.emitter.RequestSecurity
 import com.snowplowanalytics.snowplow.tracker.events.SelfDescribing
 import com.snowplowanalytics.snowplow.tracker.payload.SelfDescribingJson
 import java.text.SimpleDateFormat
@@ -29,41 +18,17 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 internal class InspetorResource(_config: InspetorConfig): InspetorResourceService {
-    private var trackerName: String
-    private var appId: String
-    private var base64Encoded: Boolean
-    private var collectorUri: String
-    private var clientName: String
-    private var httpMethod: HttpMethod
-    private var protocolType: RequestSecurity
-    private var bufferOption: BufferOption
     private var tracker: Tracker?
 
     init {
-        this.trackerName = _config.trackerName
-        this.appId = _config.appId
-        this.clientName = _config.trackerName.split(InspetorDependencies.DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR)[0]
-        this.collectorUri = InspetorDependencies.DEFAULT_COLLECTOR_URI
-        this.base64Encoded = InspetorDependencies.DEFAULT_BASE64_OPTION
-        this.bufferOption = switchBufferOptionSize(InspetorDependencies.DEFAULT_BUFFERSIZE_OPTION)
-        this.httpMethod = switchHttpMethod(InspetorDependencies.DEFAULT_HTTP_METHOD_TYPE)
-        this.protocolType = switchSecurityProtocol(InspetorDependencies.DEFAULT_PROTOCOL_TYPE)
-
-        if (_config.devEnv) {
-            this.collectorUri = InspetorDependencies.DEFAULT_COLLECTOR_DEV_URI
-        }
-
+        SnowManager.init(_config)
         this.tracker = null
-
-        require(verifySetup())
     }
 
     override fun setContext(context: Context) {
-        tracker = setupTracker(context) ?: throw fail("Inspetor Exception 9000: Internal error.")
+        tracker = SnowManager.setupTracker(context) ?: throw fail("Inspetor Exception 9000: Internal error.")
     }
 
     private fun fail(message: String): Throwable {
@@ -89,6 +54,10 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
         )
         if (datamap != null) {
             trackUnstructuredEvent(InspetorDependencies.FRONTEND_AUTH_SCHEMA_VERSION, datamap, action.rawValue())
+        }
+
+        if (action.rawValue() == AuthAction.ACCOUNT_LOGIN_ACTION.rawValue()) {
+            tracker?.subject?.setUserId(account_id)
         }
 
         return true
@@ -142,53 +111,6 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
         return true
     }
 
-    private fun switchBufferOptionSize (bufferOptionSize: BufferOptionSize): BufferOption {
-        return when(bufferOptionSize) {
-            BufferOptionSize.SINGLE -> BufferOption.Single
-            BufferOptionSize.DEFAULT -> BufferOption.DefaultGroup
-            BufferOptionSize.HEAVY -> BufferOption.HeavyGroup
-        }
-    }
-
-    private fun switchSecurityProtocol (requestSecurityProtocol: RequestSecurityProtocol): RequestSecurity {
-        return when (requestSecurityProtocol) {
-            RequestSecurityProtocol.HTTP -> RequestSecurity.HTTP
-            RequestSecurityProtocol.HTTPS -> RequestSecurity.HTTPS
-        }
-    }
-
-    private fun switchHttpMethod (httpMethodType: HttpMethodType): HttpMethod {
-        return when (httpMethodType) {
-            HttpMethodType.GET -> HttpMethod.GET
-            HttpMethodType.POST -> HttpMethod.POST
-        }
-    }
-
-    private fun verifySetup(): Boolean {
-        return (appId != "" && trackerName != "")
-    }
-
-    private fun setupTracker(context: Context): Tracker? {
-        val geoContext = verifyPermission(context)
-        val emitter = Emitter.EmitterBuilder(collectorUri, context)
-            .method(httpMethod)
-            .option(bufferOption)
-            .security(protocolType)
-            .build() ?: throw fail("Inspetor Exception 9000: Internal error.")
-
-        return init(Tracker.TrackerBuilder(emitter, trackerName, appId, context)
-                .base64(base64Encoded)
-                .platform(DevicePlatforms.Mobile)
-                .subject(Subject.SubjectBuilder().build())
-                .sessionContext(true)
-                .sessionCheckInterval(10)
-                .foregroundTimeout(300)
-                .backgroundTimeout(120)
-                .geoLocationContext(geoContext)
-                .mobileContext(true)
-                .build()) ?: throw fail("Inspetor Exception 9000: Internal error.")
-    }
-
     private fun trackUnstructuredEvent(schema: String, data: HashMap<String, String>, action: String) {
         val inspetorData = SelfDescribingJson(schema, data)
         val contextMap: HashMap<String, String>? = hashMapOf(
@@ -201,10 +123,9 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
         tracker?.track(
             SelfDescribing.builder()
                 .eventData(inspetorData)
-                .customContext(contexts)
+//                .customContext(contexts)
                 .build() ?: throw fail("Inspetor Exception 9000: Internal error.")
         )
-        tracker?.emitter?.flush() ?: throw fail("Inspetor Exception 9000: Internal error.")
     }
 
     private fun getNormalizedTimestamp(): String {
@@ -221,14 +142,5 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
 
     private fun encodeData(data: String): String {
         return Base64.encodeToString(data.toByteArray(), Base64.NO_WRAP)
-    }
-
-    private fun verifyPermission(context: Context): Boolean {
-        if (checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return false
-        }
-
-        return true
     }
 }
