@@ -7,9 +7,13 @@
 //
 package com.inspetor
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Base64
+import androidx.core.app.ActivityCompat
 import com.snowplowanalytics.snowplow.tracker.Tracker
 import com.snowplowanalytics.snowplow.tracker.events.SelfDescribing
 import com.snowplowanalytics.snowplow.tracker.payload.SelfDescribingJson
@@ -28,7 +32,7 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
     }
 
     override fun setContext(context: Context) {
-        tracker = SnowManager.setupTracker(context) ?: throw fail("Inspetor Exception 9000: Internal error.")
+        tracker = SnowManager.setupTracker(context.applicationContext) ?: throw fail("Inspetor Exception 9000: Internal error.")
     }
 
     private fun fail(message: String): Throwable {
@@ -75,9 +79,9 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
         return true
     }
 
-    override fun trackPasswordRecoveryAction(account_email: String, action: PassRecoveryAction): Boolean {
+    override fun trackPasswordRecoveryAction(accountEmail: String, action: PassRecoveryAction): Boolean {
         val datamap: HashMap<String, String>? = hashMapOf(
-            "pass_recovey_email" to encodeData(account_email),
+            "pass_recovey_email" to encodeData(accountEmail),
             "pass_recovey_timestamp" to encodeData(getNormalizedTimestamp())
         )
         if (datamap != null) {
@@ -120,10 +124,14 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
             InspetorDependencies.FRONTEND_CONTEXT_SCHEMA_VERSION, contextMap)
         val contexts: ArrayList<SelfDescribingJson>? = arrayListOf(inspetorContext)
 
+        if(tracker != null) {
+            Tracker.instance().globalContexts.clear()
+        }
+
         tracker?.track(
             SelfDescribing.builder()
                 .eventData(inspetorData)
-//                .customContext(contexts)
+                .customContext(contexts)
                 .build() ?: throw fail("Inspetor Exception 9000: Internal error.")
         )
     }

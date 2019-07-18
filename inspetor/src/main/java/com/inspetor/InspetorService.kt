@@ -7,6 +7,7 @@
 //
 package com.inspetor
 
+import android.app.Activity
 import android.content.Context
 
 interface InspetorService {
@@ -95,18 +96,18 @@ interface InspetorService {
     /**
      * Send password reset data to Inspetor
      *
-     * @param account_email
+     * @param accountEmail
      * @return void
      */
-    fun trackPasswordReset(account_email: String): Boolean?
+    fun trackPasswordReset(accountEmail: String): Boolean?
 
     /**
      * Send password recovery data to Inspetor
      *
-     * @param account_email
+     * @param accountEmail
      * @return void
      */
-    fun trackPasswordRecovery(account_email: String): Boolean?
+    fun trackPasswordRecovery(accountEmail: String): Boolean?
 
     /**
      * Send sale creation data to Inspetor

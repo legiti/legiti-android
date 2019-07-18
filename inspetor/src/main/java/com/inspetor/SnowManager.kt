@@ -8,8 +8,7 @@ import com.snowplowanalytics.snowplow.tracker.Tracker
 import com.snowplowanalytics.snowplow.tracker.emitter.BufferOption
 import com.snowplowanalytics.snowplow.tracker.emitter.HttpMethod
 import com.snowplowanalytics.snowplow.tracker.emitter.RequestSecurity
-import com.snowplowanalytics.snowplow.tracker.events.SelfDescribing
-import com.snowplowanalytics.snowplow.tracker.payload.SelfDescribingJson
+import com.snowplowanalytics.snowplow.tracker.utils.LogLevel
 
 object SnowManager {
     private lateinit var trackerName: String
@@ -40,16 +39,14 @@ object SnowManager {
     }
 
     fun setupTracker(context: Context): Tracker? {
-        val emitter = Emitter.EmitterBuilder(collectorUri, context)
+        val emitter = Emitter.EmitterBuilder(collectorUri, context.applicationContext)
             .method(httpMethod)
             .option(bufferOption)
             .security(protocolType)
             .build() ?: throw fail("Inspetor Exception 9000: Internal error.")
 
-        Tracker.instance().globalContexts.clear()
-
         return Tracker.init(
-            Tracker.TrackerBuilder(emitter, trackerName, appId, context)
+            Tracker.TrackerBuilder(emitter, trackerName, appId, context.applicationContext)
                 .base64(base64Encoded)
                 .platform(DevicePlatforms.Mobile)
                 .subject(Subject.SubjectBuilder().context(context).build())
@@ -58,6 +55,7 @@ object SnowManager {
                 .foregroundTimeout(180)   // Timeout after 5 minutes (default is 10)
                 .backgroundTimeout(60)
                 .geoLocationContext(true)
+                .level(LogLevel.DEBUG)
                 .applicationContext(true)
                 .mobileContext(true)
                 .build()
