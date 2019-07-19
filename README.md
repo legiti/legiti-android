@@ -60,7 +60,7 @@ The whole code to instantiate our lib is gonna be like:
 ```
 After that, you can use all of our tracking methods without errors. We have a section to explain a little more of each function you'll see here, but don't worry too much right now. These are our first steps together, right?
 
-Ok, but we'll start to code for real now, so we **strongly** recommend you to create an InspetorManager object (*like a **Singleton***). We trully believe that it's better if you call our library as a singleton to avoid instantiate the same class and trackers many times per user. Confusing? Relax, we're kind enough to show you how to do it.
+Ok, but we'll start to code for real now, so we **strongly** recommend you to create an InspetorManager object (*like a **Singleton***). We trully believe that it's better if you call our library as a singleton to avoid instantiate the same class and trackers many times per user. At the same time, with a singleton as the one bellow, you keep the 2 setup functions together and you can call just one function that does all initialization in your classes and don't have to pass config everytime. Confusing? Relax, we're kind enough to show you how to do it.
 
 ```
   package com.android.yourapplication
@@ -89,49 +89,33 @@ Now, wherever you need to call some Inspetor function, you just need to import t
 
 I'm supposing you did an amazing job until this moment, so let's move on. It's time to make some calls and track some data. Nice, huh? Here we go.
 
-If you've already read the [general Inspetor files](https://inspetor.github.io/slate/#introduction), you should be aware of all of Inspetor requests and trackers, so our intention here is just to show you how to use the PHP version of some of them.
+If you've already read the [general Inspetor files](https://inspetor.github.io/slate/#introduction), you should be aware of all of Inspetor requests and trackers, so our intention here is just to show you how to use the Kotlin version of some of them.
 
 Let's imagine that you want to put a tracker in your *"create transaction"* flow to send some data that the best Antifraud team should analyze and tell you if it's a fraud or not. So, it's intuitive that you need to call the *inspetorSaleCreation* and pass the data of that sale, right?
 
-Yeah, but we must ask you a little favor. Considering the fraud context, it's possible that not all of your transaction data
-help us to indenfity fraud, so we created a **Model** for each instance we use (remember what is a Model [here](https://inspetor.github.io/slate/#models)) that you must build and fill with it's needed. Let's see a snippet.
+Yeah, it's exactly that and that's how you do it! 
 
 ```
-<?php
+package com.android.yourapplication
 
-namespace NiceCompany\SaleFolder;
+import ...
 
-use NiceCompany\Inspetor\InspetorClass;
 
-class Sale {
-  ...
-
-  public function someCompanyFunction() {
-      // $company_sale is an example object of the company with sale data
-      $inspetor_sale = $this->inspetorSaleBuilder($company_sale);
-
-      $this->inspetor = new InspetorClass();
-
-      if($inspetor_sale) {
-          $inspetor->getClient()->trackSaleCreation($inspetor_sale);
-      }
+class MainActivity : AppCompatActivity() {
+  override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        
+        InspetorManager.setup(this) // I'm supposing you're using the singleton we've talking, ok?
+  }
+  
+  @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+  override fun onResume() {
+        super.onResume()
+    
+        InspetorManager.inspetor.trackSaleCreation(sale_id)
   }
 
-  public function inspetorSaleBuilder($company_sale) {
-      $model = $this->inspetor->getClient()->getInspetorSale();
-
-      $model->setId($company_sale->getId());
-      $model->setAccountId($company_sale->getUserId());
-      $model->setStatus($company_sale->getSaleStatus());
-      $model->setIsFraud($company_sale->getFraud());
-      $model->set...
-
-      return $model;
-  }
-  ...
-}
-
-?>
 ```
 
 Following this code and assuming you've builded your model with all required parametes (find out each Model's required parameters [here](https://inspetor.github.io/slate/#models)), we *someCompanyFunction* run, the Inspetor code inside will send a great object with all we need to know about that sale. Easy?
