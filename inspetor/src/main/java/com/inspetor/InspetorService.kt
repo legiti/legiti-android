@@ -146,5 +146,5 @@ interface InspetorService {
      *
      * @return boolean
      */
-    fun hasConfig(): Boolean
+    fun isConfigured(): Boolean
 }

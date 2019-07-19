@@ -25,13 +25,16 @@ import java.util.*
 
 internal class InspetorResource(_config: InspetorConfig): InspetorResourceService {
     private var tracker: Tracker?
+    private var context: Context?
 
     init {
         SnowManager.init(_config)
         this.tracker = null
+        this.context = null
     }
 
     override fun setContext(context: Context) {
+        this.context = context
         tracker = SnowManager.setupTracker(context.applicationContext) ?: throw fail("Inspetor Exception 9000: Internal error.")
     }
 
@@ -125,7 +128,9 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
         val contexts: ArrayList<SelfDescribingJson>? = arrayListOf(inspetorContext)
 
         if(tracker != null) {
-            Tracker.instance().globalContexts.clear()
+//            Tracker.instance().globalContexts.clear()
+        } else {
+            tracker = this.context?.let { SnowManager.setupTracker(it) }
         }
 
         tracker?.track(
@@ -134,6 +139,8 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
                 .customContext(contexts)
                 .build() ?: throw fail("Inspetor Exception 9000: Internal error.")
         )
+
+        tracker?.emitter?.flush()
     }
 
     private fun getNormalizedTimestamp(): String {

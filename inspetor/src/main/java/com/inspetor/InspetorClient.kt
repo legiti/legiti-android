@@ -13,11 +13,15 @@ import android.content.Context
 class InspetorClient() : InspetorService {
     private var inspetorResource: InspetorResource?
     private var inspetorConfig: InspetorConfig?
+    private var doneSetup: Boolean
 
     init {
         this.inspetorResource = null
         this.inspetorConfig = null
+        this.doneSetup = false
     }
+
+
 
     override fun setup(config: InspetorConfig) {
         inspetorConfig = config
@@ -26,6 +30,8 @@ class InspetorClient() : InspetorService {
 
         require(validateTrackerName(config.trackerName)) { "Inspetor Exception 9002: trackerName should have 2 terms (e.g. \"tracker.name\")." }
 
+
+        doneSetup = true
     }
 
     override fun collect(context: Context) {
@@ -38,8 +44,10 @@ class InspetorClient() : InspetorService {
         inspetorResource?.setContext(context)
     }
 
-    override fun hasConfig(): Boolean {
-        return (!inspetorConfig?.appId.isNullOrBlank() && !inspetorConfig?.trackerName.isNullOrBlank())
+    override fun isConfigured(): Boolean {
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+
+        return doneSetup
     }
 
     override fun trackLogin(account_id: String): Boolean? {
@@ -131,6 +139,10 @@ class InspetorClient() : InspetorService {
         return (trackerNameArray.count() == 2 &&
                 trackerNameArray[0].count() > 1 &&
                 trackerNameArray[1].count() > 1)
+    }
+
+    private fun hasConfig(): Boolean {
+        return (!inspetorConfig?.appId.isNullOrBlank() && !inspetorConfig?.trackerName.isNullOrBlank())
     }
 
 }
