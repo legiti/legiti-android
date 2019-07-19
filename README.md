@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
   override fun onResume() {
         super.onResume()
         ...
-        if (sale_id != null) {
+        if (sale_id != null && InspetorManager.inspetor.isConfigured()) {
           InspetorManager.inspetor.trackSaleCreation(sale_id)
         }
         ...
