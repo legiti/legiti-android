@@ -7,6 +7,7 @@
 //
 package com.inspetor
 
+import android.app.Activity
 import android.content.Context
 
 interface InspetorResourceService {
@@ -44,7 +45,7 @@ interface InspetorResourceService {
      * @param action
      * @return void
      */
-    fun trackPasswordRecoveryAction(account_email: String, action: PassRecoveryAction): Boolean
+    fun trackPasswordRecoveryAction(accountEmail: String, action: PassRecoveryAction): Boolean
 
     /**
      * Send item transfer data to Inspetor

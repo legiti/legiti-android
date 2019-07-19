@@ -5,7 +5,7 @@ apply from: 'keystore.gradle'
 ext {
     groupId = 'com.github.inspetor'
     artifactId = "inspetor"
-    libVersion = "1.0.8"
+    libVersion = "1.2.0"
 }
 
 version = libVersion
@@ -60,9 +60,9 @@ bintray {
         name = "inspetor"
         version {
             name = libVersion
-            desc = 'This is updated version 1.0.8 of Inspetor Android Library.'
+            desc = 'This is updated version 1.2.0 of Inspetor Android Library.'
             released = new Date()
-            vcsTag = '1.0.8'
+            vcsTag = '1.2.0'
         }
     }
 }
