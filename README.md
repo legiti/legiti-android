@@ -41,7 +41,7 @@ dependencies {
   (e.g. 'com.github.inspetor:inspetor:1.2.1@aar')
 }
  ```
-It means you're importing our Inspetor arctifact from Nexus repo into your project. The **transitive** statement says that the library will be imported with it dependencies. It's really important, so ***don't forget it**!
+It means you're importing our Inspetor arctifact from Nexus repo into your project. The **transitive** statement says that the library will be imported with it dependencies. It's really important, so ***don't forget it***!
 
 With these 2 steps, you're already able to use our nice code! Let's try? 
 
