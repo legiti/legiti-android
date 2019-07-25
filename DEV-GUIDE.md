@@ -4,7 +4,7 @@
 </p>
 
 # Inspetor Antifraud
-Antrifraud Inspetor library for PHP. 
+Antrifraud Inspetor library for Android. 
 
 ## Description
 This READ ME file is special! It should help you, my dear developer, on your "*publishing library road*". Let's chat about library development and publishing new versions 'cause the war against fraud never ends.
