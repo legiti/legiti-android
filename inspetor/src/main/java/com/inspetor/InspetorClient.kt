@@ -7,7 +7,6 @@
 //
 package com.inspetor
 
-import android.app.Activity
 import android.content.Context
 
 class InspetorClient() : InspetorService {
@@ -21,20 +20,17 @@ class InspetorClient() : InspetorService {
         this.doneSetup = false
     }
 
-
-
-    override fun setup(config: InspetorConfig) {
-        inspetorConfig = config
+    override fun setup(trackerName: String, appId: String, devEnv: Boolean?, inspetorEnv: Boolean?) {
+        this.inspetorConfig = InspetorConfig(trackerName, appId, devEnv)
 
         require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
 
-        require(validateTrackerName(config.trackerName)) { "Inspetor Exception 9002: trackerName should have 2 terms (e.g. \"tracker.name\")." }
-
+        require(validateTrackerName(trackerName)) { "Inspetor Exception 9002: trackerName should have 2 terms (e.g. \"tracker.name\")." }
 
         doneSetup = true
     }
 
-    override fun collect(context: Context) {
+    override fun setContext(context: Context) {
         val config = inspetorConfig ?: return
 
         require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
@@ -50,16 +46,16 @@ class InspetorClient() : InspetorService {
         return doneSetup
     }
 
-    override fun trackLogin(account_id: String): Boolean? {
+    override fun trackLogin(account_email: String): Boolean? {
         require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        return inspetorResource?.trackAccountAuthAction(account_id, AuthAction.ACCOUNT_LOGIN_ACTION)
+        return inspetorResource?.trackAccountAuthAction(account_email, AuthAction.ACCOUNT_LOGIN_ACTION)
     }
 
-    override fun trackLogout(account_id: String): Boolean? {
+    override fun trackLogout(account_email: String): Boolean? {
         require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        return inspetorResource?.trackAccountAuthAction(account_id, AuthAction.ACCOUNT_LOGOUT_ACTION)
+        return inspetorResource?.trackAccountAuthAction(account_email, AuthAction.ACCOUNT_LOGOUT_ACTION)
     }
 
     override fun trackAccountCreation(account_id: String): Boolean? {

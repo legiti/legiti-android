@@ -9,5 +9,6 @@ package com.inspetor
 data class InspetorConfig(
     var trackerName: String,
     var appId: String,
-    var devEnv: Boolean = InspetorDependencies.DEFAULT_DEV_MODE
+    var devEnv: Boolean? = InspetorDependencies.DEFAULT_DEV_MODE,
+    var inspetorEnv: Boolean? = InspetorDependencies.DEFAULT_INSPETOR_MODE
 )
