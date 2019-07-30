@@ -24,11 +24,11 @@ interface InspetorResourceService {
     /**
      * Send auth data to Inspetor
      *
-     * @param account_id;
+     * @param account_email;
      * @param action
      * @return void
      */
-    fun trackAccountAuthAction(account_id: String, action: AuthAction): Boolean
+    fun trackAccountAuthAction(account_email: String, action: AuthAction): Boolean
 
     /**
      * Send event data to Inspetor

@@ -27,8 +27,13 @@ object SnowManager {
         this.bufferOption = switchBufferOptionSize(InspetorDependencies.DEFAULT_BUFFERSIZE_OPTION)
         this.httpMethod = switchHttpMethod(InspetorDependencies.DEFAULT_HTTP_METHOD_TYPE)
         this.protocolType = switchSecurityProtocol(InspetorDependencies.DEFAULT_PROTOCOL_TYPE)
-        if (config.devEnv) {
+
+        if (config.devEnv == true) {
             this.collectorUri = InspetorDependencies.DEFAULT_COLLECTOR_DEV_URI
+        }
+
+        if (config.inspetorEnv == true) {
+            this.collectorUri = InspetorDependencies.DEFAULT_COLLECTOR_INSPETOR_URI
         }
 
         require(verifySetup())

@@ -80,18 +80,18 @@ interface InspetorService {
     /**
      * Send account login data to Inspetor
      *
-     * @param account_id
+     * @param account_email
      * @return void
      */
-    fun trackLogin(account_id: String): Boolean?
+    fun trackLogin(account_email: String): Boolean?
 
     /**
      * Send account logout data to Inspetor
      *
-     * @param account_id
+     * @param account_email
      * @return void
      */
-    fun trackLogout(account_id: String): Boolean?
+    fun trackLogout(account_email: String): Boolean?
 
     /**
      * Send password reset data to Inspetor
@@ -131,15 +131,17 @@ interface InspetorService {
      * @param context
      * @return void
      */
-    fun collect(context: Context)
+    fun setContext(context: Context)
 
     /**
      * Set config to InspetorClient
      *
-     * @param config
+     * @param trackerName
+     * @param appId
+     * @param devEnv
      * @return void
      */
-    fun setup(config: InspetorConfig)
+    fun setup(trackerName: String, appId: String, devEnv: Boolean?, inspetorEnv: Boolean?)
 
     /**
      * Verify if config exists

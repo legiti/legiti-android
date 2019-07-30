@@ -54,9 +54,9 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
         return true
     }
 
-    override fun trackAccountAuthAction(account_id: String, action: AuthAction): Boolean {
+    override fun trackAccountAuthAction(account_email: String, action: AuthAction): Boolean {
         val datamap: HashMap<String, String>? = hashMapOf(
-            "auth_account_id" to encodeData(account_id),
+            "auth_account_email" to encodeData(account_email),
             "auth_timestamp" to encodeData(getNormalizedTimestamp())
         )
         if (datamap != null) {
@@ -64,7 +64,7 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
         }
 
         if (action.rawValue() == AuthAction.ACCOUNT_LOGIN_ACTION.rawValue()) {
-            tracker?.subject?.setUserId(account_id)
+            tracker?.subject?.setUserId(account_email)
         }
 
         return true
