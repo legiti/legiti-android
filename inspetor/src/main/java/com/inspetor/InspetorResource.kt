@@ -7,13 +7,10 @@
 //
 package com.inspetor
 
-import android.Manifest
-import android.app.Activity
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Build
+import android.provider.Settings.Secure
 import android.util.Base64
-import androidx.core.app.ActivityCompat
 import com.snowplowanalytics.snowplow.tracker.Tracker
 import com.snowplowanalytics.snowplow.tracker.events.SelfDescribing
 import com.snowplowanalytics.snowplow.tracker.payload.SelfDescribingJson
@@ -22,24 +19,28 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
+import com.scottyab.rootbeer.RootBeer
+
+
 
 internal class InspetorResource(_config: InspetorConfig): InspetorResourceService {
     private var tracker: Tracker?
     private var context: Context?
+    private var mobileContext: SelfDescribingJson?
+    private var deviceId: String?
 
     init {
         SnowManager.init(_config)
         this.tracker = null
         this.context = null
+        this.mobileContext = null
+        this.deviceId = null
     }
 
     override fun setContext(context: Context) {
         this.context = context
+        this.mobileContext = setupInspetorContext(context)
         tracker = SnowManager.setupTracker(context.applicationContext) ?: throw fail("Inspetor Exception 9000: Internal error.")
-    }
-
-    private fun fail(message: String): Throwable {
-        throw Exception(message)
     }
 
     override fun trackAccountAction(account_id: String, action: AccountAction): Boolean {
@@ -127,11 +128,11 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
             InspetorDependencies.FRONTEND_CONTEXT_SCHEMA_VERSION, contextMap)
         val contexts: ArrayList<SelfDescribingJson>? = arrayListOf(inspetorContext)
 
-        if(tracker != null) {
-//            Tracker.instance().globalContexts.clear()
-        } else {
+        if(tracker == null) {
             tracker = this.context?.let { SnowManager.setupTracker(it) }
         }
+
+        this.mobileContext?.let{ contexts?.add(it) }
 
         tracker?.track(
             SelfDescribing.builder()
@@ -157,5 +158,49 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
 
     private fun encodeData(data: String): String {
         return Base64.encodeToString(data.toByteArray(), Base64.NO_WRAP)
+    }
+
+    private fun fail(message: String): Throwable {
+        throw Exception(message)
+    }
+
+    private fun setupInspetorContext(context: Context): SelfDescribingJson {
+        val contextMap: HashMap<String, String?>
+        val isEmutator: Boolean = checkBasic()
+        val rootBeer = RootBeer(context)
+
+        if (this.deviceId == null) {
+            this.deviceId = Secure.getString(context.contentResolver, Secure.ANDROID_ID)
+        }
+
+        contextMap = hashMapOf(
+            "device_fingerprint" to this.deviceId,
+            "is_rooted" to rootBeer.isRootedWithoutBusyBoxCheck.toString(),
+            "is_simulator" to isEmutator.toString()
+        )
+
+        return SelfDescribingJson(
+            InspetorDependencies.FRONTEND_FINGERPRINT_SCHEMA_VERSION, contextMap
+        )
+    }
+
+    private fun checkBasic(): Boolean {
+       return Build.FINGERPRINT.startsWith("generic")
+               || Build.MODEL.contains("google_sdk")
+               || Build.MODEL.toLowerCase().contains("droid4x")
+               || Build.MODEL.contains("Emulator")
+               || Build.MODEL.contains("Android SDK built for x86")
+               || Build.MANUFACTURER.contains("Genymotion")
+               || Build.HARDWARE == "goldfish"
+               || Build.HARDWARE == "vbox86"
+               || Build.PRODUCT == "sdk"
+               || Build.PRODUCT == "google_sdk"
+               || Build.PRODUCT == "sdk_x86"
+               || Build.PRODUCT == "vbox86p"
+               || Build.BOARD.toLowerCase().contains("nox")
+               || Build.BOOTLOADER.toLowerCase().contains("nox")
+               || Build.HARDWARE.toLowerCase().contains("nox")
+               || Build.PRODUCT.toLowerCase().contains("nox")
+               || Build.SERIAL.toLowerCase().contains("nox")
     }
 }
