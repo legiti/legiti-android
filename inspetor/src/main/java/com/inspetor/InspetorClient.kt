@@ -46,16 +46,16 @@ class InspetorClient() : InspetorService {
         return doneSetup
     }
 
-    override fun trackLogin(account_email: String): Boolean? {
+    override fun trackLogin(account_email: String, account_id: String): Boolean? {
         require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        return inspetorResource?.trackAccountAuthAction(account_email, AuthAction.ACCOUNT_LOGIN_ACTION)
+        return inspetorResource?.trackAccountAuthAction(account_email, account_id, AuthAction.ACCOUNT_LOGIN_ACTION)
     }
 
-    override fun trackLogout(account_email: String): Boolean? {
+    override fun trackLogout(account_email: String, account_id: String): Boolean? {
         require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        return inspetorResource?.trackAccountAuthAction(account_email, AuthAction.ACCOUNT_LOGOUT_ACTION)
+        return inspetorResource?.trackAccountAuthAction(account_email, account_id, AuthAction.ACCOUNT_LOGOUT_ACTION)
     }
 
     override fun trackAccountCreation(account_id: String): Boolean? {
@@ -128,6 +128,12 @@ class InspetorClient() : InspetorService {
         require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
         return inspetorResource?.trackPasswordRecoveryAction(accountEmail, PassRecoveryAction.PASSWORD_RECOVERY_ACTION)
+    }
+
+    override fun trackScreenView(screen_name: String): Boolean? {
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+
+        return inspetorResource?.trackScreenView(screen_name)
     }
 
     private fun validateTrackerName(trackerName: String): Boolean {

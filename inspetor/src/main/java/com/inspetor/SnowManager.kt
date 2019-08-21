@@ -63,6 +63,7 @@ object SnowManager {
                 .level(LogLevel.DEBUG)
                 .applicationContext(true)
                 .mobileContext(true)
+                .screenviewEvents(true)
                 .build()
         ) ?: throw fail("Inspetor Exception 9000: Internal error.")
     }

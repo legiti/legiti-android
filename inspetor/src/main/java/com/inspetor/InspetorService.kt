@@ -81,17 +81,19 @@ interface InspetorService {
      * Send account login data to Inspetor
      *
      * @param account_email
+     * @param account_id
      * @return void
      */
-    fun trackLogin(account_email: String): Boolean?
+    fun trackLogin(account_email: String, account_id: String): Boolean?
 
     /**
      * Send account logout data to Inspetor
      *
      * @param account_email
+     * @param account_id
      * @return void
      */
-    fun trackLogout(account_email: String): Boolean?
+    fun trackLogout(account_email: String, account_id: String): Boolean?
 
     /**
      * Send password reset data to Inspetor
@@ -124,6 +126,14 @@ interface InspetorService {
      * @return void
      */
     fun trackSaleUpdate(sale_id: String): Boolean?
+
+    /**
+     * Send screen data to Inspetor
+     *
+     * @param screen_name
+     * @return void
+     */
+    fun trackScreenView(screen_name: String): Boolean?
 
     /**
      * Send context to InspetorClient
