@@ -7,7 +7,6 @@
 //
 package com.inspetor
 
-import android.app.Activity
 import android.content.Context
 
 interface InspetorResourceService {
@@ -28,7 +27,7 @@ interface InspetorResourceService {
      * @param action
      * @return void
      */
-    fun trackAccountAuthAction(account_email: String, action: AuthAction): Boolean
+    fun trackAccountAuthAction(account_email: String, account_id: String, action: AuthAction): Boolean
 
     /**
      * Send event data to Inspetor
@@ -65,6 +64,13 @@ interface InspetorResourceService {
      */
     fun trackSaleAction(sale_id: String, action: SaleAction): Boolean
 
+    /**
+     * Send page data to Inspetor
+     *
+     * @param page_title;
+     * @return void
+     */
+    fun trackPageView(page_title: String): Boolean
 
     /**
      * Set context to use Snowplow
