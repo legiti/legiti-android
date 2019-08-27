@@ -27,6 +27,10 @@ class InspetorClient() : InspetorService {
 
         require(validateTrackerName(trackerName)) { "Inspetor Exception 9002: trackerName should have 2 terms (e.g. \"tracker.name\")." }
 
+        val config = this.inspetorConfig ?: return
+
+        inspetorResource = InspetorResource(config)
+
         doneSetup = true
     }
 
@@ -145,6 +149,17 @@ class InspetorClient() : InspetorService {
 
     private fun hasConfig(): Boolean {
         return (!inspetorConfig?.appId.isNullOrBlank() && !inspetorConfig?.trackerName.isNullOrBlank())
+    }
+
+    internal fun setContextWithoutConfig(context: Context?): Boolean {
+        if (context != null) {
+            this.setup("inspetor.init", "0001", devEnv = true, inspetorEnv = true)
+            this.setContext(context)
+
+            return true
+        }
+
+        return false
     }
 
 }
