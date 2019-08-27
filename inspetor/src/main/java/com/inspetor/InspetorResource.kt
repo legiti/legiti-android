@@ -124,12 +124,12 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
         return true
     }
 
-    override fun trackScreenView(screen_name: String): Boolean {
+    override fun trackPageView(page_title: String): Boolean {
         val contexts: ArrayList<SelfDescribingJson>? = arrayListOf()
         this.mobileContext?.let{ contexts?.add(it) }
         this.tracker?.track(
             ScreenView.builder()
-                .name(screen_name)
+                .name(page_title)
                 .id(UUID.randomUUID().toString())
                 .customContext(contexts)
                 .build())

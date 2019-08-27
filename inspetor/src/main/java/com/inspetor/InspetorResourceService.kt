@@ -67,10 +67,10 @@ interface InspetorResourceService {
     /**
      * Send page data to Inspetor
      *
-     * @param screen_name;
+     * @param page_title;
      * @return void
      */
-    fun trackScreenView(screen_name: String): Boolean
+    fun trackPageView(page_title: String): Boolean
 
     /**
      * Set context to use Snowplow

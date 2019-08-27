@@ -133,7 +133,7 @@ interface InspetorService {
      * @param screen_name
      * @return void
      */
-    fun trackScreenView(screen_name: String): Boolean?
+    fun trackPageView(screen_name: String): Boolean?
 
     /**
      * Send context to InspetorClient

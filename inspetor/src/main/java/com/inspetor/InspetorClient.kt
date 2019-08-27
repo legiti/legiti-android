@@ -130,10 +130,10 @@ class InspetorClient() : InspetorService {
         return inspetorResource?.trackPasswordRecoveryAction(accountEmail, PassRecoveryAction.PASSWORD_RECOVERY_ACTION)
     }
 
-    override fun trackScreenView(screen_name: String): Boolean? {
+    override fun trackPageView(page_title: String): Boolean? {
         require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        return inspetorResource?.trackScreenView(screen_name)
+        return inspetorResource?.trackPageView(page_title)
     }
 
     private fun validateTrackerName(trackerName: String): Boolean {
