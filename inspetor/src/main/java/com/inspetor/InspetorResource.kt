@@ -143,7 +143,8 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
             "action" to action
         )
         val inspetorContext = SelfDescribingJson(
-            InspetorDependencies.FRONTEND_CONTEXT_SCHEMA_VERSION, contextMap)
+            InspetorDependencies.FRONTEND_CONTEXT_SCHEMA_VERSION, contextMap
+        )
         val contexts: ArrayList<SelfDescribingJson>? = arrayListOf(inspetorContext)
 
         if(tracker == null) {

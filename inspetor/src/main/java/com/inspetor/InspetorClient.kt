@@ -13,35 +13,44 @@ class InspetorClient() : InspetorService {
     private var inspetorResource: InspetorResource?
     private var inspetorConfig: InspetorConfig?
     private var doneSetup: Boolean
+    private var context: Context?
 
     init {
         this.inspetorResource = null
         this.inspetorConfig = null
         this.doneSetup = false
+        this.context = null
     }
 
     override fun setup(trackerName: String, appId: String, devEnv: Boolean?, inspetorEnv: Boolean?) {
-        this.inspetorConfig = InspetorConfig(trackerName, appId, devEnv)
-
-        require(hasConfig()) { "Exception 9001: appId and trackerName are required parameters."}
+        if (appId.isNullOrBlank() || trackerName.isNullOrBlank()) {
+            throw Exception("Exception 9001: appId and trackerName are required parameters.")
+        }
 
         require(validateTrackerName(trackerName)) { "Inspetor Exception 9002: trackerName should have 2 terms (e.g. \"tracker.name\")." }
 
-        val config = this.inspetorConfig ?: return
+        this.inspetorConfig = InspetorConfig(trackerName, appId, devEnv, inspetorEnv)
 
-        inspetorResource = InspetorResource(config)
+        if (this.context != null) {
+            this.setContext(context!!)
+            doneSetup = true
+        } else {
+            throw Exception("Inspetor Exception 9000: Could not get the context please pass it to the setContext function.")
+        }
 
-        doneSetup = true
     }
 
     override fun setContext(context: Context) {
-        val config = inspetorConfig ?: return
+        val config = this.inspetorConfig ?: return
+
+        if (this.context == null) {
+            this.context = context
+        }
 
         require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        inspetorResource = InspetorResource(config)
-
-        inspetorResource?.setContext(context)
+        this.inspetorResource = InspetorResource(config)
+        this.inspetorResource!!.setContext(context)
     }
 
     override fun isConfigured(): Boolean {
@@ -153,9 +162,7 @@ class InspetorClient() : InspetorService {
 
     internal fun setContextWithoutConfig(context: Context?): Boolean {
         if (context != null) {
-            this.setup("inspetor.init", "0001", devEnv = true, inspetorEnv = true)
-            this.setContext(context)
-
+            this.context = context
             return true
         }
 

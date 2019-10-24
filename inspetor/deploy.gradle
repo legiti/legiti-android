@@ -5,7 +5,7 @@ apply from: 'keystore.gradle'
 ext {
     groupId = 'com.github.inspetor'
     artifactId = "inspetor"
-    libVersion = "1.3.0-beta"
+    libVersion = "1.3.6-beta"
 }
 
 version = libVersion

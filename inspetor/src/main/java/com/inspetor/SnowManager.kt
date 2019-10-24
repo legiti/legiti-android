@@ -56,14 +56,14 @@ object SnowManager {
                 .platform(DevicePlatforms.Mobile)
                 .subject(Subject.SubjectBuilder().context(context).build())
                 .sessionContext(true)
-                .sessionCheckInterval(5) // Checks every 10 seconds (default is 15)
-                .foregroundTimeout(180)   // Timeout after 5 minutes (default is 10)
-                .backgroundTimeout(60)
-                .geoLocationContext(true)
-                .level(LogLevel.DEBUG)
+                .sessionCheckInterval(10) // Checks every 10 seconds (default is 15)
+                .foregroundTimeout(300)   // Timeout after 5 minutes (default is 10)
+                .backgroundTimeout(120)
+                .geoLocationContext(false) // Since we are not being able to get the location anyway
+                .level(LogLevel.VERBOSE)
                 .applicationContext(true)
                 .mobileContext(true)
-                .screenviewEvents(true)
+                .screenviewEvents(true) // Snowplow can auto track the screenView events
                 .build()
         ) ?: throw fail("Inspetor Exception 9000: Internal error.")
     }
