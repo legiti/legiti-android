@@ -60,7 +60,6 @@ object SnowManager {
                 .foregroundTimeout(300)   // Timeout after 5 minutes (default is 10)
                 .backgroundTimeout(120)
                 .geoLocationContext(false) // Since we are not being able to get the location anyway
-                .level(LogLevel.VERBOSE)
                 .applicationContext(true)
                 .mobileContext(true)
                 .build()
