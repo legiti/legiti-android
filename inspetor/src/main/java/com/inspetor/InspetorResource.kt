@@ -127,12 +127,20 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
     override fun trackPageView(page_title: String): Boolean {
         val contexts: ArrayList<SelfDescribingJson>? = arrayListOf()
         this.mobileContext?.let{ contexts?.add(it) }
-        this.tracker?.track(
+
+        if(tracker == null) {
+            tracker = this.context?.let { SnowManager.setupTracker(it) }
+        }
+
+        tracker?.track(
             ScreenView.builder()
                 .name(page_title)
                 .id(UUID.randomUUID().toString())
                 .customContext(contexts)
-                .build())
+                .build() ?: throw fail("Inspetor Exception 9000: Internal error.")
+        )
+
+        tracker?.emitter?.flush()
 
         return true
     }

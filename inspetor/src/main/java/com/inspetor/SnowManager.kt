@@ -63,7 +63,6 @@ object SnowManager {
                 .level(LogLevel.VERBOSE)
                 .applicationContext(true)
                 .mobileContext(true)
-                .screenviewEvents(true) // Snowplow can auto track the screenView events
                 .build()
         ) ?: throw fail("Inspetor Exception 9000: Internal error.")
     }
