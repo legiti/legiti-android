@@ -26,149 +26,184 @@ import android.net.ConnectivityManager
 import com.snowplowanalytics.snowplow.tracker.events.ScreenView
 import java.security.MessageDigest
 
-internal class InspetorResource(_config: InspetorConfig): InspetorResourceService {
+internal class InspetorResource(config: InspetorConfig, androidContext: Context): InspetorResourceService {
 
-    private var tracker: Tracker?
-    private var context: Context?
-    private var mobileContext: SelfDescribingJson?
-    private var deviceId: String?
+    private var spTracker: Tracker
+    private var androidContext: Context
+    private var inspetorDeviceIdContext: SelfDescribingJson
 
     init {
-        SnowManager.init(_config)
-        this.tracker = null
-        this.context = null
-        this.mobileContext = null
-        this.deviceId = null
-    }
-
-    override fun setContext(context: Context) {
-        this.context = context
-        this.mobileContext = setupInspetorContext(context)
-        tracker = SnowManager.setupTracker(context.applicationContext) ?: throw fail("Inspetor Exception 9000: Internal error.")
+        SnowplowManager.init(config)
+        this.androidContext = androidContext
+        this.spTracker = SnowplowManager.setupTracker(this.androidContext.applicationContext) ?: throw fail("Inspetor Exception 9000: Internal error.")
+        this.inspetorDeviceIdContext = setupInspetorDeviceIdContext()
     }
 
     override fun trackAccountAction(account_id: String, action: AccountAction): Boolean {
-        val datamap: HashMap<String, String>? = hashMapOf(
+        val datamap: HashMap<String, String> = hashMapOf(
             "account_id" to encodeData(account_id),
             "account_timestamp" to encodeData(getNormalizedTimestamp())
         )
-        if (datamap != null) {
-            trackUnstructuredEvent(InspetorDependencies.FRONTEND_ACCOUNT_SCHEMA_VERSION, datamap, action.rawValue())
-        }
+
+        this.trackUnstructuredEvent(
+            InspetorDependencies.FRONTEND_ACCOUNT_SCHEMA_VERSION,
+            datamap,
+            action.rawValue()
+        )
 
         return true
     }
 
     override fun trackAccountAuthAction(account_email: String, account_id: String, action: AuthAction): Boolean {
-        val datamap: HashMap<String, String>? = hashMapOf(
+        val datamap: HashMap<String, String> = hashMapOf(
             "auth_account_email" to encodeData(account_email),
             "auth_timestamp" to encodeData(getNormalizedTimestamp()),
             "auth_account_id" to encodeData(account_id)
         )
-        if (datamap != null) {
-            trackUnstructuredEvent(InspetorDependencies.FRONTEND_AUTH_SCHEMA_VERSION, datamap, action.rawValue())
-        }
+
+        this.trackUnstructuredEvent(
+            InspetorDependencies.FRONTEND_AUTH_SCHEMA_VERSION,
+            datamap,
+            action.rawValue()
+        )
+
 
         if (action.rawValue() == AuthAction.ACCOUNT_LOGIN_ACTION.rawValue()) {
-            tracker?.subject?.setUserId(account_email)
+            this.spTracker.subject?.setUserId(account_email)
         }
 
         return true
     }
 
     override fun trackEventAction(event_id: String, action: EventAction): Boolean {
-        val datamap: HashMap<String, String>? = hashMapOf(
+        val datamap: HashMap<String, String> = hashMapOf(
             "event_id" to encodeData(event_id),
             "event_timestamp" to encodeData(getNormalizedTimestamp())
         )
-        if (datamap != null) {
-            trackUnstructuredEvent(InspetorDependencies.FRONTEND_EVENT_SCHEMA_VERSION, datamap, action.rawValue())
-        }
+
+        this.trackUnstructuredEvent(
+            InspetorDependencies.FRONTEND_EVENT_SCHEMA_VERSION,
+            datamap,
+            action.rawValue()
+        )
+
 
         return true
     }
 
     override fun trackPasswordRecoveryAction(accountEmail: String, action: PassRecoveryAction): Boolean {
-        val datamap: HashMap<String, String>? = hashMapOf(
+        val datamap: HashMap<String, String> = hashMapOf(
             "pass_recovery_email" to encodeData(accountEmail),
             "pass_recovery_timestamp" to encodeData(getNormalizedTimestamp())
         )
-        if (datamap != null) {
-            trackUnstructuredEvent(InspetorDependencies.FRONTEND_PASS_RECOVERY_SCHEMA_VERSION, datamap, action.rawValue())
-        }
+
+        this.trackUnstructuredEvent(
+            InspetorDependencies.FRONTEND_PASS_RECOVERY_SCHEMA_VERSION,
+            datamap,
+            action.rawValue()
+        )
 
         return true
     }
 
     override fun trackItemTransferAction(transfer_id: String, action: TransferAction): Boolean {
-        val datamap: HashMap<String, String>? = hashMapOf(
+        val datamap: HashMap<String, String> = hashMapOf(
             "transfer_id" to encodeData(transfer_id),
             "transfer_timestamp" to encodeData(getNormalizedTimestamp())
         )
-        if (datamap != null) {
-            trackUnstructuredEvent(InspetorDependencies.FRONTEND_TRANSFER_SCHEMA_VERSION, datamap, action.rawValue())
-        }
+
+        this.trackUnstructuredEvent(
+            InspetorDependencies.FRONTEND_TRANSFER_SCHEMA_VERSION,
+            datamap,
+            action.rawValue()
+        )
 
         return true
     }
 
     override fun trackSaleAction(sale_id: String, action: SaleAction): Boolean {
-        val datamap: HashMap<String, String>? = hashMapOf(
+        val datamap: HashMap<String, String> = hashMapOf(
             "sale_id" to encodeData(sale_id),
             "sale_timestamp" to encodeData(getNormalizedTimestamp())
         )
-        if (datamap != null) {
-            trackUnstructuredEvent(InspetorDependencies.FRONTEND_SALE_SCHEMA_VERSION, datamap, action.rawValue())
-        }
+
+        this.trackUnstructuredEvent(
+            InspetorDependencies.FRONTEND_SALE_SCHEMA_VERSION,
+            datamap,
+            action.rawValue()
+        )
 
         return true
     }
 
     override fun trackPageView(page_title: String): Boolean {
-        val contexts: ArrayList<SelfDescribingJson>? = arrayListOf()
-        this.mobileContext?.let{ contexts?.add(it) }
+        val spContexts: ArrayList<SelfDescribingJson> = arrayListOf()
+        this.inspetorDeviceIdContext.let{ spContexts.add(it) }
 
-        if(tracker == null) {
-            tracker = this.context?.let { SnowManager.setupTracker(it) }
-        }
-
-        tracker?.track(
+        this.spTracker.track(
             ScreenView.builder()
                 .name(page_title)
                 .id(UUID.randomUUID().toString())
-                .customContext(contexts)
+                .customContext(spContexts)
                 .build() ?: throw fail("Inspetor Exception 9000: Internal error.")
         )
 
-        tracker?.emitter?.flush()
+        // Making sure there are no more events to be sent
+        this.spTracker.emitter?.flush()
 
         return true
     }
 
     private fun trackUnstructuredEvent(schema: String, data: HashMap<String, String>, action: String) {
         val inspetorData = SelfDescribingJson(schema, data)
-        val contextMap: HashMap<String, String>? = hashMapOf(
-            "action" to action
+
+        val spContexts: ArrayList<SelfDescribingJson> = arrayListOf(
+            this.setupActionContext(action)
         )
-        val inspetorContext = SelfDescribingJson(
-            InspetorDependencies.FRONTEND_CONTEXT_SCHEMA_VERSION, contextMap
-        )
-        val contexts: ArrayList<SelfDescribingJson>? = arrayListOf(inspetorContext)
 
-        if(tracker == null) {
-            tracker = this.context?.let { SnowManager.setupTracker(it) }
-        }
+        this.inspetorDeviceIdContext.let{ spContexts.add(it) }
 
-        this.mobileContext?.let{ contexts?.add(it) }
-
-        tracker?.track(
+        this.spTracker.track(
             SelfDescribing.builder()
                 .eventData(inspetorData)
-                .customContext(contexts)
+                .customContext(spContexts)
                 .build() ?: throw fail("Inspetor Exception 9000: Internal error.")
         )
 
-        tracker?.emitter?.flush()
+        // Making sure there are no more events to be sent
+        this.spTracker.emitter?.flush()
+    }
+
+    private fun setupActionContext(action: String): SelfDescribingJson {
+        val contextMap: HashMap<String, String>? = hashMapOf(
+            "action" to action
+        )
+
+        return SelfDescribingJson(
+            InspetorDependencies.FRONTEND_CONTEXT_SCHEMA_VERSION,
+            contextMap
+        )
+
+    }
+
+    private fun setupInspetorDeviceIdContext(): SelfDescribingJson {
+        val contextMap: HashMap<String, Any?>
+        val isSimulator: Boolean = checkBasic()
+        val isRooted = RootBeer(this.androidContext)
+        val isVPN = checkVPN()
+        val deviceId = Secure.getString(this.androidContext.contentResolver, Secure.ANDROID_ID)
+
+        contextMap = hashMapOf(
+            "device_fingerprint" to hashDeviceId(deviceId),
+            "is_rooted" to isRooted.isRootedWithoutBusyBoxCheck,
+            "is_simulator" to isSimulator,
+            "is_vpn" to isVPN
+        )
+
+        return SelfDescribingJson(
+            InspetorDependencies.FRONTEND_FINGERPRINT_SCHEMA_VERSION,
+            contextMap
+        )
     }
 
     private fun getNormalizedTimestamp(): String {
@@ -191,28 +226,6 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
         throw Exception(message)
     }
 
-    private fun setupInspetorContext(context: Context): SelfDescribingJson {
-        val contextMap: HashMap<String, Any?>
-        val isSimulator: Boolean = checkBasic()
-        val isRooted = RootBeer(context)
-        val isVPN = checkVPN(context)
-
-        if (this.deviceId == null) {
-            this.deviceId = Secure.getString(context.contentResolver, Secure.ANDROID_ID)
-        }
-
-        contextMap = hashMapOf(
-            "device_fingerprint" to hashDeviceId(this.deviceId),
-            "is_rooted" to isRooted.isRootedWithoutBusyBoxCheck,
-            "is_simulator" to isSimulator,
-            "is_vpn" to isVPN
-        )
-
-        return SelfDescribingJson(
-            InspetorDependencies.FRONTEND_FINGERPRINT_SCHEMA_VERSION, contextMap
-        )
-    }
-
     private fun checkBasic(): Boolean {
        return Build.FINGERPRINT.startsWith("generic")
                || Build.MODEL.contains("google_sdk")
@@ -233,8 +246,8 @@ internal class InspetorResource(_config: InspetorConfig): InspetorResourceServic
                || Build.SERIAL.toLowerCase().contains("nox")
     }
 
-    private fun checkVPN(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    private fun checkVPN(): Boolean {
+        val connectivityManager = this.androidContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkList: ArrayList<String> = arrayListOf()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

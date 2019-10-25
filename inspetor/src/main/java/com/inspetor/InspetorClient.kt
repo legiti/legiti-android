@@ -13,17 +13,17 @@ class InspetorClient() : InspetorService {
     private var inspetorResource: InspetorResource?
     private var inspetorConfig: InspetorConfig?
     private var doneSetup: Boolean
-    private var context: Context?
+    private var androidContext: Context?
 
     init {
         this.inspetorResource = null
         this.inspetorConfig = null
         this.doneSetup = false
-        this.context = null
+        this.androidContext = null
     }
 
     override fun setup(trackerName: String, appId: String, devEnv: Boolean?, inspetorEnv: Boolean?) {
-        if (appId.isNullOrBlank() || trackerName.isNullOrBlank()) {
+        if (appId.isEmpty() || trackerName.isEmpty()) {
             throw Exception("Exception 9001: appId and trackerName are required parameters.")
         }
 
@@ -31,8 +31,8 @@ class InspetorClient() : InspetorService {
 
         this.inspetorConfig = InspetorConfig(trackerName, appId, devEnv, inspetorEnv)
 
-        if (this.context != null) {
-            this.setContext(context!!)
+        if (this.androidContext != null) {
+            this.setContext(androidContext!!)
             doneSetup = true
         } else {
             throw Exception("Inspetor Exception 9000: Could not get the context please pass it to the setContext function.")
@@ -43,14 +43,13 @@ class InspetorClient() : InspetorService {
     override fun setContext(context: Context) {
         val config = this.inspetorConfig ?: return
 
-        if (this.context == null) {
-            this.context = context
+        if (this.androidContext == null) {
+            this.androidContext = context
         }
 
         require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        this.inspetorResource = InspetorResource(config)
-        this.inspetorResource!!.setContext(context)
+        this.inspetorResource = InspetorResource(config, context)
     }
 
     override fun isConfigured(): Boolean {
@@ -162,7 +161,7 @@ class InspetorClient() : InspetorService {
 
     internal fun setContextWithoutConfig(context: Context?): Boolean {
         if (context != null) {
-            this.context = context
+            this.androidContext = context
             return true
         }
 
