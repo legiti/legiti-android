@@ -2,13 +2,14 @@ package com.inspetor
 
 import android.content.ContentProvider
 import android.content.ContentValues
-import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 
 class InspetorProvider: ContentProvider() {
     override fun onCreate(): Boolean {
-        Inspetor.sharedInstance().setContextWithoutConfig(context)
+        Inspetor.sharedInstance().setContextWithoutConfig(
+            this.context?.applicationContext
+        )
 
         return true
     }

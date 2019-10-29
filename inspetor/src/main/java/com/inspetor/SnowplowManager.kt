@@ -8,9 +8,8 @@ import com.snowplowanalytics.snowplow.tracker.Tracker
 import com.snowplowanalytics.snowplow.tracker.emitter.BufferOption
 import com.snowplowanalytics.snowplow.tracker.emitter.HttpMethod
 import com.snowplowanalytics.snowplow.tracker.emitter.RequestSecurity
-import com.snowplowanalytics.snowplow.tracker.utils.LogLevel
 
-object SnowManager {
+object SnowplowManager {
     private lateinit var trackerName: String
     private lateinit var appId: String
     private lateinit var collectorUri: String
@@ -40,30 +39,28 @@ object SnowManager {
     }
 
     private fun verifySetup(): Boolean {
-        return (appId != "" && trackerName != "")
+        return (this.appId != "" && this.trackerName != "")
     }
 
-    fun setupTracker(context: Context): Tracker? {
-        val emitter = Emitter.EmitterBuilder(collectorUri, context.applicationContext)
-            .method(httpMethod)
-            .option(bufferOption)
-            .security(protocolType)
+    fun setupTracker(androidContext: Context): Tracker? {
+        val emitter = Emitter.EmitterBuilder(collectorUri, androidContext.applicationContext)
+            .method(this.httpMethod)
+            .option(this.bufferOption)
+            .security(this.protocolType)
             .build() ?: throw fail("Inspetor Exception 9000: Internal error.")
 
         return Tracker.init(
-            Tracker.TrackerBuilder(emitter, trackerName, appId, context.applicationContext)
-                .base64(base64Encoded)
+            Tracker.TrackerBuilder(emitter, this.trackerName, this.appId, androidContext.applicationContext)
+                .base64(this.base64Encoded)
                 .platform(DevicePlatforms.Mobile)
-                .subject(Subject.SubjectBuilder().context(context).build())
+                .subject(Subject.SubjectBuilder().context(androidContext).build())
                 .sessionContext(true)
-                .sessionCheckInterval(5) // Checks every 10 seconds (default is 15)
-                .foregroundTimeout(180)   // Timeout after 5 minutes (default is 10)
-                .backgroundTimeout(60)
-                .geoLocationContext(true)
-                .level(LogLevel.DEBUG)
+                .sessionCheckInterval(10) // Checks every 10 seconds (default is 15)
+                .foregroundTimeout(300)   // Timeout after 5 minutes (default is 10)
+                .backgroundTimeout(120)
+                .geoLocationContext(false) // Since we are not being able to get the location anyway
                 .applicationContext(true)
                 .mobileContext(true)
-                .screenviewEvents(true)
                 .build()
         ) ?: throw fail("Inspetor Exception 9000: Internal error.")
     }

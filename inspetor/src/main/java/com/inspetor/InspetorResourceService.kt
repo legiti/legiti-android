@@ -7,7 +7,6 @@
 //
 package com.inspetor
 
-import android.content.Context
 
 interface InspetorResourceService {
 
@@ -71,13 +70,5 @@ interface InspetorResourceService {
      * @return void
      */
     fun trackPageView(page_title: String): Boolean
-
-    /**
-     * Set context to use Snowplow
-     *
-     * @param context;
-     * @return void
-     */
-    fun setContext(context: Context)
 
 }
