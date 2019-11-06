@@ -40,7 +40,7 @@ internal class InspetorResource(config: InspetorConfig, androidContext: Context)
     }
 
     override fun trackAccountAction(account_id: String, action: AccountAction): Boolean {
-        val datamap: HashMap<String, String> = hashMapOf(
+        val datamap: HashMap<String, String?> = hashMapOf(
             "account_id" to encodeData(account_id),
             "account_timestamp" to encodeData(getNormalizedTimestamp())
         )
@@ -54,8 +54,8 @@ internal class InspetorResource(config: InspetorConfig, androidContext: Context)
         return true
     }
 
-    override fun trackAccountAuthAction(account_email: String, account_id: String, action: AuthAction): Boolean {
-        val datamap: HashMap<String, String> = hashMapOf(
+    override fun trackAccountAuthAction(account_email: String, account_id: String?, action: AuthAction): Boolean {
+        val datamap: HashMap<String, String?> = hashMapOf(
             "auth_account_email" to encodeData(account_email),
             "auth_timestamp" to encodeData(getNormalizedTimestamp()),
             "auth_account_id" to encodeData(account_id)
@@ -76,7 +76,7 @@ internal class InspetorResource(config: InspetorConfig, androidContext: Context)
     }
 
     override fun trackEventAction(event_id: String, action: EventAction): Boolean {
-        val datamap: HashMap<String, String> = hashMapOf(
+        val datamap: HashMap<String, String?> = hashMapOf(
             "event_id" to encodeData(event_id),
             "event_timestamp" to encodeData(getNormalizedTimestamp())
         )
@@ -92,7 +92,7 @@ internal class InspetorResource(config: InspetorConfig, androidContext: Context)
     }
 
     override fun trackPasswordRecoveryAction(accountEmail: String, action: PassRecoveryAction): Boolean {
-        val datamap: HashMap<String, String> = hashMapOf(
+        val datamap: HashMap<String, String?> = hashMapOf(
             "pass_recovery_email" to encodeData(accountEmail),
             "pass_recovery_timestamp" to encodeData(getNormalizedTimestamp())
         )
@@ -107,7 +107,7 @@ internal class InspetorResource(config: InspetorConfig, androidContext: Context)
     }
 
     override fun trackItemTransferAction(transfer_id: String, action: TransferAction): Boolean {
-        val datamap: HashMap<String, String> = hashMapOf(
+        val datamap: HashMap<String, String?> = hashMapOf(
             "transfer_id" to encodeData(transfer_id),
             "transfer_timestamp" to encodeData(getNormalizedTimestamp())
         )
@@ -122,7 +122,7 @@ internal class InspetorResource(config: InspetorConfig, androidContext: Context)
     }
 
     override fun trackSaleAction(sale_id: String, action: SaleAction): Boolean {
-        val datamap: HashMap<String, String> = hashMapOf(
+        val datamap: HashMap<String, String?> = hashMapOf(
             "sale_id" to encodeData(sale_id),
             "sale_timestamp" to encodeData(getNormalizedTimestamp())
         )
@@ -154,7 +154,7 @@ internal class InspetorResource(config: InspetorConfig, androidContext: Context)
         return true
     }
 
-    private fun trackUnstructuredEvent(schema: String, data: HashMap<String, String>, action: String) {
+    private fun trackUnstructuredEvent(schema: String, data: HashMap<String, String?>, action: String) {
         val inspetorData = SelfDescribingJson(schema, data)
 
         val spContexts: ArrayList<SelfDescribingJson> = arrayListOf(
@@ -218,8 +218,11 @@ internal class InspetorResource(config: InspetorConfig, androidContext: Context)
         }
     }
 
-    private fun encodeData(data: String): String {
-        return Base64.encodeToString(data.toByteArray(), Base64.NO_WRAP)
+    private fun encodeData(data: String?): String? {
+        if (data != null) {
+            return Base64.encodeToString(data.toByteArray(), Base64.NO_WRAP)
+        }
+        return null
     }
 
     private fun fail(message: String): Throwable {

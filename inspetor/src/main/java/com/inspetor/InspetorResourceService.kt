@@ -26,7 +26,7 @@ interface InspetorResourceService {
      * @param action
      * @return void
      */
-    fun trackAccountAuthAction(account_email: String, account_id: String, action: AuthAction): Boolean
+    fun trackAccountAuthAction(account_email: String, account_id: String?, action: AuthAction): Boolean
 
     /**
      * Send event data to Inspetor

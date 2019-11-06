@@ -22,7 +22,7 @@ class InspetorClient() : InspetorService {
         this.androidContext = null
     }
 
-    override fun setup(trackerName: String, appId: String, devEnv: Boolean?, inspetorEnv: Boolean?) {
+    override fun setup(trackerName: String, appId: String, devEnv: Boolean, inspetorEnv: Boolean) {
         if (appId.isEmpty() || trackerName.isEmpty()) {
             throw Exception("Exception 9001: appId and trackerName are required parameters.")
         }
@@ -41,15 +41,15 @@ class InspetorClient() : InspetorService {
     }
 
     override fun setContext(context: Context) {
-        val config = this.inspetorConfig ?: return
+        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+
+        val config = this.inspetorConfig
 
         if (this.androidContext == null) {
             this.androidContext = context
         }
 
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
-
-        this.inspetorResource = InspetorResource(config, context)
+        this.inspetorResource = InspetorResource(config!!, context)
     }
 
     override fun isConfigured(): Boolean {
@@ -58,13 +58,13 @@ class InspetorClient() : InspetorService {
         return doneSetup
     }
 
-    override fun trackLogin(account_email: String, account_id: String): Boolean? {
+    override fun trackLogin(account_email: String, account_id: String?): Boolean? {
         require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
         return inspetorResource?.trackAccountAuthAction(account_email, account_id, AuthAction.ACCOUNT_LOGIN_ACTION)
     }
 
-    override fun trackLogout(account_email: String, account_id: String): Boolean? {
+    override fun trackLogout(account_email: String, account_id: String?): Boolean? {
         require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
         return inspetorResource?.trackAccountAuthAction(account_email, account_id, AuthAction.ACCOUNT_LOGOUT_ACTION)

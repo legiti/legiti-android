@@ -84,7 +84,7 @@ interface InspetorService {
      * @param account_id
      * @return void
      */
-    fun trackLogin(account_email: String, account_id: String): Boolean?
+    fun trackLogin(account_email: String, account_id: String?): Boolean?
 
     /**
      * Send account logout data to Inspetor
@@ -93,7 +93,7 @@ interface InspetorService {
      * @param account_id
      * @return void
      */
-    fun trackLogout(account_email: String, account_id: String): Boolean?
+    fun trackLogout(account_email: String, account_id: String?): Boolean?
 
     /**
      * Send password reset data to Inspetor
@@ -151,7 +151,7 @@ interface InspetorService {
      * @param devEnv
      * @return void
      */
-    fun setup(trackerName: String, appId: String, devEnv: Boolean?, inspetorEnv: Boolean?)
+    fun setup(trackerName: String, appId: String, devEnv: Boolean = false, inspetorEnv: Boolean = false)
 
     /**
      * Verify if config exists
