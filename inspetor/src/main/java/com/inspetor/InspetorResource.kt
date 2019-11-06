@@ -33,13 +33,15 @@ internal class InspetorResource(config: InspetorConfig, androidContext: Context)
 
     private var spTracker: Tracker
     private var androidContext: Context
+    private var inspetorDeviceData: InspetorDeviceData
     private var inspetorDeviceIdContext: SelfDescribingJson
 
     init {
         SnowplowManager.init(config)
         this.androidContext = androidContext
-        this.spTracker = SnowplowManager.setupTracker(this.androidContext.applicationContext) ?: throw fail("Inspetor Exception 9000: Internal error.")
-        this.inspetorDeviceIdContext = setupInspetorDeviceIdContext()
+        this.spTracker = SnowplowManager.setupTracker(this.androidContext) ?: throw fail("Inspetor Exception 9000: Internal error.")
+        this.inspetorDeviceData = InspetorDeviceData(androidContext)
+        this.inspetorDeviceIdContext = this.getFingerprintContext()
     }
 
     override fun trackAccountAction(account_id: String, action: AccountAction): Boolean {
@@ -189,26 +191,6 @@ internal class InspetorResource(config: InspetorConfig, androidContext: Context)
 
     }
 
-    private fun setupInspetorDeviceIdContext(): SelfDescribingJson {
-        val contextMap: HashMap<String, Any?>
-        val isSimulator: Boolean = checkBasic()
-        val isRooted = RootBeer(this.androidContext)
-        val isVPN = checkVPN()
-        val deviceId = Secure.getString(this.androidContext.contentResolver, Secure.ANDROID_ID)
-
-        contextMap = hashMapOf(
-            "device_fingerprint" to hashDeviceId(deviceId),
-            "is_rooted" to isRooted.isRootedWithoutBusyBoxCheck,
-            "is_simulator" to isSimulator,
-            "is_vpn" to isVPN
-        )
-
-        return SelfDescribingJson(
-            InspetorDependencies.FRONTEND_FINGERPRINT_SCHEMA_VERSION,
-            contextMap
-        )
-    }
-
     private fun getNormalizedTimestamp(): String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             val dateTime = LocalDateTime.now(ZoneId.of("UTC"))
@@ -232,59 +214,15 @@ internal class InspetorResource(config: InspetorConfig, androidContext: Context)
         throw Exception(message)
     }
 
-    private fun checkBasic(): Boolean {
-       return Build.FINGERPRINT.startsWith("generic")
-               || Build.MODEL.contains("google_sdk")
-               || Build.MODEL.toLowerCase().contains("droid4x")
-               || Build.MODEL.contains("Emulator")
-               || Build.MODEL.contains("Android SDK built for x86")
-               || Build.MANUFACTURER.contains("Genymotion")
-               || Build.HARDWARE == "goldfish"
-               || Build.HARDWARE == "vbox86"
-               || Build.PRODUCT == "sdk"
-               || Build.PRODUCT == "google_sdk"
-               || Build.PRODUCT == "sdk_x86"
-               || Build.PRODUCT == "vbox86p"
-               || Build.BOARD.toLowerCase().contains("nox")
-               || Build.BOOTLOADER.toLowerCase().contains("nox")
-               || Build.HARDWARE.toLowerCase().contains("nox")
-               || Build.PRODUCT.toLowerCase().contains("nox")
-               || Build.SERIAL.toLowerCase().contains("nox")
+    private fun getFingerprintContext(): SelfDescribingJson {
+        val deviceData = this.inspetorDeviceData.getDeviceData()
+
+        return SelfDescribingJson(
+            InspetorDependencies.FRONTEND_FINGERPRINT_SCHEMA_VERSION,
+            deviceData
+        )
     }
 
-    private fun checkVPN(): Boolean {
-        val connectivityManager = this.androidContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkList: ArrayList<String> = arrayListOf()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val activeNetwork = connectivityManager.activeNetwork
-            val caps = connectivityManager.getNetworkCapabilities(activeNetwork)
-            val vpnInUse = caps.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
 
-            if (vpnInUse) {
-                return vpnInUse
-            }
-        }
-
-        try {
-            for (networkInterface in Collections.list(getNetworkInterfaces())) {
-                if (networkInterface.isUp)
-                    networkList.add(networkInterface.name)
-            }
-        } catch (ex: Exception) {
-
-        }
-
-        return networkList.contains("tun0") || networkList.contains("ppp0")
-    }
-
-    private fun hashDeviceId(data: String?): String? {
-        if (data == null) {
-            return null
-        }
-
-        val md = MessageDigest.getInstance("SHA-256")
-        val digest = md.digest(data.toByteArray())
-        return digest.fold("", { str, it -> str + "%02x".format(it) })
-    }
 }
