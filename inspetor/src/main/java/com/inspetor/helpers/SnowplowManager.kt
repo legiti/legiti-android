@@ -1,6 +1,7 @@
-package com.inspetor
+package com.inspetor.helpers
 
 import android.content.Context
+import com.inspetor.InspetorConfig
 import com.snowplowanalytics.snowplow.tracker.DevicePlatforms
 import com.snowplowanalytics.snowplow.tracker.Emitter
 import com.snowplowanalytics.snowplow.tracker.Subject
@@ -19,39 +20,44 @@ object SnowplowManager {
     private var base64Encoded: Boolean = false
 
     fun init(config: InspetorConfig) {
-        this.trackerName = config.trackerName
-        this.appId = config.appId
-        this.collectorUri = InspetorDependencies.DEFAULT_COLLECTOR_URI
-        this.base64Encoded = InspetorDependencies.DEFAULT_BASE64_OPTION
-        this.bufferOption = switchBufferOptionSize(InspetorDependencies.DEFAULT_BUFFERSIZE_OPTION)
-        this.httpMethod = switchHttpMethod(InspetorDependencies.DEFAULT_HTTP_METHOD_TYPE)
-        this.protocolType = switchSecurityProtocol(InspetorDependencies.DEFAULT_PROTOCOL_TYPE)
+        trackerName = config.trackerName
+        appId = config.appId
+        collectorUri = InspetorDependencies.DEFAULT_COLLECTOR_URI
+        base64Encoded = InspetorDependencies.DEFAULT_BASE64_OPTION
+        bufferOption =
+            switchBufferOptionSize(InspetorDependencies.DEFAULT_BUFFERSIZE_OPTION)
+        httpMethod =
+            switchHttpMethod(InspetorDependencies.DEFAULT_HTTP_METHOD_TYPE)
+        protocolType =
+            switchSecurityProtocol(InspetorDependencies.DEFAULT_PROTOCOL_TYPE)
 
         if (config.devEnv == true) {
-            this.collectorUri = InspetorDependencies.DEFAULT_COLLECTOR_DEV_URI
+            collectorUri = InspetorDependencies.DEFAULT_COLLECTOR_DEV_URI
         }
 
         if (config.inspetorEnv == true) {
-            this.collectorUri = InspetorDependencies.DEFAULT_COLLECTOR_INSPETOR_URI
+            collectorUri = InspetorDependencies.DEFAULT_COLLECTOR_INSPETOR_URI
         }
 
         require(verifySetup())
     }
 
     private fun verifySetup(): Boolean {
-        return (this.appId != "" && this.trackerName != "")
+        return (appId != "" && trackerName != "")
     }
 
     fun setupTracker(androidContext: Context): Tracker? {
         val emitter = Emitter.EmitterBuilder(collectorUri, androidContext.applicationContext)
-            .method(this.httpMethod)
-            .option(this.bufferOption)
-            .security(this.protocolType)
+            .method(httpMethod)
+            .option(bufferOption)
+            .security(protocolType)
             .build() ?: throw fail("Inspetor Exception 9000: Internal error.")
 
         return Tracker.init(
-            Tracker.TrackerBuilder(emitter, this.trackerName, this.appId, androidContext.applicationContext)
-                .base64(this.base64Encoded)
+            Tracker.TrackerBuilder(emitter,
+                trackerName,
+                appId, androidContext.applicationContext)
+                .base64(base64Encoded)
                 .platform(DevicePlatforms.Mobile)
                 .subject(Subject.SubjectBuilder().context(androidContext).build())
                 .sessionContext(true)

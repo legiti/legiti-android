@@ -1,4 +1,4 @@
-package com.inspetor
+package com.inspetor.helpers
 
 enum class AccountAction: EnumValue {
     ACCOUNT_CREATE_ACTION {

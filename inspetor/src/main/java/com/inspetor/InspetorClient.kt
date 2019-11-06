@@ -8,6 +8,8 @@
 package com.inspetor
 
 import android.content.Context
+import com.inspetor.helpers.*
+import com.inspetor.services.InspetorService
 
 class InspetorClient() : InspetorService {
     private var inspetorResource: InspetorResource?

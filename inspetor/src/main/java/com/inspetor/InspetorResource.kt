@@ -23,10 +23,13 @@ import com.scottyab.rootbeer.RootBeer
 import java.net.NetworkInterface.getNetworkInterfaces
 import android.net.NetworkCapabilities
 import android.net.ConnectivityManager
+import com.inspetor.helpers.*
+import com.inspetor.services.InspetorResourceService
 import com.snowplowanalytics.snowplow.tracker.events.ScreenView
 import java.security.MessageDigest
 
-internal class InspetorResource(config: InspetorConfig, androidContext: Context): InspetorResourceService {
+internal class InspetorResource(config: InspetorConfig, androidContext: Context):
+    InspetorResourceService {
 
     private var spTracker: Tracker
     private var androidContext: Context
