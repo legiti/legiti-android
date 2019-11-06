@@ -7,11 +7,9 @@ import org.junit.Assert.*
 import java.lang.Exception
 import org.mockito.*
 
-class InspetorAndroidTests {
+class UnitTests {
 
-    private val UNIT_TEST_DEFAULT_TRACKER_NAME = "inspetor.test"
     private val UNIT_TEST_DEFAULT_APP_ID = "0123456789"
-
 
     @Test(expected = java.lang.IllegalArgumentException::class)
     fun testSetContextWithoutConfig() {

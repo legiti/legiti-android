@@ -17,10 +17,8 @@ object InspetorDependencies {
     const val DEFAULT_COLLECTOR_INSPETOR_URI: String = "test.useinspetor.com"
     const val DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR: String = "."
     val DEFAULT_HTTP_METHOD_TYPE: HttpMethodType = HttpMethodType.POST
-    val DEFAULT_PROTOCOL_TYPE: RequestSecurityProtocol =
-        RequestSecurityProtocol.HTTPS
-    val DEFAULT_BUFFERSIZE_OPTION: BufferOptionSize =
-        BufferOptionSize.SINGLE //1
+    val DEFAULT_PROTOCOL_TYPE: RequestSecurityProtocol = RequestSecurityProtocol.HTTPS
+    val DEFAULT_BUFFERSIZE_OPTION: BufferOptionSize = BufferOptionSize.SINGLE //1
 
     // Schema versions
     const val FRONTEND_CONTEXT_SCHEMA_VERSION:       String = "iglu:com.inspetor/inspetor_context/jsonschema/1-0-0"
