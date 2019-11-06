@@ -19,20 +19,7 @@ class InspetorAndroidTests {
             context = Mockito.mock(Context::class.java)
         )
     }
-
-//    @Test
-//    fun testCorrectSetup() {
-//        Inspetor.sharedInstance().setContextWithoutConfig(
-//            context = Mockito.mock(Context::class.java)
-//        )
-//        // No need to assert anything since if an exception is thrown the test will fail
-//        Inspetor.sharedInstance().setup(
-//            appId = UNIT_TEST_DEFAULT_APP_ID,
-//            trackerName = UNIT_TEST_DEFAULT_TRACKER_NAME,
-//            devEnv = true
-//        )
-//    }
-
+    
     @Test(expected = Exception::class)
     fun testInvalidTrackerNameTooManyFields() {
         val invalidTrackerNameTooManyFields = "improper.tracker.name.format"

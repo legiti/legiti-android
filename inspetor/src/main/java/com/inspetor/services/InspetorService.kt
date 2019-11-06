@@ -7,7 +7,6 @@
 //
 package com.inspetor.services
 
-import android.app.Activity
 import android.content.Context
 
 interface InspetorService {
@@ -15,85 +14,85 @@ interface InspetorService {
     /**
      * Send account creation data to Inspetor
      *
-     * @param account_id
+     * @param accountId
      * @return void
      */
-    fun trackAccountCreation(account_id: String): Boolean?
+    fun trackAccountCreation(accountId: String): Boolean?
 
     /**
      * Send account update data to Inspetor
      *
-     * @param account_id
+     * @param accountId
      * @return void
      */
-    fun trackAccountUpdate(account_id: String): Boolean?
+    fun trackAccountUpdate(accountId: String): Boolean?
 
     /**
      * Send account deletion data to Inspetor
      *
-     * @param account_id
+     * @param accountId
      * @return void
      */
-    fun trackAccountDeletion(account_id: String): Boolean?
+    fun trackAccountDeletion(accountId: String): Boolean?
 
     /**
      * Send event creation data to Inspetor
      *
-     * @param event_id
+     * @param eventId
      * @return void
      */
-    fun trackEventCreation(event_id: String): Boolean?
+    fun trackEventCreation(eventId: String): Boolean?
 
     /**
      * Send event update data to Inspetor
      *
-     * @param event_id
+     * @param eventId
      * @return void
      */
-    fun trackEventUpdate(event_id: String): Boolean?
+    fun trackEventUpdate(eventId: String): Boolean?
 
     /**
      * Send event deletion data to Inspetor
      *
-     * @param event_id
+     * @param eventId
      * @return void
      */
-    fun trackEventDeletion(event_id: String): Boolean?
+    fun trackEventDeletion(eventId: String): Boolean?
 
     /**
      * Send item transfer creation data to Inspetor
      *
-     * @param transfer_id
+     * @param transferId
      * @return void
      */
-    fun trackItemTransferCreation(transfer_id: String): Boolean?
+    fun trackItemTransferCreation(transferId: String): Boolean?
 
     /**
      * Send item transfer update data to Inspetor
      *
-     * @param transfer_id
+     * @param transferId
      * @return void
      */
-    fun trackItemTransferUpdate(transfer_id: String): Boolean?
+    fun trackItemTransferUpdate(transferId: String): Boolean?
 
 
     /**
      * Send account login data to Inspetor
      *
-     * @param account_email
-     * @param account_id
+     * @param accountEmail
+     * @param accountId
      * @return void
      */
-    fun trackLogin(account_email: String, account_id: String?): Boolean?
+    fun trackLogin(accountEmail: String, accountId: String?): Boolean?
 
     /**
      * Send account logout data to Inspetor
      *
-     * @param account_email
-     * @param account_id
+     * @param accountEmail
+     * @param accountId
      * @return void
      */
-    fun trackLogout(account_email: String, account_id: String?): Boolean?
+    fun trackLogout(accountEmail: String, accountId: String?): Boolean?
 
     /**
      * Send password reset data to Inspetor
@@ -114,26 +113,26 @@ interface InspetorService {
     /**
      * Send sale creation data to Inspetor
      *
-     * @param sale_id
+     * @param saleId
      * @return void
      */
-    fun trackSaleCreation(sale_id: String): Boolean?
+    fun trackSaleCreation(saleId: String): Boolean?
 
     /**
      * Send sale update data to Inspetor
      *
-     * @param sale_id
+     * @param saleId
      * @return void
      */
-    fun trackSaleUpdate(sale_id: String): Boolean?
+    fun trackSaleUpdate(saleId: String): Boolean?
 
     /**
      * Send screen data to Inspetor
      *
-     * @param page_title
+     * @param pageTitle
      * @return void
      */
-    fun trackPageView(page_title: String): Boolean?
+    fun trackPageView(pageTitle: String): Boolean?
 
     /**
      * Send context to InspetorClient
