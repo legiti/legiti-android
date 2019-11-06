@@ -19,7 +19,7 @@ class InspetorAndroidTests {
             context = Mockito.mock(Context::class.java)
         )
     }
-    
+
     @Test(expected = Exception::class)
     fun testInvalidTrackerNameTooManyFields() {
         val invalidTrackerNameTooManyFields = "improper.tracker.name.format"

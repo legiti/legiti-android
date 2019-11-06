@@ -71,7 +71,7 @@ class InspetorClient : InspetorService {
     override fun trackLogin(accountEmail: String, accountId: String?): Boolean? {
         require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        val data = this.createJson(id = accountEmail, prefix = "auth", idSuffix = "accountEmail")
+        val data = this.createJson(id = accountEmail, prefix = "auth", idSuffix = "account_email")
         data["auth_account_id"] =  this.encodeData(accountId)
 
         return inspetorResource?.trackAccountAuthAction(data, AuthAction.ACCOUNT_LOGIN_ACTION)
@@ -80,7 +80,7 @@ class InspetorClient : InspetorService {
     override fun trackLogout(accountEmail: String, accountId: String?): Boolean? {
         require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
 
-        val data = this.createJson(id = accountEmail, prefix = "auth", idSuffix = "accountEmail")
+        val data = this.createJson(id = accountEmail, prefix = "auth", idSuffix = "account_email")
         data["auth_account_id"] =  this.encodeData(accountId)
 
         return inspetorResource?.trackAccountAuthAction(data, AuthAction.ACCOUNT_LOGOUT_ACTION)
