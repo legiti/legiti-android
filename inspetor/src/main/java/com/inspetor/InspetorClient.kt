@@ -22,36 +22,35 @@ import kotlin.collections.HashMap
 class InspetorClient : InspetorService {
     private var inspetorResource: InspetorResource?
     private var inspetorConfig: InspetorConfig?
-    private var doneSetup: Boolean
     private var androidContext: Context?
 
     init {
         this.inspetorResource = null
         this.inspetorConfig = null
-        this.doneSetup = false
         this.androidContext = null
     }
 
     override fun setup(trackerName: String, appId: String, devEnv: Boolean, inspetorEnv: Boolean) {
         if (appId.isEmpty() || trackerName.isEmpty()) {
-            throw Exception("Exception 9001: appId and trackerName are required parameters.")
+            throw InvalidCredentials("Exception 9001: appId and trackerName are required parameters.")
         }
 
-        require(validateTrackerName(trackerName)) { "Inspetor Exception 9002: trackerName should have 2 terms (e.g. \"tracker.name\")." }
+        if (this.validateTrackerName(trackerName)) {
+            throw InvalidCredentials("Inspetor Exception 9002: trackerName should have 2 terms (e.g. \"tracker.name\").")
+        }
 
         this.inspetorConfig = InspetorConfig(trackerName, appId, devEnv, inspetorEnv)
 
         if (this.androidContext != null) {
             this.setContext(androidContext!!)
-            doneSetup = true
         } else {
-            throw Exception("Inspetor Exception 9000: Could not get the context please pass it to the setContext function.")
+            throw ContextNotSetup("Inspetor Exception 9000: Could not get the context please pass it to the setContext function.")
         }
 
     }
 
     override fun setContext(context: Context) {
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+        this.hasConfig()
 
         val config = this.inspetorConfig
 
@@ -63,13 +62,16 @@ class InspetorClient : InspetorService {
     }
 
     override fun isConfigured(): Boolean {
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
-
-        return doneSetup
+        try {
+            this.hasConfig()
+            return true
+        } catch (ex: InvalidCredentials) {
+            return false
+        }
     }
 
     override fun trackLogin(accountEmail: String, accountId: String?): Boolean? {
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+        this.hasConfig()
 
         val data = this.createJson(id = accountEmail, prefix = "auth", idSuffix = "account_email")
         data["auth_account_id"] =  this.encodeData(accountId)
@@ -78,7 +80,7 @@ class InspetorClient : InspetorService {
     }
 
     override fun trackLogout(accountEmail: String, accountId: String?): Boolean? {
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+        this.hasConfig()
 
         val data = this.createJson(id = accountEmail, prefix = "auth", idSuffix = "account_email")
         data["auth_account_id"] =  this.encodeData(accountId)
@@ -87,95 +89,93 @@ class InspetorClient : InspetorService {
     }
 
     override fun trackAccountCreation(accountId: String): Boolean? {
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+        this.hasConfig()
 
         val data = this.createJson(id = accountId, prefix = "account")
         return inspetorResource?.trackAccountAction(data, AccountAction.ACCOUNT_CREATE_ACTION)
     }
 
     override fun trackAccountUpdate(accountId: String): Boolean? {
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+        this.hasConfig()
 
         val data = this.createJson(id = accountId, prefix = "account")
         return inspetorResource?.trackAccountAction(data, AccountAction.ACCOUNT_UPDATE_ACTION)
     }
 
     override fun trackAccountDeletion(accountId: String): Boolean? {
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+        this.hasConfig()
 
         val data = this.createJson(id = accountId, prefix = "account")
         return inspetorResource?.trackAccountAction(data, AccountAction.ACCOUNT_DELETE_ACTION)
     }
 
     override fun trackSaleCreation(saleId: String): Boolean? {
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+        this.hasConfig()
 
         val data = this.createJson(id = saleId, prefix = "sale")
         return inspetorResource?.trackSaleAction(data, SaleAction.SALE_CREATE_ACTION)
     }
 
     override fun trackSaleUpdate(saleId: String): Boolean? {
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+        this.hasConfig()
 
         val data = this.createJson(id = saleId, prefix = "sale")
         return inspetorResource?.trackSaleAction(data, SaleAction.SALE_UPDATE_STATUS_ACTION)
     }
 
     override fun trackEventCreation(eventId: String): Boolean? {
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+        this.hasConfig()
 
         val data = this.createJson(id = eventId, prefix = "event")
         return inspetorResource?.trackEventAction(data, EventAction.EVENT_CREATE_ACTION)
     }
 
     override fun trackEventUpdate(eventId: String): Boolean? {
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+        this.hasConfig()
 
         val data = this.createJson(id = eventId, prefix = "event")
         return inspetorResource?.trackEventAction(data, EventAction.EVENT_UPDATE_ACTION)
     }
 
     override fun trackEventDeletion(eventId: String): Boolean? {
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+        this.hasConfig()
 
         val data = this.createJson(id = eventId, prefix = "event")
         return inspetorResource?.trackEventAction(data, EventAction.EVENT_DELETE_ACTION)
     }
 
     override fun trackItemTransferCreation(transferId: String): Boolean? {
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+        this.hasConfig()
 
         val data = this.createJson(id = transferId, prefix = "transfer")
         return inspetorResource?.trackItemTransferAction(data, TransferAction.TRANSFER_CREATE_ACTION)
     }
 
     override fun trackItemTransferUpdate(transferId: String): Boolean? {
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+        this.hasConfig()
 
         val data = this.createJson(id = transferId, prefix = "transfer")
         return inspetorResource?.trackItemTransferAction(data, TransferAction.TRANSFER_UPDATE_STATUS_ACTION)
     }
 
     override fun trackPasswordReset(accountEmail: String): Boolean? {
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+        this.hasConfig()
 
         val data = this.createJson(id = accountEmail, prefix = "pass_recovery", idSuffix = "email")
         return inspetorResource?.trackPasswordRecoveryAction(data, PassRecoveryAction.PASSWORD_RESET_ACTION)
     }
 
     override fun trackPasswordRecovery(accountEmail: String): Boolean? {
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
+        this.hasConfig()
 
         val data = this.createJson(id = accountEmail, prefix = "pass_recovery", idSuffix = "email")
         return inspetorResource?.trackPasswordRecoveryAction(data, PassRecoveryAction.PASSWORD_RECOVERY_ACTION)
     }
 
     override fun trackPageView(pageTitle: String): Boolean? {
-        require(hasConfig()) { "Inspetor Exception 9001: appId and trackerName are required parameters."}
-
+        this.hasConfig()
         return inspetorResource?.trackPageView(pageTitle)
     }
-
 
     private fun getInspetorTimestamp(): String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
@@ -214,7 +214,6 @@ class InspetorClient : InspetorService {
         return data
     }
 
-
     private fun validateTrackerName(trackerName: String): Boolean {
         val trackerNameArray = trackerName.split(InspetorDependencies.DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR)
         return (trackerNameArray.count() == 2 &&
@@ -222,8 +221,10 @@ class InspetorClient : InspetorService {
                 trackerNameArray[1].count() > 1)
     }
 
-    private fun hasConfig(): Boolean {
-        return (!inspetorConfig?.appId.isNullOrBlank() && !inspetorConfig?.trackerName.isNullOrBlank())
+    private fun hasConfig() {
+        if (!inspetorConfig?.appId.isNullOrBlank() || !inspetorConfig?.trackerName.isNullOrBlank()) {
+            throw InvalidCredentials("Inspetor Exception 9001: appId and trackerName are required parameters.")
+        }
     }
 
     internal fun setContextWithoutConfig(context: Context?): Boolean {

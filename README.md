@@ -1,137 +1,122 @@
 
 <p>
-  <img src="https://github.com/inspetor/slate/blob/master/source/images/logo-color.png" width="200" height="40" alt="Inspetor Logo"> </img>
+ <img src="https://inspetor-assets.s3-sa-east-1.amazonaws.com/images/inspetor-logo.png" width="200" height="40" alt="Inspetor Logo">
 </p>
 
 # Inspetor Antifraud
-Antrifraud Inspetor library for Android.
+Inspetor antifraud SDK for Android.
 
 [ ![Download](https://api.bintray.com/packages/theosato/inspetor-android/inspetor/images/download.svg) ](https://bintray.com/theosato/inspetor-android/inspetor/_latestVersion)
 
 ## Description
-Inspetor is an product developed to help your company to avoid fraudulent transactions. This READ ME file should help you to integrate the Inspetor PHP library into your product with a couple steps. 
+Inspetor is a product developed to help your company avoid fraudulent transactions. This README file should help you to integrate the Inspetor Android library into your product. 
 
-P.S.: the library was made in Kotlin and all of the code you'll see here is Kotlin as well.
+P.S.: This library was made in Kotlin and all of the code you'll see here is in Kotlin as well.
 
 ## Demo
-If you think that this tutorial and whatever you saw 'til now wasn't clear enough, maybe you need some hand's on. Thinking about that, our team builded an Demo App to test our library and you can clone from [here](https://github.com/inspetor/inspetor-android-demo-app). You'll find all of our tracker requests and how to instantiante our library with the best practices. Good luck!
+If you want to see a very simple integration of the library in action you can clone the [inspetor demo app](https://github.com/inspetor/inspetor-android-demo-app). There you find an implementation on how to setup the library and trigger all tracking actions. Apart from that, you find the best practices when using our library.
 
-## Setup Guide
-This is the step-by-step Inspetor integration:
+## How to use
+The Inspetor Android Library can be installed through Maven. To install all you have to do is follow this steps:
 
-### Library Repositories
-When we build an Android library, the most professional way of publish it to multiple clients is upload the library into some known libraries repository as ***Jitpack***, ***JCenter***,  and ***Nexus***. Our stable versions will be into Nexus. Doing that, it's extremely easy to import our library into your project. Take a look in these 2 steps: 
-1) Add this line into your root build.gradle at the end of repositories (if it's not there yet):
+1. Add this line into your root `build.gradle` (**Project**) at the end of repositories (if it's not there yet):
 ```
 allprojects {
   repositories {
-      ...
-    	mavenCentral()
+    ...
+    maven {
+      url "https://dl.bintray.com/theosato/inspetor-android" 
     }
+    jcenter()
+  }
 }
 ```
-The "mavenCentral" call says that your project will be able to use libraries hosted into Nexus repository.
-
-
-2) Then add this dependency:
+2. Add this dependency to your application `build.grandle` (**Module.app**). Remember to change the version to the last one:
 ```
 dependencies {
   ...
   implementation 'com.github.inspetor:inspetor:[version]@aar', { transitive = true }
   (e.g. 'com.github.inspetor:inspetor:1.2.1@aar')
 }
- ```
-It means you're importing our Inspetor arctifact from Nexus repo into your project. The **transitive** statement says that the library will be imported with it dependencies. It's really important, so ***don't forget it***!
+```
 
-With these 2 steps, you're already able to use our nice code! Let's try? 
+The **transitive** statement says that the library will be imported with its dependencies. It's really important, so ***don't forget !***
+
+## API Docs
+You can find more in-depth documentation about our frontend libraries and integrations in general [here](https://inspetor.github.io/docs-frontend).
 
 ### Library setup
-You must provide your config to setup our library. To do that, we created a data class called InspetorConfig (duh) and you just have to do something like that:
+In order to properly relay information to Inspetor's processing pipeline, you'll need to provide customer-specific authentication credentials:
+- App ID (provided by Inspetor)
+- Tracker name (provided by Inspetor)
+
+With these, you can instantiate the Inspetor tracking instance. Our integration library instantiates a singleton instance to prevent multiple trackers from being instantiated, which could otherwise result in duplicate or inconsistent data being relayed to Inspetor. Apart from that, the singleton will let you configure the library only once.
+
+The singleton instance is instantiated as follows:
 
 ```
-  var config = InspetorConfig(trackerName, appId, devEnv)
-  (e.g. InspetorConfig("cool.name", "ID123", true))
+try {
+    Inspetor.sharedInstance().setup(appId="appId", trackerName="trackerName", devEnv=false)
+} catch (ex: Exception) {
+    when (ex) {
+        is InvalidCredentials -> { print("Error: $ex") }
+        is ContextNotSetup -> { Inspetor.sharedInstance().setContext(context=applicationContext) }
+    }
+}
 ```
 
-The ***"appId"*** is an unique identifier that the awesome Inspetor Team will provide you when you start to pay us. The ***"trackerName"*** is a name that will help us to find your data in our database and we'll provide you a couple of them. The ***"devEnv"*** is a boolean statement that you set to say if you want to use the develoment environment or prod. It's false by default. Okay, if you did everything right until now, you're really able to call our functions and to begin your fight against fraudulent transactions with us.
+Be advised, that this function can throw two types of exceptions:
 
-The whole code to instantiate our lib is gonna be like:
-```
-  val inspetor = InspetorClient()
-  inspetor.setup(InspetorConfig("inspetor.test", "123", true))
-  inspetor.collect(this)
-```
-After that, you can use all of our tracking methods without errors. We have a section in our [general files]() to explain a little more of each function you'll see here, but don't worry too much right now. These are our first steps together, right?
+1. `InvalidCredentials` -> If you pass an invalid appId or/and trackerName (empty strings or not in the format required).
+2. `ContextNotSetup` -> The Inspetor Android Library will try to get the `ApplicationContext` automatically on setup, but if this does not work you will need to manually pass the context to the library by using the `setContext` function
 
-Ok, but we'll start to code for real now, so we **strongly** recommend you to create an InspetorManager object (*like a **Singleton***). We trully believe that it's better if you call our library as a singleton to avoid instantiate the same class and trackers many times per user. At the same time, with a singleton as the one bellow, you keep the 2 setup functions together and you can call just one function that does all initialization in your classes and don't have to pass config everytime. Confusing? Relax, we're kind enough to show you how to do it.
+We **strongly** recommend you instantiate the Inspetor Library in your application `onCreate` function, since this way you will configure the library as soon as the app loads enabling you to call the library functions.
 
-```
-  package com.android.yourapplication
+All the access to the Inspetor functions is made by calling the `Inspetor.sharedInstance()`. 
 
-  import android.content.Context
-  import com.inspetor.*
+The parameters passed are the following, in order:
 
-  object InspetorManager {
-      var config = InspetorConfig("inspetor.android", "1234", true)
-      var inspetor: InspetorClient = InspetorClient()
+Parameter | Required | Type | Description 
+--------- | -------- | ---- | ----------- 
+appId | Yes | String | An unique identifier that the Inspetor Team will provide to you
+trackerName | Yes | String | A name that will help us to find your data in our database and we'll provide you with a couple of them
+devEnv | No | Boolean | Indicates that you are testing the library (development environment), meaning that data is not ready for production. All boolean parameters are `false` by default.
 
-      fun setup(context: Context) {
-          inspetor.setup(config)
-          inspetor.collect(context)
-      }
-
-      fun getClient(): InspetorClient {
-          return this.inspetor
-      }
-  }
-```
-
-Now, wherever you need to call some Inspetor function, you just need to import this Class, get the client and _voilà_.
+P.S: always remember to import the library using the `import com.inspetor.Inspetor`
 
 ### Library Calls
+If you've already read the [general Inspetor files](https://inspetor.github.io/docs-frontend), you should be aware of all of Inspetor requests and collection functions.
 
-I'm supposing you did an amazing job until this moment, so let's move on. It's time to make some calls and track some data. Nice, huh? Here we go.
+Here we will show you some details to be aware of if you are calling the Inspetor tracking functions.
 
-If you've already read the [general Inspetor files](https://inspetor.github.io/slate/#introduction), you should be aware of all of Inspetor requests and trackers, so our intention here is just to show you how to use the Kotlin version of one of them. You'll see it's so, so, so, so easy that one request will be enough. 
-
-Let's imagine that you want to put a tracker in your *"create transaction"* flow to send some data that the best Antifraud team should analyze and tell you if it's a fraud or not. So, it's intuitive that you need to call the *inspetorSaleCreation* and pass the data of that sale, right?
-
-Yeah, it's exactly that and that's how you do it! 
+All of out *track functions* can throw exceptions, but the only exception they will through is if you forget to configure the Inspetor Library before calling one of them. Because of that, the Inspetor class has a function called `isConfigured()` that returns a boolean saying if you have configured or not the Inspetor Library. We recommend that when you call any of our tracking functions you check if the Inspetor Library is configured. Here is an example on how to do that:
 
 ```
-package com.android.yourapplication
-
-import ...
-
-class MainActivity : AppCompatActivity() {
-  override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        
-        InspetorManager.setup(this) // I'm supposing you're using the singleton we've talking, ok?
-  }
-  
-  @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-  override fun onResume() {
-        super.onResume()
-        ...
-        if (sale_id != null && InspetorManager.inspetor.isConfigured()) {
-          InspetorManager.inspetor.trackSaleCreation(sale_id)
-        }
-        ...
-  }
-
+if (Inspetor.sharedInstance().isConfigured()) {
+    Inspetor.sharedInstance().trackAccountCreation(accountId="123")
+}
 ```
 
-Following this code and assuming you've builded your singleton carefully, it'll send an request to us saying that a sale with this sale_id was created and we'll be able to join with more data with the same sale_id sent by the [banckend trackers](). 
+#### TrackScreenView
+Different from the Inspetor Javascript Library the track of user pageviews (screenview) is not done automatically. You need to add the function `trackPageView` on every new page.
+We **strongly recommend** that you add the functions inside the `onCreate` function of every file associated with a `contentView` in your app, since this way we can track the pageview/screenview action as soon as it happens. You can see an example of this implementation bellow:
+
+```
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
+
+    if (Inspetor.sharedInstance().isConfigured()) {
+        Inspetor.sharedInstance().trackPageView(pageTitle="login-page")
+    }
+}
+```
+
+### User Location
+The Inspetor Android Library can use the user location to help us provide more accurate results, but it will **never** ask for it. If your app already has access to user location the library will automatically capture it, otherwise, it won't send the location to us.
 
 ### Models
+If you are coming from one of our backend libraries you will notice that we do not use models (e.g. Account, Sale) in our frontend libraries. Here you just need to send us the id of the model (e.g. sale ID, account ID).
 
-If you're some poor full stack developer and had to set your backend with some Inspetor backend library, first I should say that I know your pain. Second: models don't exist here. You can notice that all of the trackers funtions has only one parameter and it's a simple string, so... Forget the models!
-
-### Conclusion
-WOW! It was lovely to work with you, my friend. We trully hope that our instructions were clear and effective. Again, please tell us if we could make something better and contact us [here]().
-
-Now you're invited to join our army against fraud 'cause ***STEALING IS BULLSHIT***!
-
-*DPCL (dope cool)*
+## More Information
+For more info, you should check the [Inspetor Frontend docs](https://inspetor.github.io/docs-frontend)
