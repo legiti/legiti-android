@@ -17,16 +17,13 @@ P.S.: This library was made in Kotlin and all of the code you'll see here is in 
 If you want to see a very simple integration of the library in action you can clone the [inspetor demo app](https://github.com/inspetor/inspetor-android-demo-app). There you find an implementation on how to setup the library and trigger all tracking actions. Apart from that, you find the best practices when using our library.
 
 ## How to use
-The Inspetor Android Library can be installed through Maven. To install all you have to do is follow this steps:
+The Inspetor Android Library can be installed through [Nexus](https://oss.sonatype.org). To install all you have to do is follow this steps:
 
 1. Add this line into your root `build.gradle` (**Project**) at the end of repositories (if it's not there yet):
 ```
 allprojects {
   repositories {
     ...
-    maven {
-      url "https://dl.bintray.com/theosato/inspetor-android" 
-    }
     jcenter()
   }
 }
