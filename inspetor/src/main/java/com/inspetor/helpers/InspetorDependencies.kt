@@ -5,7 +5,7 @@
 //  Created by Matheus Sato on 12/4/19.
 //  Copyright © 2019 Inspetor. All rights reserved.
 //
-package com.inspetor
+package com.inspetor.helpers
 
 object InspetorDependencies {
     //Emitter and Tracker basic config

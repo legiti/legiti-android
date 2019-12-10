@@ -4,7 +4,7 @@
 //  Created by Matheus Sato on 8/5/19.
 //  Copyright © 2019 Inspetor. All rights reserved.
 //
-package com.inspetor
+package com.inspetor.helpers
 
 enum class HttpMethodType {
     GET,

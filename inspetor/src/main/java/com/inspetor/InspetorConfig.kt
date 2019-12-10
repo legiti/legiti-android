@@ -6,6 +6,8 @@
 //
 package com.inspetor
 
+import com.inspetor.helpers.InspetorDependencies
+
 data class InspetorConfig(
     var trackerName: String,
     var appId: String,

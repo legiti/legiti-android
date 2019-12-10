@@ -5,7 +5,9 @@
 //  Created by Matheus Sato on 12/4/19.
 //  Copyright © 2019 Inspetor. All rights reserved.
 //
-package com.inspetor
+package com.inspetor.services
+
+import com.inspetor.helpers.*
 
 
 interface InspetorResourceService {
@@ -17,7 +19,7 @@ interface InspetorResourceService {
      * @param action
      * @return void
      */
-    fun trackAccountAction(account_id: String, action: AccountAction): Boolean
+    fun trackAccountAction(data: HashMap<String, String?>, action: AccountAction): Boolean
 
     /**
      * Send auth data to Inspetor
@@ -26,7 +28,7 @@ interface InspetorResourceService {
      * @param action
      * @return void
      */
-    fun trackAccountAuthAction(account_email: String, account_id: String, action: AuthAction): Boolean
+    fun trackAccountAuthAction(data: HashMap<String, String?>,  action: AuthAction): Boolean
 
     /**
      * Send event data to Inspetor
@@ -34,7 +36,7 @@ interface InspetorResourceService {
      * @param action
      * @return void
      */
-    fun trackEventAction(event_id: String, action: EventAction): Boolean
+    fun trackEventAction(data: HashMap<String, String?>, action: EventAction): Boolean
 
 
     /**
@@ -43,7 +45,7 @@ interface InspetorResourceService {
      * @param action
      * @return void
      */
-    fun trackPasswordRecoveryAction(accountEmail: String, action: PassRecoveryAction): Boolean
+    fun trackPasswordRecoveryAction(data: HashMap<String, String?>, action: PassRecoveryAction): Boolean
 
     /**
      * Send item transfer data to Inspetor
@@ -52,7 +54,7 @@ interface InspetorResourceService {
      * @param action
      * @return void
      */
-    fun trackItemTransferAction(transfer_id: String, action: TransferAction): Boolean
+    fun trackItemTransferAction(data: HashMap<String, String?>, action: TransferAction): Boolean
 
     /**
      * Send Sale data to Inspetor
@@ -61,7 +63,7 @@ interface InspetorResourceService {
      * @param action
      * @return void
      */
-    fun trackSaleAction(sale_id: String, action: SaleAction): Boolean
+    fun trackSaleAction(data: HashMap<String, String?>, action: SaleAction): Boolean
 
     /**
      * Send page data to Inspetor

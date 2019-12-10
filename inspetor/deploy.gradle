@@ -5,7 +5,7 @@ apply from: 'keystore.gradle'
 ext {
     groupId = 'com.github.inspetor'
     artifactId = "inspetor"
-    libVersion = "1.4.2-beta"
+    libVersion = "1.4.6-beta2"
 }
 
 version = libVersion
@@ -94,8 +94,8 @@ install {
 
             developers {
                 developer {
-                    id = 'theosato'
-                    name 'Matheus Sato'
+                    id = 'inspetor'
+                    name 'Inspetor'
                 }
             }
         }
