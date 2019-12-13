@@ -11,6 +11,10 @@ import com.snowplowanalytics.snowplow.tracker.emitter.HttpMethod
 import com.snowplowanalytics.snowplow.tracker.emitter.RequestSecurity
 
 object SnowplowManager {
+
+    private const val DEFAULT_TRACKER_NAME = "inspetor.android.tracker"
+
+
     private lateinit var trackerName: String
     private lateinit var appId: String
     private lateinit var collectorUri: String
@@ -20,16 +24,13 @@ object SnowplowManager {
     private var base64Encoded: Boolean = false
 
     fun init(config: InspetorConfig) {
-        trackerName = config.trackerName
-        appId = config.appId
+        trackerName = this.DEFAULT_TRACKER_NAME
+        appId = config.authToken
         collectorUri = InspetorDependencies.DEFAULT_COLLECTOR_URI
         base64Encoded = InspetorDependencies.DEFAULT_BASE64_OPTION
-        bufferOption =
-            switchBufferOptionSize(InspetorDependencies.DEFAULT_BUFFERSIZE_OPTION)
-        httpMethod =
-            switchHttpMethod(InspetorDependencies.DEFAULT_HTTP_METHOD_TYPE)
-        protocolType =
-            switchSecurityProtocol(InspetorDependencies.DEFAULT_PROTOCOL_TYPE)
+        bufferOption = switchBufferOptionSize(InspetorDependencies.DEFAULT_BUFFER_SIZE_OPTION)
+        httpMethod = switchHttpMethod(InspetorDependencies.DEFAULT_HTTP_METHOD_TYPE)
+        protocolType = switchSecurityProtocol(InspetorDependencies.DEFAULT_PROTOCOL_TYPE)
 
         if (config.devEnv == true) {
             collectorUri = InspetorDependencies.DEFAULT_COLLECTOR_DEV_URI
