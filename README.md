@@ -43,8 +43,7 @@ The **transitive** statement says that the library will be imported with its dep
 You can find more in-depth documentation about our frontend libraries and integrations in general [here](https://inspetor.github.io/docs-frontend).
 
 ### Library setup
-In order to properly relay information to Inspetor's processing pipeline, you'll need to provide your customer-specific authentication credential:
-- authToken (provided by Inspetor)
+In order to properly relay information to Inspetor's processing pipeline, you'll need to provide your customer-specific authentication credential (your authToken, which is provided to you by Inspetor)
 
 **P.S:** Remember to use the *sandbox* `authToken` when you are not in production
 
@@ -76,7 +75,7 @@ The parameters passed are the following, in order:
 
 Parameter | Required | Type | Description
 --------- | -------- | ---- | -----------
-authToken       | Yes | String  | An unique identifier that the Inspetor Team will provide to you
+authToken       | Yes | String  | A unique identifier that the Inspetor Team will provide to you
 
 P.S: always remember to import the library using the `import com.inspetor.Inspetor`
 

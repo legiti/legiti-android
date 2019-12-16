@@ -23,30 +23,30 @@ class UnitTests {
         )
     }
 
-    @Test
+    @Test(expected = InvalidCredentials::class)
     fun testSetupWithoutAuthToken() {
-        assertFalse(InspetorConfig.isValid(""))
+        InspetorConfig("", false)
     }
 
-    @Test
+    @Test(expected = InvalidCredentials::class)
     fun testSetupWithInvalidAuthToken() {
-        assertFalse(InspetorConfig.isValid("123"))
+        InspetorConfig("123", false)
     }
 
-    @Test
+    @Test(expected = InvalidCredentials::class)
     fun testSetupWithAuthTokenMissingPart() {
         val invalidAuthToken = AUTH_TOKEN.split(".").subList(0, 1).joinToString(".")
-        assertFalse(InspetorConfig.isValid(invalidAuthToken))
+        InspetorConfig(invalidAuthToken, false)
     }
 
-    @Test
+    @Test(expected = InvalidCredentials::class)
     fun testSetupWithTokenMissingPrincipalId() {
         val splittedToken = AUTH_TOKEN.split(".")
         val middlePart = "{\"missing_principal_id\": \"not_principal_id\"}".toByteArray()
         val encodedMiddlePart = Base64.getEncoder().encodeToString(middlePart)
         val invalidAuthToken = arrayOf(splittedToken[0], encodedMiddlePart, splittedToken[2]).joinToString(".")
 
-        assertFalse(InspetorConfig.isValid(invalidAuthToken))
+        InspetorConfig(invalidAuthToken, false)
     }
 
     @Test

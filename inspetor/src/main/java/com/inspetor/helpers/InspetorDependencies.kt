@@ -10,7 +10,7 @@ package com.inspetor.helpers
 object InspetorDependencies {
     //Emitter and Tracker basic config
     const val DEFAULT_BASE64_OPTION: Boolean = true
-    const val DEFAULT_COLLECTOR_URI: String = "heimdall-prod .inspcdn.net/prod"
+    const val DEFAULT_COLLECTOR_URI: String = "heimdall-prod.inspcdn.net/prod"
     const val DEFAULT_COLLECTOR_DEV_URI: String = "heimdall-prod.inspcdn.net/staging"
     const val DEFAULT_COLLECTOR_INSPETOR_URI: String = "test.useinspetor.com"
     val DEFAULT_HTTP_METHOD_TYPE: HttpMethodType = HttpMethodType.POST

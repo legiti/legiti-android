@@ -31,11 +31,6 @@ class InspetorClient : InspetorService {
     }
 
     override fun setup(authToken: String, inspetorEnv: Boolean) {
-        if (!InspetorConfig.Companion.isValid(authToken)) {
-            throw InvalidCredentials("Inspetor Exception 9002: authToken not valid")
-        }
-
-
         this.inspetorConfig = InspetorConfig(authToken, inspetorEnv)
 
         if (this.androidContext != null) {
