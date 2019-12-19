@@ -13,7 +13,6 @@ import java.util.*
 @RunWith(RobolectricTestRunner::class)
 class UnitTests {
 
-    private val SANDBOX_AUTH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcmluY2lwYWxJZCI6Imluc3BldG9yX3Rlc3Rfc2FuZGJveCJ9.jo0VeV2k8i2TWP6Us9WSokHhEyVIBOa6hrxGqbDADt8"
     private val AUTH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcmluY2lwYWxJZCI6Imluc3BldG9yX3Rlc3QifQ.cJimBzTsFCC5LMurLelIax_-0ejXYEOZdYIL7Q3GEEQ"
 
     @Test(expected = InvalidCredentials::class)
@@ -58,17 +57,6 @@ class UnitTests {
 
         assertTrue(InspetorConfig.isValid(authToken))
     }
-
-    @Test
-    fun testIfIsSandboxMode() {
-        assertTrue(InspetorConfig(SANDBOX_AUTH_TOKEN, true).devEnv)
-    }
-
-    @Test
-    fun testIfIsNotSandboxMode() {
-        assertFalse(InspetorConfig(AUTH_TOKEN, true).devEnv)
-    }
-
 
     @Test(expected = InvalidCredentials::class)
     fun testAccountCreationWithoutConfig() {

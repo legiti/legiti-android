@@ -150,7 +150,7 @@ interface InspetorService {
      * @param devEnv
      * @return void
      */
-    fun setup(authToken: String, inspetorEnv: Boolean = false)
+    fun setup(authToken: String, inspetorDevEnv: Boolean = false)
 
     /**
      * Verify if config exists

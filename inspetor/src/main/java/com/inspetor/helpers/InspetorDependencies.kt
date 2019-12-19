@@ -10,12 +10,12 @@ package com.inspetor.helpers
 object InspetorDependencies {
     //Emitter and Tracker basic config
     const val DEFAULT_BASE64_OPTION: Boolean = true
-    const val DEFAULT_COLLECTOR_URI: String = "heimdall-prod.inspcdn.net/prod"
-    const val DEFAULT_COLLECTOR_DEV_URI: String = "heimdall-prod.inspcdn.net/staging"
-    const val DEFAULT_COLLECTOR_INSPETOR_URI: String = "test.useinspetor.com"
+    const val DEFAULT_COLLECTOR_URL: String = "heimdall-prod.inspcdn.net/" //Remember to add the "/" to the end of the url
+    const val DEFAULT_COLLECTOR_PROD_PATH: String = "prod"
+    const val DEFAULT_COLLECTOR_STAGING_PATH: String = "staging"
     val DEFAULT_HTTP_METHOD_TYPE: HttpMethodType = HttpMethodType.POST
     val DEFAULT_PROTOCOL_TYPE: RequestSecurityProtocol = RequestSecurityProtocol.HTTPS
-    val DEFAULT_BUFFER_SIZE_OPTION: BufferOptionSize = BufferOptionSize.SINGLE //1
+    val DEFAULT_BUFFER_SIZE_OPTION: BufferOptionSize = BufferOptionSize.SINGLE
 
     // Schema versions
     const val FRONTEND_CONTEXT_SCHEMA_VERSION:       String = "iglu:com.inspetor/inspetor_context/jsonschema/1-0-0"

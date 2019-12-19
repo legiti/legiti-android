@@ -30,13 +30,13 @@ class InspetorClient : InspetorService {
         this.androidContext = null
     }
 
-    override fun setup(authToken: String, inspetorEnv: Boolean) {
-        this.inspetorConfig = InspetorConfig(authToken, inspetorEnv)
+    override fun setup(authToken: String, inspetorDevEnv: Boolean) {
+        this.inspetorConfig = InspetorConfig(authToken, inspetorDevEnv)
 
         if (this.androidContext != null) {
             this.setContext(androidContext!!)
         } else {
-            throw ContextNotSetup("Inspetor Exception 9000: Could not get the context please pass it to the setContext function.")
+            throw ContextNotSetup("Inspetor Exception 9003: Could not get the context please pass it to the setContext function.")
         }
 
     }

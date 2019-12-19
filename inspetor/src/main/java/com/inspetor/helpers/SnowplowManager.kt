@@ -1,6 +1,7 @@
 package com.inspetor.helpers
 
 import android.content.Context
+import com.inspetor.Inspetor
 import com.inspetor.InspetorConfig
 import com.snowplowanalytics.snowplow.tracker.DevicePlatforms
 import com.snowplowanalytics.snowplow.tracker.Emitter
@@ -14,7 +15,6 @@ object SnowplowManager {
 
     private const val DEFAULT_TRACKER_NAME = "inspetor.android.tracker"
 
-
     private lateinit var trackerName: String
     private lateinit var appId: String
     private lateinit var collectorUri: String
@@ -26,25 +26,11 @@ object SnowplowManager {
     fun init(config: InspetorConfig) {
         trackerName = this.DEFAULT_TRACKER_NAME
         appId = config.authToken
-        collectorUri = InspetorDependencies.DEFAULT_COLLECTOR_URI
+        collectorUri = this.createCollectorUrl(config)
         base64Encoded = InspetorDependencies.DEFAULT_BASE64_OPTION
         bufferOption = switchBufferOptionSize(InspetorDependencies.DEFAULT_BUFFER_SIZE_OPTION)
         httpMethod = switchHttpMethod(InspetorDependencies.DEFAULT_HTTP_METHOD_TYPE)
         protocolType = switchSecurityProtocol(InspetorDependencies.DEFAULT_PROTOCOL_TYPE)
-
-        if (config.devEnv == true) {
-            collectorUri = InspetorDependencies.DEFAULT_COLLECTOR_DEV_URI
-        }
-
-        if (config.inspetorEnv == true) {
-            collectorUri = InspetorDependencies.DEFAULT_COLLECTOR_INSPETOR_URI
-        }
-
-        require(verifySetup())
-    }
-
-    private fun verifySetup(): Boolean {
-        return (appId != "" && trackerName != "")
     }
 
     fun setupTracker(androidContext: Context): Tracker? {
@@ -52,7 +38,7 @@ object SnowplowManager {
             .method(httpMethod)
             .option(bufferOption)
             .security(protocolType)
-            .build() ?: throw fail("Inspetor Exception 9000: Internal error.")
+            .build() ?: throw fail()
 
         return Tracker.init(
             Tracker.TrackerBuilder(emitter,
@@ -69,14 +55,14 @@ object SnowplowManager {
                 .applicationContext(true)
                 .mobileContext(true)
                 .build()
-        ) ?: throw fail("Inspetor Exception 9000: Internal error.")
+        ) ?: throw fail()
     }
 
-    private fun fail(message: String): Throwable {
+    private fun fail(message: String = "Inspetor Exception 9000: Internal error."): Throwable {
         throw Exception(message)
     }
 
-    private fun switchBufferOptionSize (bufferOptionSize: BufferOptionSize): BufferOption {
+    private fun switchBufferOptionSize(bufferOptionSize: BufferOptionSize): BufferOption {
         return when(bufferOptionSize) {
             BufferOptionSize.SINGLE -> BufferOption.Single
             BufferOptionSize.DEFAULT -> BufferOption.DefaultGroup
@@ -84,18 +70,27 @@ object SnowplowManager {
         }
     }
 
-    private fun switchSecurityProtocol (requestSecurityProtocol: RequestSecurityProtocol): RequestSecurity {
+    private fun switchSecurityProtocol(requestSecurityProtocol: RequestSecurityProtocol): RequestSecurity {
         return when (requestSecurityProtocol) {
             RequestSecurityProtocol.HTTP -> RequestSecurity.HTTP
             RequestSecurityProtocol.HTTPS -> RequestSecurity.HTTPS
         }
     }
 
-    private fun switchHttpMethod (httpMethodType: HttpMethodType): HttpMethod {
+    private fun switchHttpMethod(httpMethodType: HttpMethodType): HttpMethod {
         return when (httpMethodType) {
             HttpMethodType.GET -> HttpMethod.GET
             HttpMethodType.POST -> HttpMethod.POST
         }
+    }
+
+    private fun createCollectorUrl(config: InspetorConfig): String {
+        val path = when (config.inspetorDevEnv) {
+            true -> InspetorDependencies.DEFAULT_COLLECTOR_STAGING_PATH
+            false -> InspetorDependencies.DEFAULT_COLLECTOR_PROD_PATH
+        }
+
+        return InspetorDependencies.DEFAULT_COLLECTOR_URL + path
     }
 
 }

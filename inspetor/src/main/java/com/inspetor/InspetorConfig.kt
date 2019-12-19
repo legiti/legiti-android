@@ -11,14 +11,12 @@ import org.json.JSONException
 import android.util.Base64
 import com.inspetor.helpers.InvalidCredentials
 
-class InspetorConfig(val authToken: String, val inspetorEnv: Boolean) {
-    var devEnv: Boolean = true
+class InspetorConfig(val authToken: String, val inspetorDevEnv: Boolean) {
 
     init {
-        require(isValid(authToken)) { throw InvalidCredentials("Inspetor Exception 9002: authToken not valid") }
-        val splittedToken = this.authToken.split(".")
-        val principalId = getPrincipalId(splittedToken[1])
-        this.devEnv = principalId!!.contains("sandbox", ignoreCase = true)
+        require(isValid(authToken)) {
+            throw InvalidCredentials("Inspetor Exception 9002: authToken not valid")
+        }
     }
 
 
