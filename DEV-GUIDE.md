@@ -25,6 +25,12 @@ To run the integration test you need to deploy a new version of the library and 
 1. Inside the app you can trigger the desired tracking actions
 1. Check if data corresponding to the events you've triggered appear in `atomic.actions` in the staging DB (You can use the `tracker_name` `inspetor.test` to help you find the results)
 
+### Sending data to staging
+If you want to send data to the staging database you need to set the `InspetorDevEnv` as `true` when initializing the library. Here is an example:
+```
+Inspetor.sharedInstance().setup(authToken, true)
+```
+
 ## How to publish
 To publish a new version of the Inspetor Android Library you need to follow this steps:
 1. Update the version of the library in `Inspetor/deploy.grandle` (should be in line 8)
