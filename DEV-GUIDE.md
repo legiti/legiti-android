@@ -34,4 +34,6 @@ Inspetor.sharedInstance().setup(authToken, true)
 ## How to publish
 To publish a new version of the Inspetor Android Library you need to follow this steps:
 1. Update the version of the library in `Inspetor/deploy.grandle` (should be in line 8)
+1. Rename the file `inspetor/keystore.grandle.default` to `inspetor/keystore.grandle`
+1. Change the placeholder file (You can find the values in 1password)
 1. Inside the repository run the `./gradlew bintrayUpload` command
