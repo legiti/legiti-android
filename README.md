@@ -6,7 +6,7 @@
 # Inspetor Antifraud
 Inspetor antifraud SDK for Android.
 
-[ ![Download](https://api.bintray.com/packages/theosato/inspetor-android/inspetor/images/download.svg) ](https://bintray.com/theosato/inspetor-android/inspetor/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/inspetor/inspetor-android/inspetor/images/download.svg) ](https://bintray.com/inspetor/inspetor-android/inspetor/_latestVersion)
 
 ## Description
 Inspetor is a product developed to help your company avoid fraudulent transactions. This README file should help you to integrate the Inspetor Android library into your product. 
