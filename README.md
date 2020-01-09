@@ -28,7 +28,7 @@ allprojects {
   }
 }
 ```
-2. Add this dependency to your application `build.grandle` (**Module.app**). Remember to change the version to the last one:
+2. Add this dependency to your application `build.gradle` (**Module.app**). Remember to change the version to the last one:
 ```
 dependencies {
   ...

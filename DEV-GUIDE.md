@@ -16,7 +16,7 @@ There are 2 different tests in this repository:
 
 ### 2. Integration Test / Test App
 To run the integration test you need to deploy a new version of the library and test it in the https://github.com/inspetor/inspetor-android-demo-app/ app:
-1. Update the version of the library in `Inspetor/deploy.grandle` (should be in line 8). We recommend adding a `beta` to the version so it would look like `1.4.2-beta`
+1. Update the version of the library in `Inspetor/deploy.gradle` (should be in line 8). We recommend adding a `beta` to the version so it would look like `1.4.2-beta`
 1. Inside the repository run the `./gradlew bintrayUpload` command
 1. Open the `inspetor-android-demo-app` in AndroidStudio
 1. Update the version of the library in the `build.gradle` file (should be in line 36)
@@ -33,7 +33,7 @@ Inspetor.sharedInstance().setup(authToken, true)
 
 ## How to publish
 To publish a new version of the Inspetor Android Library you need to follow this steps:
-1. Update the version of the library in `Inspetor/deploy.grandle` (should be in line 8)
-1. Rename the file `inspetor/keystore.grandle.default` to `inspetor/keystore.grandle`
+1. Update the version of the library in `Inspetor/deploy.gradle` (should be in line 8)
+1. Rename the file `inspetor/keystore.gradle.default` to `inspetor/keystore.gradle`
 1. Change the placeholder file (You can find the values in 1password)
 1. Inside the repository run the `./gradlew bintrayUpload` command
