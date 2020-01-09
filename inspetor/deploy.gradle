@@ -3,9 +3,9 @@ apply plugin: 'com.jfrog.bintray'
 apply from: 'keystore.gradle'
 
 ext {
-    groupId = 'com.github.inspetor'
+    groupId = 'com.useinspetor'
     artifactId = "inspetor"
-    libVersion = "1.4.6-beta2"
+    libVersion = "1.0.0"
 }
 
 version = libVersion
@@ -71,9 +71,9 @@ install {
     repositories.mavenInstaller {
         pom.project {
             name 'Inspetor'
-            description 'Inspetor is an antifraud library that works tracking events from applications.'
+            description 'Inspetor Android Antifraud Library'
             url 'https://github.com/inspetor/inspetor-android'
-            inceptionYear '2019'
+            inceptionYear '2020'
             packaging 'aar'
             groupId groupId
             artifactId artifactId
@@ -95,7 +95,7 @@ install {
             developers {
                 developer {
                     id = 'inspetor'
-                    name 'Inspetor'
+                    name 'Inspetor Team'
                 }
             }
         }

@@ -6,7 +6,7 @@
 # Inspetor Antifraud
 Inspetor antifraud SDK for Android.
 
-[ ![Download](https://api.bintray.com/packages/theosato/inspetor-android/inspetor/images/download.svg) ](https://bintray.com/theosato/inspetor-android/inspetor/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/inspetor/inspetor-android/inspetor/images/download.svg) ](https://bintray.com/inspetor/inspetor-android/inspetor/_latestVersion)
 
 ## Description
 Inspetor is a product developed to help your company avoid fraudulent transactions. This README file should help you to integrate the Inspetor Android library into your product. 
@@ -28,7 +28,7 @@ allprojects {
   }
 }
 ```
-2. Add this dependency to your application `build.grandle` (**Module.app**). Remember to change the version to the last one:
+2. Add this dependency to your application `build.gradle` (**Module.app**). Remember to change the version to the last one:
 ```
 dependencies {
   ...
@@ -43,9 +43,9 @@ The **transitive** statement says that the library will be imported with its dep
 You can find more in-depth documentation about our frontend libraries and integrations in general [here](https://inspetor.github.io/docs-frontend).
 
 ### Library setup
-In order to properly relay information to Inspetor's processing pipeline, you'll need to provide customer-specific authentication credentials:
-- App ID (provided by Inspetor)
-- Tracker name (provided by Inspetor)
+In order to properly relay information to Inspetor's processing pipeline, you'll need to provide your customer-specific authentication credential (your authToken, which is provided to you by Inspetor)
+
+**P.S:** Remember to use the *sandbox* `authToken` when you are not in production
 
 With these, you can instantiate the Inspetor tracking instance. Our integration library instantiates a singleton instance to prevent multiple trackers from being instantiated, which could otherwise result in duplicate or inconsistent data being relayed to Inspetor. Apart from that, the singleton will let you configure the library only once.
 
@@ -53,7 +53,7 @@ The singleton instance is instantiated as follows:
 
 ```
 try {
-    Inspetor.sharedInstance().setup(appId="appId", trackerName="trackerName", devEnv=false)
+    Inspetor.sharedInstance().setup(authToken="authToken")
 } catch (ex: Exception) {
     when (ex) {
         is InvalidCredentials -> { print("Error: $ex") }
@@ -69,15 +69,13 @@ Be advised, that this function can throw two types of exceptions:
 
 We **strongly** recommend you instantiate the Inspetor Library in your application `onCreate` function, since this way you will configure the library as soon as the app loads enabling you to call the library functions.
 
-All the access to the Inspetor functions is made by calling the `Inspetor.sharedInstance()`. 
+All the access to the Inspetor functions is made by calling the `Inspetor.sharedInstance()`.
 
 The parameters passed are the following, in order:
 
-Parameter | Required | Type | Description 
---------- | -------- | ---- | ----------- 
-appId | Yes | String | An unique identifier that the Inspetor Team will provide to you
-trackerName | Yes | String | A name that will help us to find your data in our database and we'll provide you with a couple of them
-devEnv | No | Boolean | Indicates that you are testing the library (development environment), meaning that data is not ready for production. All boolean parameters are `false` by default.
+Parameter | Required | Type | Description
+--------- | -------- | ---- | -----------
+authToken       | Yes | String  | A unique identifier that the Inspetor Team will provide to you
 
 P.S: always remember to import the library using the `import com.inspetor.Inspetor`
 

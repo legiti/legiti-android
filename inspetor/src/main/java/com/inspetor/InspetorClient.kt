@@ -30,21 +30,13 @@ class InspetorClient : InspetorService {
         this.androidContext = null
     }
 
-    override fun setup(trackerName: String, appId: String, devEnv: Boolean, inspetorEnv: Boolean) {
-        if (appId.isEmpty() || trackerName.isEmpty()) {
-            throw InvalidCredentials("Exception 9001: appId and trackerName are required parameters.")
-        }
-
-        if (this.validateTrackerName(trackerName)) {
-            throw InvalidCredentials("Inspetor Exception 9002: trackerName should have 2 terms (e.g. \"tracker.name\").")
-        }
-
-        this.inspetorConfig = InspetorConfig(trackerName, appId, devEnv, inspetorEnv)
+    override fun setup(authToken: String, inspetorDevEnv: Boolean) {
+        this.inspetorConfig = InspetorConfig(authToken, inspetorDevEnv)
 
         if (this.androidContext != null) {
             this.setContext(androidContext!!)
         } else {
-            throw ContextNotSetup("Inspetor Exception 9000: Could not get the context please pass it to the setContext function.")
+            throw ContextNotSetup("Inspetor Exception 9003: Could not get the context please pass it to the setContext function.")
         }
 
     }
@@ -62,11 +54,11 @@ class InspetorClient : InspetorService {
     }
 
     override fun isConfigured(): Boolean {
-        try {
+        return try {
             this.hasConfig()
-            return true
+            true
         } catch (ex: InvalidCredentials) {
-            return false
+            false
         }
     }
 
@@ -214,16 +206,9 @@ class InspetorClient : InspetorService {
         return data
     }
 
-    private fun validateTrackerName(trackerName: String): Boolean {
-        val trackerNameArray = trackerName.split(InspetorDependencies.DEFAULT_INSPETOR_TRACKER_NAME_SEPARATOR)
-        return (trackerNameArray.count() == 2 &&
-                trackerNameArray[0].count() > 1 &&
-                trackerNameArray[1].count() > 1)
-    }
-
     private fun hasConfig() {
-        if (!inspetorConfig?.appId.isNullOrBlank() || !inspetorConfig?.trackerName.isNullOrBlank()) {
-            throw InvalidCredentials("Inspetor Exception 9001: appId and trackerName are required parameters.")
+        if (this.inspetorConfig == null) {
+            throw InvalidCredentials("Inspetor Exception 9001: Library not configured.")
         }
     }
 

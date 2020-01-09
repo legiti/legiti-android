@@ -1,143 +1,129 @@
 package com.inspetor
 
 import android.content.Context
-import kotlin.test.*
 import org.junit.Test
 import org.junit.Assert.*
-import java.lang.Exception
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import org.mockito.*
+import com.inspetor.helpers.InvalidCredentials
+import java.util.*
 
+
+@RunWith(RobolectricTestRunner::class)
 class UnitTests {
 
-    private val UNIT_TEST_DEFAULT_APP_ID = "0123456789"
+    private val AUTH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcmluY2lwYWxJZCI6Imluc3BldG9yX3Rlc3QifQ.cJimBzTsFCC5LMurLelIax_-0ejXYEOZdYIL7Q3GEEQ"
 
-    @Test(expected = java.lang.IllegalArgumentException::class)
+    @Test(expected = InvalidCredentials::class)
     fun testSetContextWithoutConfig() {
         Inspetor.sharedInstance().setContext(
             context = Mockito.mock(Context::class.java)
         )
     }
 
-    @Test(expected = Exception::class)
-    fun testInvalidTrackerNameTooManyFields() {
-        val invalidTrackerNameTooManyFields = "improper.tracker.name.format"
-
-        Inspetor.sharedInstance().setup(
-            appId = UNIT_TEST_DEFAULT_APP_ID,
-            trackerName = invalidTrackerNameTooManyFields,
-            devEnv = true
-        )
+    @Test(expected = InvalidCredentials::class)
+    fun testSetupWithoutAuthToken() {
+        InspetorConfig("", false)
     }
 
-    @Test(expected = Exception::class)
-    fun invalidTrackerNameTooFewFields() {
-        val invalidTrackerNameTooFewFields = "improper_tracker_name_format"
-
-        Inspetor.sharedInstance().setup(
-            appId = UNIT_TEST_DEFAULT_APP_ID,
-            trackerName = invalidTrackerNameTooFewFields,
-            devEnv = true
-        )
+    @Test(expected = InvalidCredentials::class)
+    fun testSetupWithInvalidAuthToken() {
+        InspetorConfig("123", false)
     }
 
-    @Test(expected = Exception::class)
-    fun invalidTrackerNameNoClientName() {
-        val invalidTrackerNameNoClientName = ".improper_tracker_name_format"
-
-        Inspetor.sharedInstance().setup(
-            trackerName = invalidTrackerNameNoClientName,
-            appId = UNIT_TEST_DEFAULT_APP_ID,
-            devEnv = true
-        )
+    @Test(expected = InvalidCredentials::class)
+    fun testSetupWithAuthTokenMissingPart() {
+        val invalidAuthToken = AUTH_TOKEN.split(".").subList(0, 1).joinToString(".")
+        InspetorConfig(invalidAuthToken, false)
     }
 
-    @Test(expected = Exception::class)
-    fun invalidTrackerNameNoProductName() {
-        val invalidTrackerNameNoProductName = "improper_tracker_name_format."
+    @Test(expected = InvalidCredentials::class)
+    fun testSetupWithTokenMissingPrincipalId() {
+        val splittedToken = AUTH_TOKEN.split(".")
+        val middlePart = "{\"missing_principal_id\": \"not_principal_id\"}".toByteArray()
+        val encodedMiddlePart = Base64.getEncoder().encodeToString(middlePart)
+        val invalidAuthToken = arrayOf(splittedToken[0], encodedMiddlePart, splittedToken[2]).joinToString(".")
 
-        Inspetor.sharedInstance().setup(
-            appId = UNIT_TEST_DEFAULT_APP_ID,
-            trackerName = invalidTrackerNameNoProductName,
-            devEnv = true
-        )
+        InspetorConfig(invalidAuthToken, false)
     }
 
-    @Test(expected = IllegalArgumentException::class)
-    fun testIncorrectSetup() {
+    @Test
+    fun testSetupWithAuthTokenInUpperCase() {
+        val splittedToken = AUTH_TOKEN.split(".")
+        val middlePart = ("{\"principalId\": \"inspetor_test_SANDBOX\"}").toByteArray()
+        val encodedMiddlePart = Base64.getEncoder().encodeToString(middlePart)
+        val authToken = arrayOf(splittedToken[0], encodedMiddlePart, splittedToken[2]).joinToString(".")
 
-        Inspetor.sharedInstance().setup(
-            appId = UNIT_TEST_DEFAULT_APP_ID,
-            trackerName = "ingresse",
-            devEnv = true
-        )
+        assertTrue(InspetorConfig.isValid(authToken))
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidCredentials::class)
     fun testAccountCreationWithoutConfig() {
         InspetorClient().trackAccountCreation("123")
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidCredentials::class)
     fun testAccountUpdateWithoutConfig() {
         InspetorClient().trackAccountCreation("123")
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidCredentials::class)
     fun testAccountDeletionWithoutConfig() {
         InspetorClient().trackAccountCreation("123")
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidCredentials::class)
     fun testAuthLoginWithoutConfig() {
         InspetorClient().trackLogin("123", "123")
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidCredentials::class)
     fun testAuthLogoutWithoutConfig() {
         InspetorClient().trackLogout("123", null)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidCredentials::class)
     fun testEventCreationWithoutConfig() {
         InspetorClient().trackEventCreation("123")
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidCredentials::class)
     fun testEventUpdateWithoutConfig() {
         InspetorClient().trackEventCreation("123")
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidCredentials::class)
     fun testEventDeletionWithoutConfig() {
         InspetorClient().trackEventCreation("123")
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidCredentials::class)
     fun testTransferCreationWithoutConfig() {
         InspetorClient().trackItemTransferCreation("123")
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidCredentials::class)
     fun testTransferUpdateWithoutConfig() {
         InspetorClient().trackItemTransferUpdate("123")
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidCredentials::class)
     fun testPassRecoveryWithoutConfig() {
         InspetorClient().trackPasswordRecovery("email@email.com")
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidCredentials::class)
     fun testPassResetWithoutConfig() {
         InspetorClient().trackPasswordReset("email@email.com")
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidCredentials::class)
     fun testSaleCreationWithoutConfig() {
         InspetorClient().trackSaleCreation("123")
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidCredentials::class)
     fun testSaleUpdateWithoutConfig() {
         InspetorClient().trackSaleUpdate("123")
     }
