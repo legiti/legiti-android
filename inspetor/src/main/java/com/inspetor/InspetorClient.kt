@@ -62,105 +62,56 @@ class InspetorClient : InspetorService {
         }
     }
 
-    override fun trackLogin(accountEmail: String, accountId: String?): Boolean? {
+    override fun trackLogin(userEmail: String, userId: String?): Boolean? {
         this.hasConfig()
 
-        val data = this.createJson(id = accountEmail, prefix = "auth", idSuffix = "account_email")
-        data["auth_account_id"] =  this.encodeData(accountId)
+        val data = this.createJson(id = userEmail, prefix = "auth", idSuffix = "user_email")
+        data["auth_user_id"] =  this.encodeData(userId)
 
-        return inspetorResource?.trackAccountAuthAction(data, AuthAction.ACCOUNT_LOGIN_ACTION)
+        return inspetorResource?.trackUserAuthAction(data, AuthAction.USER_LOGIN_ACTION)
     }
 
-    override fun trackLogout(accountEmail: String, accountId: String?): Boolean? {
+    override fun trackLogout(userEmail: String, userId: String?): Boolean? {
         this.hasConfig()
 
-        val data = this.createJson(id = accountEmail, prefix = "auth", idSuffix = "account_email")
-        data["auth_account_id"] =  this.encodeData(accountId)
+        val data = this.createJson(id = userEmail, prefix = "auth", idSuffix = "user_email")
+        data["auth_user_id"] =  this.encodeData(userId)
 
-        return inspetorResource?.trackAccountAuthAction(data, AuthAction.ACCOUNT_LOGOUT_ACTION)
+        return inspetorResource?.trackUserAuthAction(data, AuthAction.USER_LOGOUT_ACTION)
     }
 
-    override fun trackAccountCreation(accountId: String): Boolean? {
+    override fun trackUserCreation(userId: String): Boolean? {
         this.hasConfig()
 
-        val data = this.createJson(id = accountId, prefix = "account")
-        return inspetorResource?.trackAccountAction(data, AccountAction.ACCOUNT_CREATE_ACTION)
+        val data = this.createJson(id = userId, prefix = "user")
+        return inspetorResource?.trackUserAction(data, UserAction.USER_CREATE_ACTION)
     }
 
-    override fun trackAccountUpdate(accountId: String): Boolean? {
+    override fun trackUserUpdate(userId: String): Boolean? {
         this.hasConfig()
 
-        val data = this.createJson(id = accountId, prefix = "account")
-        return inspetorResource?.trackAccountAction(data, AccountAction.ACCOUNT_UPDATE_ACTION)
+        val data = this.createJson(id = userId, prefix = "user")
+        return inspetorResource?.trackUserAction(data, UserAction.USER_UPDATE_ACTION)
     }
 
-    override fun trackAccountDeletion(accountId: String): Boolean? {
+    override fun trackOrderCreation(orderId: String): Boolean? {
         this.hasConfig()
 
-        val data = this.createJson(id = accountId, prefix = "account")
-        return inspetorResource?.trackAccountAction(data, AccountAction.ACCOUNT_DELETE_ACTION)
+        val data = this.createJson(id = orderId, prefix = "order")
+        return inspetorResource?.trackOrderAction(data, OrderAction.ORDER_CREATE_ACTION)
     }
 
-    override fun trackSaleCreation(saleId: String): Boolean? {
+    override fun trackPasswordReset(userEmail: String): Boolean? {
         this.hasConfig()
 
-        val data = this.createJson(id = saleId, prefix = "sale")
-        return inspetorResource?.trackSaleAction(data, SaleAction.SALE_CREATE_ACTION)
-    }
-
-    override fun trackSaleUpdate(saleId: String): Boolean? {
-        this.hasConfig()
-
-        val data = this.createJson(id = saleId, prefix = "sale")
-        return inspetorResource?.trackSaleAction(data, SaleAction.SALE_UPDATE_STATUS_ACTION)
-    }
-
-    override fun trackEventCreation(eventId: String): Boolean? {
-        this.hasConfig()
-
-        val data = this.createJson(id = eventId, prefix = "event")
-        return inspetorResource?.trackEventAction(data, EventAction.EVENT_CREATE_ACTION)
-    }
-
-    override fun trackEventUpdate(eventId: String): Boolean? {
-        this.hasConfig()
-
-        val data = this.createJson(id = eventId, prefix = "event")
-        return inspetorResource?.trackEventAction(data, EventAction.EVENT_UPDATE_ACTION)
-    }
-
-    override fun trackEventDeletion(eventId: String): Boolean? {
-        this.hasConfig()
-
-        val data = this.createJson(id = eventId, prefix = "event")
-        return inspetorResource?.trackEventAction(data, EventAction.EVENT_DELETE_ACTION)
-    }
-
-    override fun trackItemTransferCreation(transferId: String): Boolean? {
-        this.hasConfig()
-
-        val data = this.createJson(id = transferId, prefix = "transfer")
-        return inspetorResource?.trackItemTransferAction(data, TransferAction.TRANSFER_CREATE_ACTION)
-    }
-
-    override fun trackItemTransferUpdate(transferId: String): Boolean? {
-        this.hasConfig()
-
-        val data = this.createJson(id = transferId, prefix = "transfer")
-        return inspetorResource?.trackItemTransferAction(data, TransferAction.TRANSFER_UPDATE_STATUS_ACTION)
-    }
-
-    override fun trackPasswordReset(accountEmail: String): Boolean? {
-        this.hasConfig()
-
-        val data = this.createJson(id = accountEmail, prefix = "pass_recovery", idSuffix = "email")
+        val data = this.createJson(id = userEmail, prefix = "pass_recovery", idSuffix = "email")
         return inspetorResource?.trackPasswordRecoveryAction(data, PassRecoveryAction.PASSWORD_RESET_ACTION)
     }
 
-    override fun trackPasswordRecovery(accountEmail: String): Boolean? {
+    override fun trackPasswordRecovery(userEmail: String): Boolean? {
         this.hasConfig()
 
-        val data = this.createJson(id = accountEmail, prefix = "pass_recovery", idSuffix = "email")
+        val data = this.createJson(id = userEmail, prefix = "pass_recovery", idSuffix = "email")
         return inspetorResource?.trackPasswordRecoveryAction(data, PassRecoveryAction.PASSWORD_RECOVERY_ACTION)
     }
 

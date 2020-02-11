@@ -12,126 +12,63 @@ import android.content.Context
 interface InspetorService {
 
     /**
-     * Send account creation data to Inspetor
+     * Send user creation data to Inspetor
      *
-     * @param accountId
-     * @return void
+     * @param userId
+     * @return Boolean
      */
-    fun trackAccountCreation(accountId: String): Boolean?
+    fun trackUserCreation(userId: String): Boolean?
 
     /**
-     * Send account update data to Inspetor
+     * Send user update data to Inspetor
      *
-     * @param accountId
-     * @return void
+     * @param userId
+     * @return Boolean
      */
-    fun trackAccountUpdate(accountId: String): Boolean?
+    fun trackUserUpdate(userId: String): Boolean?
 
     /**
-     * Send account deletion data to Inspetor
+     * Send user login data to Inspetor
      *
-     * @param accountId
-     * @return void
+     * @param userEmail
+     * @param userId
+     * @return Boolean
      */
-    fun trackAccountDeletion(accountId: String): Boolean?
+    fun trackLogin(userEmail: String, userId: String?): Boolean?
 
     /**
-     * Send event creation data to Inspetor
+     * Send user logout data to Inspetor
      *
-     * @param eventId
-     * @return void
+     * @param userEmail
+     * @param userId
+     * @return Boolean
      */
-    fun trackEventCreation(eventId: String): Boolean?
-
-    /**
-     * Send event update data to Inspetor
-     *
-     * @param eventId
-     * @return void
-     */
-    fun trackEventUpdate(eventId: String): Boolean?
-
-    /**
-     * Send event deletion data to Inspetor
-     *
-     * @param eventId
-     * @return void
-     */
-    fun trackEventDeletion(eventId: String): Boolean?
-
-    /**
-     * Send item transfer creation data to Inspetor
-     *
-     * @param transferId
-     * @return void
-     */
-    fun trackItemTransferCreation(transferId: String): Boolean?
-
-    /**
-     * Send item transfer update data to Inspetor
-     *
-     * @param transferId
-     * @return void
-     */
-    fun trackItemTransferUpdate(transferId: String): Boolean?
-
-
-    /**
-     * Send account login data to Inspetor
-     *
-     * @param accountEmail
-     * @param accountId
-     * @return void
-     */
-    fun trackLogin(accountEmail: String, accountId: String?): Boolean?
-
-    /**
-     * Send account logout data to Inspetor
-     *
-     * @param accountEmail
-     * @param accountId
-     * @return void
-     */
-    fun trackLogout(accountEmail: String, accountId: String?): Boolean?
+    fun trackLogout(userEmail: String, userId: String?): Boolean?
 
     /**
      * Send password reset data to Inspetor
      *
-     * @param accountEmail
-     * @return void
+     * @param userEmail
+     * @return Boolean
      */
-    fun trackPasswordReset(accountEmail: String): Boolean?
+    fun trackPasswordReset(userEmail: String): Boolean?
 
     /**
      * Send password recovery data to Inspetor
      *
-     * @param accountEmail
-     * @return void
+     * @param userEmail
+     * @return Boolean
      */
-    fun trackPasswordRecovery(accountEmail: String): Boolean?
+    fun trackPasswordRecovery(userEmail: String): Boolean?
 
     /**
-     * Send sale creation data to Inspetor
+     * Send order creation data to Inspetor
      *
-     * @param saleId
-     * @return void
+     * @param orderId
+     * @return Boolean
      */
-    fun trackSaleCreation(saleId: String): Boolean?
+    fun trackOrderCreation(orderId: String): Boolean?
 
-    /**
-     * Send sale update data to Inspetor
-     *
-     * @param saleId
-     * @return void
-     */
-    fun trackSaleUpdate(saleId: String): Boolean?
-
-    /**
-     * Send screen data to Inspetor
-     *
-     * @param pageTitle
-     * @return void
-     */
     fun trackPageView(pageTitle: String): Boolean?
 
     /**

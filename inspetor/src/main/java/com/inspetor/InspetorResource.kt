@@ -44,9 +44,9 @@ internal class InspetorResource(config: InspetorConfig, androidContext: Context)
         this.inspetorDeviceIdContext = this.getFingerprintContext()
     }
 
-    override fun trackAccountAction(data: HashMap<String, String?>, action: AccountAction): Boolean {
+    override fun trackUserAction(data: HashMap<String, String?>, action: UserAction): Boolean {
         this.trackUnstructuredEvent(
-            InspetorDependencies.FRONTEND_ACCOUNT_SCHEMA_VERSION,
+            InspetorDependencies.FRONTEND_USER_SCHEMA_VERSION,
             data,
             action.rawValue()
         )
@@ -54,23 +54,12 @@ internal class InspetorResource(config: InspetorConfig, androidContext: Context)
         return true
     }
 
-    override fun trackAccountAuthAction(data: HashMap<String, String?>, action: AuthAction): Boolean {
+    override fun trackUserAuthAction(data: HashMap<String, String?>, action: AuthAction): Boolean {
         this.trackUnstructuredEvent(
             InspetorDependencies.FRONTEND_AUTH_SCHEMA_VERSION,
             data,
             action.rawValue()
         )
-
-        return true
-    }
-
-    override fun trackEventAction(data: HashMap<String, String?>, action: EventAction): Boolean {
-        this.trackUnstructuredEvent(
-            InspetorDependencies.FRONTEND_EVENT_SCHEMA_VERSION,
-            data,
-            action.rawValue()
-        )
-
 
         return true
     }
@@ -85,19 +74,9 @@ internal class InspetorResource(config: InspetorConfig, androidContext: Context)
         return true
     }
 
-    override fun trackItemTransferAction(data: HashMap<String, String?>, action: TransferAction): Boolean {
+    override fun trackOrderAction(data: HashMap<String, String?>, action: OrderAction): Boolean {
         this.trackUnstructuredEvent(
-            InspetorDependencies.FRONTEND_TRANSFER_SCHEMA_VERSION,
-            data,
-            action.rawValue()
-        )
-
-        return true
-    }
-
-    override fun trackSaleAction(data: HashMap<String, String?>, action: SaleAction): Boolean {
-        this.trackUnstructuredEvent(
-            InspetorDependencies.FRONTEND_SALE_SCHEMA_VERSION,
+            InspetorDependencies.FRONTEND_ORDER_SCHEMA_VERSION,
             data,
             action.rawValue()
         )

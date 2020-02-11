@@ -1,35 +1,23 @@
 package com.inspetor.helpers
 
-enum class AccountAction: EnumValue {
-    ACCOUNT_CREATE_ACTION {
-        override fun rawValue(): String = "account_create"
+enum class UserAction: EnumValue {
+    USER_CREATE_ACTION {
+        override fun rawValue(): String = "user_create"
     },
-    ACCOUNT_UPDATE_ACTION {
-        override fun rawValue(): String = "account_update"
+    USER_UPDATE_ACTION {
+        override fun rawValue(): String = "user_update"
     },
-    ACCOUNT_DELETE_ACTION {
-        override fun rawValue(): String = "account_delete"
+    USER_DELETE_ACTION {
+        override fun rawValue(): String = "user_delete"
     }
 }
 
 enum class AuthAction: EnumValue {
-    ACCOUNT_LOGIN_ACTION {
-        override fun rawValue(): String = "account_login"
+    USER_LOGIN_ACTION {
+        override fun rawValue(): String = "user_login"
     },
-    ACCOUNT_LOGOUT_ACTION {
-        override fun rawValue(): String = "account_logout"
-    }
-}
-
-enum class EventAction: EnumValue {
-    EVENT_CREATE_ACTION {
-        override fun rawValue(): String = "event_create"
-    },
-    EVENT_UPDATE_ACTION {
-        override fun rawValue(): String = "event_update"
-    },
-    EVENT_DELETE_ACTION {
-        override fun rawValue(): String = "event_delete"
+    USER_LOGOUT_ACTION {
+        override fun rawValue(): String = "user_logout"
     }
 }
 
@@ -42,20 +30,11 @@ enum class PassRecoveryAction: EnumValue {
     },
 }
 
-enum class SaleAction: EnumValue {
-    SALE_CREATE_ACTION {
-        override fun rawValue(): String = "sale_creation"
+enum class OrderAction: EnumValue {
+    ORDER_CREATE_ACTION {
+        override fun rawValue(): String = "order_create"
     },
-    SALE_UPDATE_STATUS_ACTION {
-        override fun rawValue(): String = "sale_update"
-    }
-}
-
-enum class TransferAction: EnumValue {
-    TRANSFER_CREATE_ACTION {
-        override fun rawValue(): String = "transfer_create"
-    },
-    TRANSFER_UPDATE_STATUS_ACTION {
-        override fun rawValue(): String = "transfer_update_status"
+    ORDER_UPDATE_ACTION {
+        override fun rawValue(): String = "order_update"
     }
 }

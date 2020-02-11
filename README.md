@@ -88,7 +88,7 @@ All of out *track functions* can throw exceptions, but the only exception they w
 
 ```
 if (Inspetor.sharedInstance().isConfigured()) {
-    Inspetor.sharedInstance().trackAccountCreation(accountId="123")
+    Inspetor.sharedInstance().trackUserCreation(accountId="123")
 }
 ```
 

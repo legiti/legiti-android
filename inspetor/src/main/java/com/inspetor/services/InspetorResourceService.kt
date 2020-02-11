@@ -13,13 +13,13 @@ import com.inspetor.helpers.*
 interface InspetorResourceService {
 
     /**
-     * Send account data to Inspetor
+     * Send user data to Inspetor
      *
      * @param account_id;
      * @param action
      * @return void
      */
-    fun trackAccountAction(data: HashMap<String, String?>, action: AccountAction): Boolean
+    fun trackUserAction(data: HashMap<String, String?>, action: UserAction): Boolean
 
     /**
      * Send auth data to Inspetor
@@ -28,16 +28,7 @@ interface InspetorResourceService {
      * @param action
      * @return void
      */
-    fun trackAccountAuthAction(data: HashMap<String, String?>,  action: AuthAction): Boolean
-
-    /**
-     * Send event data to Inspetor
-     *
-     * @param action
-     * @return void
-     */
-    fun trackEventAction(data: HashMap<String, String?>, action: EventAction): Boolean
-
+    fun trackUserAuthAction(data: HashMap<String, String?>,  action: AuthAction): Boolean
 
     /**
      * Send pass recovery data to Inspetor
@@ -47,23 +38,15 @@ interface InspetorResourceService {
      */
     fun trackPasswordRecoveryAction(data: HashMap<String, String?>, action: PassRecoveryAction): Boolean
 
-    /**
-     * Send item transfer data to Inspetor
-     *
-     * @param transfer_id;
-     * @param action
-     * @return void
-     */
-    fun trackItemTransferAction(data: HashMap<String, String?>, action: TransferAction): Boolean
 
     /**
-     * Send Sale data to Inspetor
+     * Send Order data to Inspetor
      *
      * @param sale_id;
      * @param action
      * @return void
      */
-    fun trackSaleAction(data: HashMap<String, String?>, action: SaleAction): Boolean
+    fun trackOrderAction(data: HashMap<String, String?>, action: OrderAction): Boolean
 
     /**
      * Send page data to Inspetor

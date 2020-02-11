@@ -59,18 +59,13 @@ class UnitTests {
     }
 
     @Test(expected = InvalidCredentials::class)
-    fun testAccountCreationWithoutConfig() {
-        InspetorClient().trackAccountCreation("123")
+    fun testUserCreationWithoutConfig() {
+        InspetorClient().trackUserCreation("123")
     }
 
     @Test(expected = InvalidCredentials::class)
-    fun testAccountUpdateWithoutConfig() {
-        InspetorClient().trackAccountCreation("123")
-    }
-
-    @Test(expected = InvalidCredentials::class)
-    fun testAccountDeletionWithoutConfig() {
-        InspetorClient().trackAccountCreation("123")
+    fun testUserUpdateWithoutConfig() {
+        InspetorClient().trackUserUpdate("123")
     }
 
     @Test(expected = InvalidCredentials::class)
@@ -84,31 +79,6 @@ class UnitTests {
     }
 
     @Test(expected = InvalidCredentials::class)
-    fun testEventCreationWithoutConfig() {
-        InspetorClient().trackEventCreation("123")
-    }
-
-    @Test(expected = InvalidCredentials::class)
-    fun testEventUpdateWithoutConfig() {
-        InspetorClient().trackEventCreation("123")
-    }
-
-    @Test(expected = InvalidCredentials::class)
-    fun testEventDeletionWithoutConfig() {
-        InspetorClient().trackEventCreation("123")
-    }
-
-    @Test(expected = InvalidCredentials::class)
-    fun testTransferCreationWithoutConfig() {
-        InspetorClient().trackItemTransferCreation("123")
-    }
-
-    @Test(expected = InvalidCredentials::class)
-    fun testTransferUpdateWithoutConfig() {
-        InspetorClient().trackItemTransferUpdate("123")
-    }
-
-    @Test(expected = InvalidCredentials::class)
     fun testPassRecoveryWithoutConfig() {
         InspetorClient().trackPasswordRecovery("email@email.com")
     }
@@ -119,13 +89,7 @@ class UnitTests {
     }
 
     @Test(expected = InvalidCredentials::class)
-    fun testSaleCreationWithoutConfig() {
-        InspetorClient().trackSaleCreation("123")
+    fun testOrderCreationWithoutConfig() {
+        InspetorClient().trackOrderCreation("123")
     }
-
-    @Test(expected = InvalidCredentials::class)
-    fun testSaleUpdateWithoutConfig() {
-        InspetorClient().trackSaleUpdate("123")
-    }
-
 }
