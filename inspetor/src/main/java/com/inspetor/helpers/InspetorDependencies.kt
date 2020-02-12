@@ -20,8 +20,8 @@ object InspetorDependencies {
     // Schema versions
     const val FRONTEND_CONTEXT_SCHEMA_VERSION:       String = "iglu:com.inspetor/inspetor_context/jsonschema/1-0-0"
     const val FRONTEND_FINGERPRINT_SCHEMA_VERSION:   String = "iglu:com.inspetor/inspetor_fingerprint_frontend/jsonschema/1-0-3"
-    const val FRONTEND_USER_SCHEMA_VERSION:       String = "iglu:com.inspetor/inspetor_user_frontend/jsonschema/1-0-0"
+    const val FRONTEND_USER_SCHEMA_VERSION:          String = "iglu:com.inspetor/inspetor_user_frontend/jsonschema/1-0-0"
     const val FRONTEND_AUTH_SCHEMA_VERSION:          String = "iglu:com.inspetor/inspetor_auth_frontend/jsonschema/1-0-4"
     const val FRONTEND_PASS_RECOVERY_SCHEMA_VERSION: String = "iglu:com.inspetor/inspetor_pass_recovery_frontend/jsonschema/1-0-0"
-    const val FRONTEND_ORDER_SCHEMA_VERSION:          String = "iglu:com.inspetor/inspetor_order_frontend/jsonschema/1-0-0"
+    const val FRONTEND_ORDER_SCHEMA_VERSION:         String = "iglu:com.inspetor/inspetor_order_frontend/jsonschema/1-0-0"
 }
