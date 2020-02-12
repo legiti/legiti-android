@@ -23,5 +23,6 @@ object InspetorDependencies {
     const val FRONTEND_USER_SCHEMA_VERSION:          String = "iglu:com.inspetor/inspetor_user_frontend/jsonschema/1-0-0"
     const val FRONTEND_AUTH_SCHEMA_VERSION:          String = "iglu:com.inspetor/inspetor_auth_frontend/jsonschema/1-0-4"
     const val FRONTEND_PASS_RECOVERY_SCHEMA_VERSION: String = "iglu:com.inspetor/inspetor_pass_recovery_frontend/jsonschema/1-0-0"
+    const val FRONTEND_PASS_RESET_SCHEMA_VERSION:    String = "iglu:com.inspetor/inspetor_pass_reset_frontend/jsonschema/1-0-0"
     const val FRONTEND_ORDER_SCHEMA_VERSION:         String = "iglu:com.inspetor/inspetor_order_frontend/jsonschema/1-0-0"
 }

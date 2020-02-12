@@ -101,18 +101,18 @@ class InspetorClient : InspetorService {
         return inspetorResource?.trackOrderAction(data, OrderAction.ORDER_CREATE_ACTION)
     }
 
-    override fun trackPasswordReset(userEmail: String): Boolean? {
+    override fun trackPasswordReset(userId: String): Boolean? {
         this.hasConfig()
 
-        val data = this.createJson(id = userEmail, prefix = "pass_recovery", idSuffix = "email")
-        return inspetorResource?.trackPasswordRecoveryAction(data, PassRecoveryAction.PASSWORD_RESET_ACTION)
+        val data = this.createJson(id = userId, prefix = "pass_reset", idSuffix = "user_id")
+        return inspetorResource?.trackPasswordResetAction(data, PasswordAction.PASSWORD_RESET_ACTION)
     }
 
     override fun trackPasswordRecovery(userEmail: String): Boolean? {
         this.hasConfig()
 
         val data = this.createJson(id = userEmail, prefix = "pass_recovery", idSuffix = "email")
-        return inspetorResource?.trackPasswordRecoveryAction(data, PassRecoveryAction.PASSWORD_RECOVERY_ACTION)
+        return inspetorResource?.trackPasswordRecoveryAction(data, PasswordAction.PASSWORD_RECOVERY_ACTION)
     }
 
     override fun trackPageView(pageTitle: String): Boolean? {

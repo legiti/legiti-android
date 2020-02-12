@@ -36,8 +36,15 @@ interface InspetorResourceService {
      * @param action
      * @return void
      */
-    fun trackPasswordRecoveryAction(data: HashMap<String, String?>, action: PassRecoveryAction): Boolean
+    fun trackPasswordRecoveryAction(data: HashMap<String, String?>, action: PasswordAction): Boolean
 
+    /**
+     * Send pass recovery data to Inspetor
+     *
+     * @param action
+     * @return void
+     */
+    fun trackPasswordResetAction(data: HashMap<String, String?>, action: PasswordAction): Boolean
 
     /**
      * Send Order data to Inspetor

@@ -48,10 +48,10 @@ interface InspetorService {
     /**
      * Send password reset data to Inspetor
      *
-     * @param userEmail
+     * @param userId
      * @return Boolean
      */
-    fun trackPasswordReset(userEmail: String): Boolean?
+    fun trackPasswordReset(userId: String): Boolean?
 
     /**
      * Send password recovery data to Inspetor

@@ -64,9 +64,19 @@ internal class InspetorResource(config: InspetorConfig, androidContext: Context)
         return true
     }
 
-    override fun trackPasswordRecoveryAction(data: HashMap<String, String?>, action: PassRecoveryAction): Boolean {
+    override fun trackPasswordRecoveryAction(data: HashMap<String, String?>, action: PasswordAction): Boolean {
         this.trackUnstructuredEvent(
             InspetorDependencies.FRONTEND_PASS_RECOVERY_SCHEMA_VERSION,
+            data,
+            action.rawValue()
+        )
+
+        return true
+    }
+
+    override fun trackPasswordResetAction(data: HashMap<String, String?>, action: PasswordAction): Boolean {
+        this.trackUnstructuredEvent(
+            InspetorDependencies.FRONTEND_PASS_RESET_SCHEMA_VERSION,
             data,
             action.rawValue()
         )

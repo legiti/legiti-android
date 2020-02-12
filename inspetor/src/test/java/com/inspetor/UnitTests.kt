@@ -85,7 +85,7 @@ class UnitTests {
 
     @Test(expected = InvalidCredentials::class)
     fun testPassResetWithoutConfig() {
-        InspetorClient().trackPasswordReset("email@email.com")
+        InspetorClient().trackPasswordReset("123")
     }
 
     @Test(expected = InvalidCredentials::class)

@@ -21,7 +21,7 @@ enum class AuthAction: EnumValue {
     }
 }
 
-enum class PassRecoveryAction: EnumValue {
+enum class PasswordAction: EnumValue {
     PASSWORD_RESET_ACTION {
         override fun rawValue(): String = "password_reset"
     },
