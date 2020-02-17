@@ -12,7 +12,7 @@ import com.snowplowanalytics.snowplow.tracker.emitter.RequestSecurity
 
 object SnowplowManager {
 
-    private const val DEFAULT_TRACKER_NAME = "com.legiti.android.tracker"
+    private const val DEFAULT_TRACKER_NAME = "legiti.android.tracker"
 
     private lateinit var trackerName: String
     private lateinit var appId: String
@@ -26,10 +26,10 @@ object SnowplowManager {
         trackerName = this.DEFAULT_TRACKER_NAME
         appId = config.authToken
         collectorUri = this.createCollectorUrl(config)
-        base64Encoded = InspetorDependencies.DEFAULT_BASE64_OPTION
-        bufferOption = switchBufferOptionSize(InspetorDependencies.DEFAULT_BUFFER_SIZE_OPTION)
-        httpMethod = switchHttpMethod(InspetorDependencies.DEFAULT_HTTP_METHOD_TYPE)
-        protocolType = switchSecurityProtocol(InspetorDependencies.DEFAULT_PROTOCOL_TYPE)
+        base64Encoded = LegitiDependencies.DEFAULT_BASE64_OPTION
+        bufferOption = switchBufferOptionSize(LegitiDependencies.DEFAULT_BUFFER_SIZE_OPTION)
+        httpMethod = switchHttpMethod(LegitiDependencies.DEFAULT_HTTP_METHOD_TYPE)
+        protocolType = switchSecurityProtocol(LegitiDependencies.DEFAULT_PROTOCOL_TYPE)
     }
 
     fun setupTracker(androidContext: Context): Tracker? {
@@ -57,7 +57,7 @@ object SnowplowManager {
         ) ?: throw fail()
     }
 
-    private fun fail(message: String = "Inspetor Exception 9000: Internal error."): Throwable {
+    private fun fail(message: String = "Legiti Exception 9000: Internal error."): Throwable {
         throw Exception(message)
     }
 
@@ -84,12 +84,12 @@ object SnowplowManager {
     }
 
     private fun createCollectorUrl(config: LegitiConfig): String {
-        val path = when (config.inspetorDevEnv) {
-            true -> InspetorDependencies.DEFAULT_COLLECTOR_STAGING_PATH
-            false -> InspetorDependencies.DEFAULT_COLLECTOR_PROD_PATH
+        val path = when (config.legitiDevEnv) {
+            true -> LegitiDependencies.DEFAULT_COLLECTOR_STAGING_PATH
+            false -> LegitiDependencies.DEFAULT_COLLECTOR_PROD_PATH
         }
 
-        return InspetorDependencies.DEFAULT_COLLECTOR_URL + path
+        return LegitiDependencies.DEFAULT_COLLECTOR_URL + path
     }
 
 }

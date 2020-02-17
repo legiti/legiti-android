@@ -1,13 +1,13 @@
 //
-//  InspetorConfig11.kt
+//  LegitiDependencies.kt
 //  com.legiti-android-sdk
 //
 //  Created by Matheus Sato on 12/4/19.
-//  Copyright © 2019 Inspetor. All rights reserved.
+//  Copyright © 2019 Legiti. All rights reserved.
 //
 package com.legiti.helpers
 
-object InspetorDependencies {
+object LegitiDependencies {
     //Emitter and Tracker basic config
     const val DEFAULT_BASE64_OPTION: Boolean = true
     const val DEFAULT_COLLECTOR_URL: String = "heimdall-prod.inspcdn.net/" //Remember to add the "/" to the end of the url

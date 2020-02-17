@@ -6,9 +6,6 @@ enum class UserAction: EnumValue {
     },
     USER_UPDATE_ACTION {
         override fun rawValue(): String = "user_update"
-    },
-    USER_DELETE_ACTION {
-        override fun rawValue(): String = "user_delete"
     }
 }
 
@@ -33,8 +30,5 @@ enum class PasswordAction: EnumValue {
 enum class OrderAction: EnumValue {
     ORDER_CREATE_ACTION {
         override fun rawValue(): String = "order_create"
-    },
-    ORDER_UPDATE_ACTION {
-        override fun rawValue(): String = "order_update"
     }
 }

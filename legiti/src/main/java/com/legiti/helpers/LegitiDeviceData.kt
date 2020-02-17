@@ -10,7 +10,7 @@ import java.net.NetworkInterface
 import java.security.MessageDigest
 import java.util.*
 
-internal class InspetorDeviceData(private val androidContext: Context) {
+internal class LegitiDeviceData(private val androidContext: Context) {
 
     private var deviceData: HashMap<String, Any?>? = null
 
