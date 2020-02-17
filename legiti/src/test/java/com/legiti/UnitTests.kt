@@ -24,18 +24,18 @@ class UnitTests {
 
     @Test(expected = InvalidCredentials::class)
     fun testSetupWithoutAuthToken() {
-        InspetorConfig("", false)
+        LegitiConfig("", false)
     }
 
     @Test(expected = InvalidCredentials::class)
     fun testSetupWithInvalidAuthToken() {
-        InspetorConfig("123", false)
+        LegitiConfig("123", false)
     }
 
     @Test(expected = InvalidCredentials::class)
     fun testSetupWithAuthTokenMissingPart() {
         val invalidAuthToken = AUTH_TOKEN.split(".").subList(0, 1).joinToString(".")
-        InspetorConfig(invalidAuthToken, false)
+        LegitiConfig(invalidAuthToken, false)
     }
 
     @Test(expected = InvalidCredentials::class)
@@ -45,7 +45,7 @@ class UnitTests {
         val encodedMiddlePart = Base64.getEncoder().encodeToString(middlePart)
         val invalidAuthToken = arrayOf(splittedToken[0], encodedMiddlePart, splittedToken[2]).joinToString(".")
 
-        InspetorConfig(invalidAuthToken, false)
+        LegitiConfig(invalidAuthToken, false)
     }
 
     @Test
@@ -55,41 +55,41 @@ class UnitTests {
         val encodedMiddlePart = Base64.getEncoder().encodeToString(middlePart)
         val authToken = arrayOf(splittedToken[0], encodedMiddlePart, splittedToken[2]).joinToString(".")
 
-        assertTrue(InspetorConfig.isValid(authToken))
+        assertTrue(LegitiConfig.isValid(authToken))
     }
 
     @Test(expected = InvalidCredentials::class)
     fun testUserCreationWithoutConfig() {
-        InspetorClient().trackUserCreation("123")
+        LegitiClient().trackUserCreation("123")
     }
 
     @Test(expected = InvalidCredentials::class)
     fun testUserUpdateWithoutConfig() {
-        InspetorClient().trackUserUpdate("123")
+        LegitiClient().trackUserUpdate("123")
     }
 
     @Test(expected = InvalidCredentials::class)
     fun testAuthLoginWithoutConfig() {
-        InspetorClient().trackLogin("123", "123")
+        LegitiClient().trackLogin("123", "123")
     }
 
     @Test(expected = InvalidCredentials::class)
     fun testAuthLogoutWithoutConfig() {
-        InspetorClient().trackLogout("123", null)
+        LegitiClient().trackLogout("123", null)
     }
 
     @Test(expected = InvalidCredentials::class)
     fun testPassRecoveryWithoutConfig() {
-        InspetorClient().trackPasswordRecovery("email@email.com")
+        LegitiClient().trackPasswordRecovery("email@email.com")
     }
 
     @Test(expected = InvalidCredentials::class)
     fun testPassResetWithoutConfig() {
-        InspetorClient().trackPasswordReset("123")
+        LegitiClient().trackPasswordReset("123")
     }
 
     @Test(expected = InvalidCredentials::class)
     fun testOrderCreationWithoutConfig() {
-        InspetorClient().trackOrderCreation("123")
+        LegitiClient().trackOrderCreation("123")
     }
 }

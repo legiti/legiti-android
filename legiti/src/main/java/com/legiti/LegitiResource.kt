@@ -1,6 +1,5 @@
 //
-//  InspetorResource.kt
-//  com.legiti-android-sdk
+//  LegitiResource.kt/  com.legiti-android-sdk
 //
 //  Created by Matheus Sato on 12/4/19.
 //  Copyright © 2019 Inspetor. All rights reserved.
@@ -13,11 +12,11 @@ import com.snowplowanalytics.snowplow.tracker.events.SelfDescribing
 import com.snowplowanalytics.snowplow.tracker.payload.SelfDescribingJson
 import java.util.*
 import com.legiti.helpers.*
-import com.legiti.services.InspetorResourceService
+import com.legiti.services.LegitiResourceService
 import com.snowplowanalytics.snowplow.tracker.events.ScreenView
 
-internal class InspetorResource(config: InspetorConfig, androidContext: Context):
-    InspetorResourceService {
+internal class LegitiResource(config: LegitiConfig, androidContext: Context):
+    LegitiResourceService {
 
     private var spTracker: Tracker
     private var androidContext: Context

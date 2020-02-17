@@ -1,18 +1,18 @@
 //
-//  InspetorService.kt
+//  LegitiService.kt
 //  com.legiti-android-sdk
 //
 //  Created by Matheus Sato on 12/4/19.
-//  Copyright © 2019 Inspetor. All rights reserved.
+//  Copyright © 2019 Legiti. All rights reserved.
 //
 package com.legiti.services
 
 import android.content.Context
 
-interface InspetorService {
+interface LegitiService {
 
     /**
-     * Send user creation data to Inspetor
+     * Send user creation data to Legiti
      *
      * @param userId
      * @return Boolean
@@ -20,7 +20,7 @@ interface InspetorService {
     fun trackUserCreation(userId: String): Boolean?
 
     /**
-     * Send user update data to Inspetor
+     * Send user update data to Legiti
      *
      * @param userId
      * @return Boolean
@@ -28,7 +28,7 @@ interface InspetorService {
     fun trackUserUpdate(userId: String): Boolean?
 
     /**
-     * Send user login data to Inspetor
+     * Send user login data to Legiti
      *
      * @param userEmail
      * @param userId
@@ -37,7 +37,7 @@ interface InspetorService {
     fun trackLogin(userEmail: String, userId: String?): Boolean?
 
     /**
-     * Send user logout data to Inspetor
+     * Send user logout data to Legiti
      *
      * @param userEmail
      * @param userId
@@ -46,7 +46,7 @@ interface InspetorService {
     fun trackLogout(userEmail: String, userId: String?): Boolean?
 
     /**
-     * Send password reset data to Inspetor
+     * Send password reset data to Legiti
      *
      * @param userId
      * @return Boolean
@@ -54,7 +54,7 @@ interface InspetorService {
     fun trackPasswordReset(userId: String): Boolean?
 
     /**
-     * Send password recovery data to Inspetor
+     * Send password recovery data to Legiti
      *
      * @param userEmail
      * @return Boolean
@@ -62,7 +62,7 @@ interface InspetorService {
     fun trackPasswordRecovery(userEmail: String): Boolean?
 
     /**
-     * Send order creation data to Inspetor
+     * Send order creation data to Legiti
      *
      * @param orderId
      * @return Boolean
@@ -72,7 +72,7 @@ interface InspetorService {
     fun trackPageView(pageTitle: String): Boolean?
 
     /**
-     * Send context to InspetorClient
+     * Send context to Legiti
      *
      * @param context
      * @return void
@@ -80,14 +80,14 @@ interface InspetorService {
     fun setContext(context: Context)
 
     /**
-     * Set config to InspetorClient
+     * Set config to Legiti
      *
      * @param trackerName
      * @param appId
      * @param devEnv
      * @return void
      */
-    fun setup(authToken: String, inspetorDevEnv: Boolean = false)
+    fun setup(authToken: String, legitiDevEnv: Boolean = false)
 
     /**
      * Verify if config exists

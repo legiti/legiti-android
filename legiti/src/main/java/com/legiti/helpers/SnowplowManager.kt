@@ -1,7 +1,7 @@
 package com.legiti.helpers
 
 import android.content.Context
-import com.legiti.InspetorConfig
+import com.legiti.LegitiConfig
 import com.snowplowanalytics.snowplow.tracker.DevicePlatforms
 import com.snowplowanalytics.snowplow.tracker.Emitter
 import com.snowplowanalytics.snowplow.tracker.Subject
@@ -22,7 +22,7 @@ object SnowplowManager {
     private lateinit var bufferOption: BufferOption
     private var base64Encoded: Boolean = false
 
-    fun init(config: InspetorConfig) {
+    fun init(config: LegitiConfig) {
         trackerName = this.DEFAULT_TRACKER_NAME
         appId = config.authToken
         collectorUri = this.createCollectorUrl(config)
@@ -83,7 +83,7 @@ object SnowplowManager {
         }
     }
 
-    private fun createCollectorUrl(config: InspetorConfig): String {
+    private fun createCollectorUrl(config: LegitiConfig): String {
         val path = when (config.inspetorDevEnv) {
             true -> InspetorDependencies.DEFAULT_COLLECTOR_STAGING_PATH
             false -> InspetorDependencies.DEFAULT_COLLECTOR_PROD_PATH

@@ -1,5 +1,5 @@
 //
-//  InspetorConfig  com.legiti-android-sdk
+//  LegitiConfig  com.legiti-android-sdk
 //
 //  Created by Matheus Sato on 8/5/19.
 //  Copyright © 2019 Inspetor. All rights reserved.

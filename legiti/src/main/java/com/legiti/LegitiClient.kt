@@ -1,9 +1,9 @@
 //
-//  InspetorResource.kt
+//  LegitiResourcet
 //  com.legiti-android-sdk
 //
 //  Created by Matheus Sato on 12/4/19.
-//  Copyright © 2019 Inspetor. All rights reserved.
+//  Copyright © 2019 Legiti. All rights reserved.
 //
 package com.legiti
 
@@ -11,7 +11,7 @@ import android.content.Context
 import android.os.Build
 import android.util.Base64
 import com.legiti.helpers.*
-import com.legiti.services.InspetorService
+import com.legiti.services.LegitiService
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -19,24 +19,24 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.HashMap
 
-class InspetorClient : InspetorService {
-    private var inspetorResource: InspetorResource?
-    private var inspetorConfig: InspetorConfig?
+class LegitiClient : LegitiService {
+    private var legitiResource: LegitiResource?
+    private var legitiConfig: LegitiConfig?
     private var androidContext: Context?
 
     init {
-        this.inspetorResource = null
-        this.inspetorConfig = null
+        this.legitiResource = null
+        this.legitiConfig = null
         this.androidContext = null
     }
 
-    override fun setup(authToken: String, inspetorDevEnv: Boolean) {
-        this.inspetorConfig = InspetorConfig(authToken, inspetorDevEnv)
+    override fun setup(authToken: String, legitiDevEnv: Boolean) {
+        this.legitiConfig = LegitiConfig(authToken, legitiDevEnv)
 
         if (this.androidContext != null) {
             this.setContext(androidContext!!)
         } else {
-            throw ContextNotSetup("Inspetor Exception 9003: Could not get the context please pass it to the setContext function.")
+            throw ContextNotSetup("Legiti Exception 9003: Could not get the context please pass it to the setContext function.")
         }
 
     }
@@ -44,13 +44,13 @@ class InspetorClient : InspetorService {
     override fun setContext(context: Context) {
         this.hasConfig()
 
-        val config = this.inspetorConfig
+        val config = this.legitiConfig
 
         if (this.androidContext == null) {
             this.androidContext = context
         }
 
-        this.inspetorResource = InspetorResource(config!!, context)
+        this.legitiResource = LegitiResource(config!!, context)
     }
 
     override fun isConfigured(): Boolean {
@@ -68,7 +68,7 @@ class InspetorClient : InspetorService {
         val data = this.createJson(id = userEmail, prefix = "auth", idSuffix = "user_email")
         data["auth_user_id"] =  this.encodeData(userId)
 
-        return inspetorResource?.trackUserAuthAction(data, AuthAction.USER_LOGIN_ACTION)
+        return legitiResource?.trackUserAuthAction(data, AuthAction.USER_LOGIN_ACTION)
     }
 
     override fun trackLogout(userEmail: String, userId: String?): Boolean? {
@@ -77,50 +77,50 @@ class InspetorClient : InspetorService {
         val data = this.createJson(id = userEmail, prefix = "auth", idSuffix = "user_email")
         data["auth_user_id"] =  this.encodeData(userId)
 
-        return inspetorResource?.trackUserAuthAction(data, AuthAction.USER_LOGOUT_ACTION)
+        return legitiResource?.trackUserAuthAction(data, AuthAction.USER_LOGOUT_ACTION)
     }
 
     override fun trackUserCreation(userId: String): Boolean? {
         this.hasConfig()
 
         val data = this.createJson(id = userId, prefix = "user")
-        return inspetorResource?.trackUserAction(data, UserAction.USER_CREATE_ACTION)
+        return legitiResource?.trackUserAction(data, UserAction.USER_CREATE_ACTION)
     }
 
     override fun trackUserUpdate(userId: String): Boolean? {
         this.hasConfig()
 
         val data = this.createJson(id = userId, prefix = "user")
-        return inspetorResource?.trackUserAction(data, UserAction.USER_UPDATE_ACTION)
+        return legitiResource?.trackUserAction(data, UserAction.USER_UPDATE_ACTION)
     }
 
     override fun trackOrderCreation(orderId: String): Boolean? {
         this.hasConfig()
 
         val data = this.createJson(id = orderId, prefix = "order")
-        return inspetorResource?.trackOrderAction(data, OrderAction.ORDER_CREATE_ACTION)
+        return legitiResource?.trackOrderAction(data, OrderAction.ORDER_CREATE_ACTION)
     }
 
     override fun trackPasswordReset(userId: String): Boolean? {
         this.hasConfig()
 
         val data = this.createJson(id = userId, prefix = "pass_reset", idSuffix = "user_id")
-        return inspetorResource?.trackPasswordResetAction(data, PasswordAction.PASSWORD_RESET_ACTION)
+        return legitiResource?.trackPasswordResetAction(data, PasswordAction.PASSWORD_RESET_ACTION)
     }
 
     override fun trackPasswordRecovery(userEmail: String): Boolean? {
         this.hasConfig()
 
         val data = this.createJson(id = userEmail, prefix = "pass_recovery", idSuffix = "email")
-        return inspetorResource?.trackPasswordRecoveryAction(data, PasswordAction.PASSWORD_RECOVERY_ACTION)
+        return legitiResource?.trackPasswordRecoveryAction(data, PasswordAction.PASSWORD_RECOVERY_ACTION)
     }
 
     override fun trackPageView(pageTitle: String): Boolean? {
         this.hasConfig()
-        return inspetorResource?.trackPageView(pageTitle)
+        return legitiResource?.trackPageView(pageTitle)
     }
 
-    private fun getInspetorTimestamp(): String {
+    private fun getLegitiTimestamp(): String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             val dateTime = LocalDateTime.now(ZoneId.of("UTC"))
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'+00:00'")
@@ -152,14 +152,14 @@ class InspetorClient : InspetorService {
         val timestampProperty = prefix.plus("_").plus(timestampSuffix)
 
         data[idProperty] = this.encodeData(id)
-        data[timestampProperty] = this.encodeData(this.getInspetorTimestamp())
+        data[timestampProperty] = this.encodeData(this.getLegitiTimestamp())
 
         return data
     }
 
     private fun hasConfig() {
-        if (this.inspetorConfig == null) {
-            throw InvalidCredentials("Inspetor Exception 9001: Library not configured.")
+        if (this.legitiConfig == null) {
+            throw InvalidCredentials("Legiti Exception 9001: Library not configured.")
         }
     }
 

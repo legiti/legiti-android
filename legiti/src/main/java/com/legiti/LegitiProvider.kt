@@ -5,9 +5,9 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 
-class InspetorProvider: ContentProvider() {
+class LegitiProvider: ContentProvider() {
     override fun onCreate(): Boolean {
-        Inspetor.sharedInstance().setContextWithoutConfig(
+        Legiti.sharedInstance().setContextWithoutConfig(
             this.context?.applicationContext
         )
 

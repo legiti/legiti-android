@@ -1,19 +1,19 @@
 //
-//  InspetorResourceService.kt
+//  LegitiResourceServicet
 //  com.legiti-android-sdk
 //
 //  Created by Matheus Sato on 12/4/19.
-//  Copyright © 2019 Inspetor. All rights reserved.
+//  Copyright © 2019 Legiti. All rights reserved.
 //
 package com.legiti.services
 
 import com.legiti.helpers.*
 
 
-interface InspetorResourceService {
+interface LegitiResourceService {
 
     /**
-     * Send user data to Inspetor
+     * Send user data to Legiti
      *
      * @param account_id;
      * @param action
@@ -22,7 +22,7 @@ interface InspetorResourceService {
     fun trackUserAction(data: HashMap<String, String?>, action: UserAction): Boolean
 
     /**
-     * Send auth data to Inspetor
+     * Send auth data to Legiti
      *
      * @param account_email;
      * @param action
@@ -31,7 +31,7 @@ interface InspetorResourceService {
     fun trackUserAuthAction(data: HashMap<String, String?>,  action: AuthAction): Boolean
 
     /**
-     * Send pass recovery data to Inspetor
+     * Send pass recovery data to Legiti
      *
      * @param action
      * @return void
@@ -39,7 +39,7 @@ interface InspetorResourceService {
     fun trackPasswordRecoveryAction(data: HashMap<String, String?>, action: PasswordAction): Boolean
 
     /**
-     * Send pass recovery data to Inspetor
+     * Send pass recovery data to Legiti
      *
      * @param action
      * @return void
@@ -47,7 +47,7 @@ interface InspetorResourceService {
     fun trackPasswordResetAction(data: HashMap<String, String?>, action: PasswordAction): Boolean
 
     /**
-     * Send Order data to Inspetor
+     * Send Order data to Legiti
      *
      * @param sale_id;
      * @param action
@@ -56,7 +56,7 @@ interface InspetorResourceService {
     fun trackOrderAction(data: HashMap<String, String?>, action: OrderAction): Boolean
 
     /**
-     * Send page data to Inspetor
+     * Send page data to Legiti
      *
      * @param page_title;
      * @return void

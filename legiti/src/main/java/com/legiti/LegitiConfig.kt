@@ -1,8 +1,8 @@
 //
-//  InspetorConfig.ktnspetor-android-sdk
+//  LegitiConfig.ktnspetor-android-sdk
 //
 //  Created by Matheus Sato on 12/4/19.
-//  Copyright © 2019 Inspetor. All rights reserved.
+//  Copyright © 2019 Legiti. All rights reserved.
 //
 package com.legiti
 
@@ -11,11 +11,11 @@ import org.json.JSONException
 import android.util.Base64
 import com.legiti.helpers.InvalidCredentials
 
-class InspetorConfig(val authToken: String, val inspetorDevEnv: Boolean) {
+class LegitiConfig(val authToken: String, val legitiDevEnv: Boolean) {
 
     init {
         require(isValid(authToken)) {
-            throw InvalidCredentials("Inspetor Exception 9002: authToken not valid")
+            throw InvalidCredentials("Legiti Exception 9002: authToken not valid")
         }
     }
 
