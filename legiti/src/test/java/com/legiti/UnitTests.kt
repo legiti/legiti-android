@@ -17,7 +17,7 @@ class UnitTests {
 
     @Test(expected = InvalidCredentials::class)
     fun testSetContextWithoutConfig() {
-        Inspetor.sharedInstance().setContext(
+        Legiti.sharedInstance().setContext(
             context = Mockito.mock(Context::class.java)
         )
     }
