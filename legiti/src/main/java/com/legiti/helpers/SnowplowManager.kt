@@ -1,8 +1,7 @@
-package com.inspetor.helpers
+package com.legiti.helpers
 
 import android.content.Context
-import com.inspetor.Inspetor
-import com.inspetor.InspetorConfig
+import com.legiti.InspetorConfig
 import com.snowplowanalytics.snowplow.tracker.DevicePlatforms
 import com.snowplowanalytics.snowplow.tracker.Emitter
 import com.snowplowanalytics.snowplow.tracker.Subject
@@ -13,7 +12,7 @@ import com.snowplowanalytics.snowplow.tracker.emitter.RequestSecurity
 
 object SnowplowManager {
 
-    private const val DEFAULT_TRACKER_NAME = "inspetor.android.tracker"
+    private const val DEFAULT_TRACKER_NAME = "com.legiti.android.tracker"
 
     private lateinit var trackerName: String
     private lateinit var appId: String

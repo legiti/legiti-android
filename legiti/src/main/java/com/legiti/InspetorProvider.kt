@@ -1,4 +1,4 @@
-package com.inspetor
+package com.legiti
 
 import android.content.ContentProvider
 import android.content.ContentValues

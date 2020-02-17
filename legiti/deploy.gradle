@@ -4,7 +4,7 @@ apply from: 'keystore.gradle'
 
 ext {
     groupId = 'com.useinspetor'
-    artifactId = "inspetor"
+    artifactId = "com.legiti"
     libVersion = "1.0.1"
 }
 
@@ -56,8 +56,8 @@ bintray {
     override = true
 
     pkg {
-        repo = "inspetor-android"
-        name = "inspetor"
+        repo = "com.legiti-android"
+        name = "com.legiti"
         version {
             name = libVersion
             desc = 'Inspetor Android Library'
@@ -72,7 +72,7 @@ install {
         pom.project {
             name 'Inspetor'
             description 'Inspetor Android Antifraud Library'
-            url 'https://github.com/inspetor/inspetor-android'
+            url 'https://github.com/com.legiti/com.legiti-android'
             inceptionYear '2020'
             packaging 'aar'
             groupId groupId
@@ -88,13 +88,13 @@ install {
             }
 
             scm {
-                connection 'https://github.com/inspetor/inspetor-android.git'
-                url 'https://github.com/inspetor/inspetor-android'
+                connection 'https://github.com/com.legiti/com.legiti-android.git'
+                url 'https://github.com/com.legiti/com.legiti-android'
             }
 
             developers {
                 developer {
-                    id = 'inspetor'
+                    id = 'com.legiti'
                     name 'Inspetor Team'
                 }
             }

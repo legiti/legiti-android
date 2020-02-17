@@ -4,12 +4,12 @@
 //  Created by Matheus Sato on 12/4/19.
 //  Copyright © 2019 Inspetor. All rights reserved.
 //
-package com.inspetor
+package com.legiti
 
 import org.json.JSONObject
 import org.json.JSONException
 import android.util.Base64
-import com.inspetor.helpers.InvalidCredentials
+import com.legiti.helpers.InvalidCredentials
 
 class InspetorConfig(val authToken: String, val inspetorDevEnv: Boolean) {
 

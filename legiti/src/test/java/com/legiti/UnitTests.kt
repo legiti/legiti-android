@@ -1,4 +1,4 @@
-package com.inspetor
+package com.legiti
 
 import android.content.Context
 import org.junit.Test
@@ -6,7 +6,7 @@ import org.junit.Assert.*
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.mockito.*
-import com.inspetor.helpers.InvalidCredentials
+import com.legiti.helpers.InvalidCredentials
 import java.util.*
 
 

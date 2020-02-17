@@ -1,4 +1,4 @@
-package com.inspetor.helpers
+package com.legiti.helpers
 
 enum class UserAction: EnumValue {
     USER_CREATE_ACTION {

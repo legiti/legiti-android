@@ -77,7 +77,7 @@ Parameter | Required | Type | Description
 --------- | -------- | ---- | -----------
 authToken       | Yes | String  | A unique identifier that the Inspetor Team will provide to you
 
-P.S: always remember to import the library using the `import com.inspetor.Inspetor`
+P.S: always remember to import the library using the `import com.legiti.Inspetor`
 
 ### Library Calls
 If you've already read the [general Inspetor files](https://inspetor.github.io/docs-frontend), you should be aware of all of Inspetor requests and collection functions.

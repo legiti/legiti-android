@@ -1,32 +1,20 @@
 //
 //  InspetorResource.kt
-//  inspetor-android-sdk
+//  com.legiti-android-sdk
 //
 //  Created by Matheus Sato on 12/4/19.
 //  Copyright © 2019 Inspetor. All rights reserved.
 //
-package com.inspetor
+package com.legiti
 
 import android.content.Context
-import android.os.Build
-import android.provider.Settings.Secure
-import android.util.Base64
 import com.snowplowanalytics.snowplow.tracker.Tracker
 import com.snowplowanalytics.snowplow.tracker.events.SelfDescribing
 import com.snowplowanalytics.snowplow.tracker.payload.SelfDescribingJson
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.*
-import com.scottyab.rootbeer.RootBeer
-import java.net.NetworkInterface.getNetworkInterfaces
-import android.net.NetworkCapabilities
-import android.net.ConnectivityManager
-import com.inspetor.helpers.*
-import com.inspetor.services.InspetorResourceService
+import com.legiti.helpers.*
+import com.legiti.services.InspetorResourceService
 import com.snowplowanalytics.snowplow.tracker.events.ScreenView
-import java.security.MessageDigest
 
 internal class InspetorResource(config: InspetorConfig, androidContext: Context):
     InspetorResourceService {

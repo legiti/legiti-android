@@ -1,17 +1,17 @@
 //
 //  InspetorResource.kt
-//  inspetor-android-sdk
+//  com.legiti-android-sdk
 //
 //  Created by Matheus Sato on 12/4/19.
 //  Copyright © 2019 Inspetor. All rights reserved.
 //
-package com.inspetor
+package com.legiti
 
 import android.content.Context
 import android.os.Build
 import android.util.Base64
-import com.inspetor.helpers.*
-import com.inspetor.services.InspetorService
+import com.legiti.helpers.*
+import com.legiti.services.InspetorService
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.ZoneId

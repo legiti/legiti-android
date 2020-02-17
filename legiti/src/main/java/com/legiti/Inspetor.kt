@@ -1,4 +1,4 @@
-package com.inspetor
+package com.legiti
 
 object Inspetor {
     // There will be a warning saying that you cannot store the context in a static class

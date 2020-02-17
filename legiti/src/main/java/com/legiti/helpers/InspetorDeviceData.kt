@@ -1,13 +1,11 @@
-package com.inspetor.helpers
+package com.legiti.helpers
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.provider.DocumentsContract
 import android.provider.Settings
 import com.scottyab.rootbeer.RootBeer
-import com.snowplowanalytics.snowplow.tracker.payload.SelfDescribingJson
 import java.net.NetworkInterface
 import java.security.MessageDigest
 import java.util.*

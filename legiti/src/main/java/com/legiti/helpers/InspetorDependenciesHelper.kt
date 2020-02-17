@@ -1,10 +1,10 @@
 //
-//  InspetorConfig  inspetor-android-sdk
+//  InspetorConfig  com.legiti-android-sdk
 //
 //  Created by Matheus Sato on 8/5/19.
 //  Copyright © 2019 Inspetor. All rights reserved.
 //
-package com.inspetor.helpers
+package com.legiti.helpers
 
 enum class HttpMethodType {
     GET,
