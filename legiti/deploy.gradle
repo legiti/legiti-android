@@ -3,9 +3,9 @@ apply plugin: 'com.jfrog.bintray'
 apply from: 'keystore.gradle'
 
 ext {
-    groupId = 'com.useinspetor'
+    groupId = 'com.legiti'
     artifactId = "com.legiti"
-    libVersion = "1.0.1"
+    libVersion = "1.0.0"
 }
 
 version = libVersion
@@ -60,7 +60,7 @@ bintray {
         name = "com.legiti"
         version {
             name = libVersion
-            desc = 'Inspetor Android Library'
+            desc = 'Legiti Antifraud Library for Android'
             released = new Date()
             vcsTag = libVersion
         }
@@ -70,9 +70,9 @@ bintray {
 install {
     repositories.mavenInstaller {
         pom.project {
-            name 'Inspetor'
-            description 'Inspetor Android Antifraud Library'
-            url 'https://github.com/com.legiti/com.legiti-android'
+            name 'Legiti'
+            description 'Legiti Antifraud Library for Android'
+            url 'https://github.com/legiti/legiti-android'
             inceptionYear '2020'
             packaging 'aar'
             groupId groupId
@@ -88,14 +88,14 @@ install {
             }
 
             scm {
-                connection 'https://github.com/com.legiti/com.legiti-android.git'
-                url 'https://github.com/com.legiti/com.legiti-android'
+                connection 'https://github.com/legiti/legiti-android.git'
+                url 'https://github.com/legiti/legiti-android'
             }
 
             developers {
                 developer {
                     id = 'com.legiti'
-                    name 'Inspetor Team'
+                    name 'Legiti Dev Team'
                 }
             }
         }
