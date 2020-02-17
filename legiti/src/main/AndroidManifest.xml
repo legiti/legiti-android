@@ -3,8 +3,8 @@
           package="com.legiti">
     <application>
         <provider
-                android:authorities="${applicationId}.inspetorprovider"
-                android:name="com.com.legiti.InspetorProvider"
+                android:authorities="${applicationId}.legitiprovider"
+                android:name="com.legiti.LegitiProvider"
                 android:exported="false"
                 android:enabled="true" />
     </application>
