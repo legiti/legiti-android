@@ -1,9 +1,3 @@
-//
-//  LegitiConfig.ktnspetor-android-sdk
-//
-//  Created by Matheus Sato on 12/4/19.
-//  Copyright © 2019 Legiti. All rights reserved.
-//
 package com.legiti
 
 import org.json.JSONObject
