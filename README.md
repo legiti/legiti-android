@@ -1,6 +1,6 @@
 
 <p>
- <img src="https://inspetor-assets.s3-sa-east-1.amazonaws.com/images/inspetor-logo.png" width="200" height="40" alt="Inspetor Logo">
+ <img src="https://files.lgtcdn.net/images/legiti_logo_black.png" width="200" height="55" alt="Legiti Logo">
 </p>
 
 # Legiti Antifraud
