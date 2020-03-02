@@ -4,7 +4,7 @@ apply from: 'keystore.gradle'
 
 ext {
     groupId = 'com.legiti'
-    artifactId = "com.legiti"
+    artifactId = "legiti"
     libVersion = "1.0.0"
 }
 
@@ -56,8 +56,8 @@ bintray {
     override = true
 
     pkg {
-        repo = "com.legiti-android"
-        name = "com.legiti"
+        repo = "legiti-android"
+        name = "legiti"
         version {
             name = libVersion
             desc = 'Legiti Antifraud Library for Android'
@@ -94,7 +94,7 @@ install {
 
             developers {
                 developer {
-                    id = 'com.legiti'
+                    id = 'legiti'
                     name 'Legiti Dev Team'
                 }
             }
