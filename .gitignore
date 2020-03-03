@@ -12,4 +12,6 @@
 /captures
 .externalNativeBuild
 .idea
-/inspetor/keystore.gradle
+/legiti/keystore.gradle
+/inspetor-android.iml
+/legiti-android.iml

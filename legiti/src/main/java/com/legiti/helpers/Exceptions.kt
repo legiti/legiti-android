@@ -1,4 +1,4 @@
-package com.inspetor.helpers
+package com.legiti.helpers
 
 class InvalidCredentials(message:String): Exception(message)
 
