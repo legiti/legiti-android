@@ -17,6 +17,7 @@ object SnowplowManager {
     private lateinit var trackerName: String
     private lateinit var appId: String
     private lateinit var collectorUri: String
+    private lateinit var postPath: String
     private lateinit var httpMethod: HttpMethod
     private lateinit var protocolType: RequestSecurity
     private lateinit var bufferOption: BufferOption
@@ -25,7 +26,8 @@ object SnowplowManager {
     fun init(config: LegitiConfig) {
         trackerName = this.DEFAULT_TRACKER_NAME
         appId = config.authToken
-        collectorUri = this.createCollectorUrl(config)
+        collectorUri = LegitiDependencies.DEFAULT_COLLECTOR_URL
+        postPath = if (config.legitiDevEnv) LegitiDependencies.DEFAULT_COLLECTOR_STAGING_PATH else LegitiDependencies.DEFAULT_COLLECTOR_PROD_PATH
         base64Encoded = LegitiDependencies.DEFAULT_BASE64_OPTION
         bufferOption = switchBufferOptionSize(LegitiDependencies.DEFAULT_BUFFER_SIZE_OPTION)
         httpMethod = switchHttpMethod(LegitiDependencies.DEFAULT_HTTP_METHOD_TYPE)
@@ -36,6 +38,7 @@ object SnowplowManager {
         val emitter = Emitter.EmitterBuilder(collectorUri, androidContext.applicationContext)
             .method(httpMethod)
             .option(bufferOption)
+            .customPostPath(postPath)
             .security(protocolType)
             .build() ?: throw fail()
 
@@ -81,15 +84,6 @@ object SnowplowManager {
             HttpMethodType.GET -> HttpMethod.GET
             HttpMethodType.POST -> HttpMethod.POST
         }
-    }
-
-    private fun createCollectorUrl(config: LegitiConfig): String {
-        val path = when (config.legitiDevEnv) {
-            true -> LegitiDependencies.DEFAULT_COLLECTOR_STAGING_PATH
-            false -> LegitiDependencies.DEFAULT_COLLECTOR_PROD_PATH
-        }
-
-        return LegitiDependencies.DEFAULT_COLLECTOR_URL + path
     }
 
 }

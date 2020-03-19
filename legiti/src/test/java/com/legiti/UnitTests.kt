@@ -13,7 +13,7 @@ import java.util.*
 @RunWith(RobolectricTestRunner::class)
 class UnitTests {
 
-    private val AUTH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcmluY2lwYWxJZCI6Imluc3BldG9yX3Rlc3QifQ.cJimBzTsFCC5LMurLelIax_-0ejXYEOZdYIL7Q3GEEQ"
+    private val AUTH_TOKEN = "sandbox_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcmluY2lwYWxJZCI6Imluc3BldG9yX3Rlc3QifQ.cJimBzTsFCC5LMurLelIax_-0ejXYEOZdYIL7Q3GEEQ"
 
     @Test(expected = InvalidCredentials::class)
     fun testSetContextWithoutConfig() {
