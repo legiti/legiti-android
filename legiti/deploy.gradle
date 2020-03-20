@@ -5,7 +5,7 @@ apply from: 'keystore.gradle'
 ext {
     groupId = 'com.legiti'
     artifactId = "legiti"
-    libVersion = "1.0.1"
+    libVersion = "1.0.2"
 }
 
 version = libVersion

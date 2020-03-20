@@ -8,61 +8,54 @@ interface LegitiService {
      * Send user creation data to Legiti
      *
      * @param userId
-     * @return Boolean
      */
-    fun trackUserCreation(userId: String): Boolean?
+    fun trackUserCreation(userId: String)
 
     /**
      * Send user update data to Legiti
      *
      * @param userId
-     * @return Boolean
      */
-    fun trackUserUpdate(userId: String): Boolean?
+    fun trackUserUpdate(userId: String)
 
     /**
      * Send user login data to Legiti
      *
      * @param userEmail
      * @param userId
-     * @return Boolean
      */
-    fun trackLogin(userEmail: String, userId: String?): Boolean?
+    fun trackLogin(userEmail: String, userId: String?)
 
     /**
      * Send user logout data to Legiti
      *
      * @param userEmail
      * @param userId
-     * @return Boolean
      */
-    fun trackLogout(userEmail: String, userId: String?): Boolean?
+    fun trackLogout(userEmail: String, userId: String?)
 
     /**
      * Send password reset data to Legiti
      *
      * @param userId
-     * @return Boolean
      */
-    fun trackPasswordReset(userId: String): Boolean?
+    fun trackPasswordReset(userId: String)
 
     /**
      * Send password recovery data to Legiti
      *
      * @param userEmail
-     * @return Boolean
      */
-    fun trackPasswordRecovery(userEmail: String): Boolean?
+    fun trackPasswordRecovery(userEmail: String)
 
     /**
      * Send order creation data to Legiti
      *
      * @param orderId
-     * @return Boolean
      */
-    fun trackOrderCreation(orderId: String): Boolean?
+    fun trackOrderCreation(orderId: String)
 
-    fun trackPageView(pageTitle: String): Boolean?
+    fun trackPageView(pageTitle: String)
 
     /**
      * Send context to Legiti
