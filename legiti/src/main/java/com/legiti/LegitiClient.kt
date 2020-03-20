@@ -55,62 +55,62 @@ class LegitiClient : LegitiService {
         }
     }
 
-    override fun trackLogin(userEmail: String, userId: String?): Boolean? {
+    override fun trackLogin(userEmail: String, userId: String?) {
         this.hasConfig()
 
         val data = this.createJson(id = userEmail, prefix = "auth", idSuffix = "user_email")
         data["auth_user_id"] =  this.encodeData(userId)
 
-        return legitiResource?.trackUserAuthAction(data, AuthAction.USER_LOGIN_ACTION)
+        legitiResource?.trackUserAuthAction(data, AuthAction.USER_LOGIN_ACTION)
     }
 
-    override fun trackLogout(userEmail: String, userId: String?): Boolean? {
+    override fun trackLogout(userEmail: String, userId: String?) {
         this.hasConfig()
 
         val data = this.createJson(id = userEmail, prefix = "auth", idSuffix = "user_email")
         data["auth_user_id"] =  this.encodeData(userId)
 
-        return legitiResource?.trackUserAuthAction(data, AuthAction.USER_LOGOUT_ACTION)
+        legitiResource?.trackUserAuthAction(data, AuthAction.USER_LOGOUT_ACTION)
     }
 
-    override fun trackUserCreation(userId: String): Boolean? {
+    override fun trackUserCreation(userId: String) {
         this.hasConfig()
 
         val data = this.createJson(id = userId, prefix = "user")
-        return legitiResource?.trackUserAction(data, UserAction.USER_CREATE_ACTION)
+        legitiResource?.trackUserAction(data, UserAction.USER_CREATE_ACTION)
     }
 
-    override fun trackUserUpdate(userId: String): Boolean? {
+    override fun trackUserUpdate(userId: String) {
         this.hasConfig()
 
         val data = this.createJson(id = userId, prefix = "user")
-        return legitiResource?.trackUserAction(data, UserAction.USER_UPDATE_ACTION)
+        legitiResource?.trackUserAction(data, UserAction.USER_UPDATE_ACTION)
     }
 
-    override fun trackOrderCreation(orderId: String): Boolean? {
+    override fun trackOrderCreation(orderId: String) {
         this.hasConfig()
 
         val data = this.createJson(id = orderId, prefix = "order")
-        return legitiResource?.trackOrderAction(data, OrderAction.ORDER_CREATE_ACTION)
+        legitiResource?.trackOrderAction(data, OrderAction.ORDER_CREATE_ACTION)
     }
 
-    override fun trackPasswordReset(userId: String): Boolean? {
+    override fun trackPasswordReset(userId: String) {
         this.hasConfig()
 
         val data = this.createJson(id = userId, prefix = "pass_reset", idSuffix = "user_id")
-        return legitiResource?.trackPasswordResetAction(data, PasswordAction.PASSWORD_RESET_ACTION)
+        legitiResource?.trackPasswordResetAction(data, PasswordAction.PASSWORD_RESET_ACTION)
     }
 
-    override fun trackPasswordRecovery(userEmail: String): Boolean? {
+    override fun trackPasswordRecovery(userEmail: String) {
         this.hasConfig()
 
         val data = this.createJson(id = userEmail, prefix = "pass_recovery", idSuffix = "email")
-        return legitiResource?.trackPasswordRecoveryAction(data, PasswordAction.PASSWORD_RECOVERY_ACTION)
+        legitiResource?.trackPasswordRecoveryAction(data, PasswordAction.PASSWORD_RECOVERY_ACTION)
     }
 
-    override fun trackPageView(pageTitle: String): Boolean? {
+    override fun trackPageView(pageTitle: String) {
         this.hasConfig()
-        return legitiResource?.trackPageView(pageTitle)
+        legitiResource?.trackPageView(pageTitle)
     }
 
     private fun getLegitiTimestamp(): String {

@@ -19,6 +19,11 @@ android {
         multiDexEnabled true
     }
 
+    compileOptions {
+        targetCompatibility = "8"
+        sourceCompatibility = "8"
+    }
+
     buildTypes {
         release {
             minifyEnabled false
