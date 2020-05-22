@@ -39,7 +39,7 @@ internal class LegitiDeviceData(private val androidContext: Context) {
 
         val data: HashMap<String, Any?> = hashMapOf(
             "device_fingerprint" to this.getDeviceFingerprint(),
-            "secondary_device_fingerprint" to this.getSecondaryDeviceFingerprint(),
+            "customer_device_fingerprint" to this.getCustomerDeviceFingerprint(),
             "is_rooted" to this.getIsRooted(),
             "is_simulator" to this.getIsSimulator(),
             "is_vpn" to this.getIsVPNConnected()
@@ -126,7 +126,7 @@ internal class LegitiDeviceData(private val androidContext: Context) {
         return deviceFingerprint
     }
 
-    private fun getSecondaryDeviceFingerprint(): String? {
+    private fun getCustomerDeviceFingerprint(): String? {
         return Settings.Secure.getString(this.androidContext.contentResolver, Settings.Secure.ANDROID_ID) ?: return null
     }
 

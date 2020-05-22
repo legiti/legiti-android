@@ -60,6 +60,7 @@ class LegitiClient : LegitiService {
 
         val data = this.createJson(id = userEmail, prefix = "auth", idSuffix = "user_email")
         data["auth_user_id"] =  this.encodeData(userId)
+        legitiResource?.currentUserId = if (userId.isNullOrEmpty()) null else userId
 
         legitiResource?.trackUserAuthAction(data, AuthAction.USER_LOGIN_ACTION)
     }
@@ -69,6 +70,7 @@ class LegitiClient : LegitiService {
 
         val data = this.createJson(id = userEmail, prefix = "auth", idSuffix = "user_email")
         data["auth_user_id"] =  this.encodeData(userId)
+        legitiResource?.currentUserId = null
 
         legitiResource?.trackUserAuthAction(data, AuthAction.USER_LOGOUT_ACTION)
     }
