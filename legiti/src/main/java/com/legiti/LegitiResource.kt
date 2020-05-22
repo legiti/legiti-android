@@ -8,21 +8,22 @@ import java.util.*
 import com.legiti.helpers.*
 import com.legiti.services.LegitiResourceService
 import com.snowplowanalytics.snowplow.tracker.events.ScreenView
+import kotlin.collections.HashMap
 
 internal class LegitiResource(config: LegitiConfig, androidContext: Context):
     LegitiResourceService {
 
     private var spTracker: Tracker
     private var androidContext: Context
-    private var legitiDeviceData: LegitiDeviceData
-    private var legitiDeviceIdContext: SelfDescribingJson
+    private var legitiDeviceData: HashMap<String, Any?>
+
+    var currentUserId: String? = null
 
     init {
         SnowplowManager.init(config)
         this.androidContext = androidContext
         this.spTracker = SnowplowManager.setupTracker(this.androidContext) ?: throw fail("Legiti Exception 9000: Internal error.")
-        this.legitiDeviceData = LegitiDeviceData(androidContext)
-        this.legitiDeviceIdContext = this.getFingerprintContext()
+        this.legitiDeviceData = LegitiDeviceData(androidContext).getDeviceData()
     }
 
     override fun trackUserAction(data: HashMap<String, String?>, action: UserAction): Boolean {
@@ -77,7 +78,7 @@ internal class LegitiResource(config: LegitiConfig, androidContext: Context):
 
     override fun trackPageView(page_title: String): Boolean {
         val spContexts: ArrayList<SelfDescribingJson> = arrayListOf()
-        this.legitiDeviceIdContext.let{ spContexts.add(it) }
+        this.getFingerprintContext().let{ spContexts.add(it) }
 
         this.spTracker.track(
             ScreenView.builder()
@@ -100,7 +101,8 @@ internal class LegitiResource(config: LegitiConfig, androidContext: Context):
             this.setupActionContext(action)
         )
 
-        this.legitiDeviceIdContext.let{ spContexts.add(it) }
+
+        this.getFingerprintContext().let{ spContexts.add(it) }
 
         this.spTracker.track(
             SelfDescribing.builder()
@@ -130,7 +132,8 @@ internal class LegitiResource(config: LegitiConfig, androidContext: Context):
     }
 
     private fun getFingerprintContext(): SelfDescribingJson {
-        val deviceData = this.legitiDeviceData.getDeviceData()
+        val deviceData = this.legitiDeviceData
+        deviceData["logged_user_id"] = this.currentUserId
 
         return SelfDescribingJson(
             LegitiDependencies.FRONTEND_FINGERPRINT_SCHEMA_VERSION,

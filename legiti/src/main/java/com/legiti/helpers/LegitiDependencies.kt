@@ -12,7 +12,7 @@ object LegitiDependencies {
 
     // Schema versions
     const val FRONTEND_CONTEXT_SCHEMA_VERSION:       String = "iglu:com.legiti/legiti_context_frontend/jsonschema/1-0-0"
-    const val FRONTEND_FINGERPRINT_SCHEMA_VERSION:   String = "iglu:com.legiti/legiti_fingerprint_frontend/jsonschema/1-0-0"
+    const val FRONTEND_FINGERPRINT_SCHEMA_VERSION:   String = "iglu:com.legiti/legiti_fingerprint_frontend/jsonschema/1-0-1"
     const val FRONTEND_USER_SCHEMA_VERSION:          String = "iglu:com.legiti/legiti_user_frontend/jsonschema/1-0-0"
     const val FRONTEND_AUTH_SCHEMA_VERSION:          String = "iglu:com.legiti/legiti_auth_frontend/jsonschema/1-0-0"
     const val FRONTEND_PASS_RECOVERY_SCHEMA_VERSION: String = "iglu:com.legiti/legiti_pass_recovery_frontend/jsonschema/1-0-0"

@@ -51,9 +51,9 @@ object SnowplowManager {
                 .subject(Subject.SubjectBuilder().context(androidContext).build())
                 .sessionContext(true)
                 .sessionCheckInterval(10) // Checks every 10 seconds (default is 15)
-                .foregroundTimeout(300)   // Timeout after 5 minutes (default is 10)
+                .foregroundTimeout(300) // Timeout after 5 minutes (default is 10)
                 .backgroundTimeout(120)
-                .geoLocationContext(false) // Since we are not being able to get the location anyway
+                .geoLocationContext(true)
                 .applicationContext(true)
                 .mobileContext(true)
                 .build()
