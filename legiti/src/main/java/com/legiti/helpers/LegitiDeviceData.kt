@@ -1,19 +1,16 @@
 package com.legiti.helpers
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.media.MediaDrm
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
 import com.scottyab.rootbeer.RootBeer
 import java.net.NetworkInterface
 import java.security.MessageDigest
 import java.util.*
 import kotlin.collections.HashMap
-import kotlin.math.log
 
 internal class LegitiDeviceData(private val androidContext: Context) {
 
