@@ -23,7 +23,7 @@ To run the integration test you need to deploy a new version of the library and 
 1. Re-sync Gradle (You can find the icon on the top right corner)
 1. Run the app
 1. Inside the app you can trigger the desired tracking actions
-1. Check if data corresponding to the events you've triggered appear in `atomic.actions` in the staging DB (You can use the `tracker_name` `legiti.test` to help you find the results)
+1. Check if data corresponding to the events you've triggered appear in the `sessions table` in the staging DB (You can use the `tracker_name` `legiti.test` to help you find the results)
 
 ### Sending data to staging
 If you want to send data to the staging database you need to set the `LegitiDevEnv` as `true` when initializing the library. Here is an example:
