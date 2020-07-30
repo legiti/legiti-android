@@ -3,6 +3,7 @@ package com.legiti
 import android.content.Context
 import android.os.Build
 import android.util.Base64
+import android.util.Log
 import com.legiti.helpers.*
 import com.legiti.services.LegitiService
 import java.text.SimpleDateFormat
@@ -96,8 +97,14 @@ class LegitiClient : LegitiService {
         legitiResource?.trackOrderAction(data, OrderAction.ORDER_CREATE_ACTION)
     }
 
+    @Deprecated(
+        message = "This function is deprecated and will be removed in a future version of the library",
+        level = DeprecationLevel.WARNING
+    )
     override fun trackPasswordReset(userId: String) {
         this.hasConfig()
+
+        Log.w("LEGITI", "This function is deprecated and will be removed in a future version of the library")
 
         val data = this.createJson(id = userId, prefix = "pass_reset", idSuffix = "user_id")
         legitiResource?.trackPasswordResetAction(data, PasswordAction.PASSWORD_RESET_ACTION)
