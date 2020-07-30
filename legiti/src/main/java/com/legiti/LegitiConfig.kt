@@ -5,12 +5,22 @@ import org.json.JSONException
 import android.util.Base64
 import com.legiti.helpers.InvalidCredentials
 
-class LegitiConfig(val authToken: String, val legitiDevEnv: Boolean) {
+
+class LegitiConfig(var authToken: String) {
+
+    internal var legitiDevEnv: Boolean = false
+    private val INTERNAL_KEYWORD: String = "internal_"
 
     init {
         require(isValid(authToken)) {
             throw InvalidCredentials("Legiti Exception 9002: authToken not valid")
         }
+        this.authToken = checkIfInternal(this.authToken)
+    }
+
+    private fun checkIfInternal(authToken: String): String {
+        if (authToken.contains(this.INTERNAL_KEYWORD)) this.legitiDevEnv = true
+        return authToken.removePrefix(this.INTERNAL_KEYWORD)
     }
 
 
@@ -33,6 +43,7 @@ class LegitiConfig(val authToken: String, val legitiDevEnv: Boolean) {
 
             return true
         }
+
 
         fun getPrincipalId(authTokenPart: String): String? {
             val decodedAuthToken = String(Base64.decode(authTokenPart, Base64.NO_PADDING))

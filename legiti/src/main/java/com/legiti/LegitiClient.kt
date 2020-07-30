@@ -24,8 +24,28 @@ class LegitiClient : LegitiService {
         this.androidContext = null
     }
 
+
+    @Deprecated(
+        message = "This function is deprecated and will be removed in a future version of the library",
+        level = DeprecationLevel.WARNING,
+        replaceWith = ReplaceWith(
+            expression = "Legiti.sharedInstance().setup(authToken)",
+            imports = ["com.legiti.Legiti"]
+        )
+    )
     override fun setup(authToken: String, legitiDevEnv: Boolean) {
-        this.legitiConfig = LegitiConfig(authToken, legitiDevEnv)
+        this.legitiConfig = LegitiConfig(authToken)
+
+        if (this.androidContext != null) {
+            this.setContext(androidContext!!)
+        } else {
+            throw ContextNotSetup("Legiti Exception 9003: Could not get the context please pass it to the setContext function.")
+        }
+
+    }
+
+    override fun setup(authToken: String) {
+        this.legitiConfig = LegitiConfig(authToken)
 
         if (this.androidContext != null) {
             this.setContext(androidContext!!)
