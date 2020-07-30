@@ -56,6 +56,7 @@ object SnowplowManager {
                 .geoLocationContext(true)
                 .applicationContext(true)
                 .mobileContext(true)
+                .applicationCrash(false)
                 .build()
         ) ?: throw fail()
     }
