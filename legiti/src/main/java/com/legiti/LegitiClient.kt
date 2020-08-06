@@ -3,6 +3,7 @@ package com.legiti
 import android.content.Context
 import android.os.Build
 import android.util.Base64
+import android.util.Log
 import com.legiti.helpers.*
 import com.legiti.services.LegitiService
 import java.text.SimpleDateFormat
@@ -23,8 +24,28 @@ class LegitiClient : LegitiService {
         this.androidContext = null
     }
 
+
+    @Deprecated(
+        message = "This function is deprecated and will be removed in a future version of the library",
+        level = DeprecationLevel.WARNING,
+        replaceWith = ReplaceWith(
+            expression = "Legiti.sharedInstance().setup(authToken)",
+            imports = ["com.legiti.Legiti"]
+        )
+    )
     override fun setup(authToken: String, legitiDevEnv: Boolean) {
-        this.legitiConfig = LegitiConfig(authToken, legitiDevEnv)
+        this.legitiConfig = LegitiConfig(authToken)
+
+        if (this.androidContext != null) {
+            this.setContext(androidContext!!)
+        } else {
+            throw ContextNotSetup("Legiti Exception 9003: Could not get the context please pass it to the setContext function.")
+        }
+
+    }
+
+    override fun setup(authToken: String) {
+        this.legitiConfig = LegitiConfig(authToken)
 
         if (this.androidContext != null) {
             this.setContext(androidContext!!)
@@ -96,8 +117,14 @@ class LegitiClient : LegitiService {
         legitiResource?.trackOrderAction(data, OrderAction.ORDER_CREATE_ACTION)
     }
 
+    @Deprecated(
+        message = "This function is deprecated and will be removed in a future version of the library",
+        level = DeprecationLevel.WARNING
+    )
     override fun trackPasswordReset(userId: String) {
         this.hasConfig()
+
+        Log.w("LEGITI", "This function is deprecated and will be removed in a future version of the library")
 
         val data = this.createJson(id = userId, prefix = "pass_reset", idSuffix = "user_id")
         legitiResource?.trackPasswordResetAction(data, PasswordAction.PASSWORD_RESET_ACTION)

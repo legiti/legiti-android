@@ -68,12 +68,19 @@ interface LegitiService {
     /**
      * Set config to Legiti
      *
-     * @param trackerName
-     * @param appId
-     * @param devEnv
+     * @param authToken
+     * @param legitiDevEnv
      * @return void
      */
     fun setup(authToken: String, legitiDevEnv: Boolean = false)
+
+    /**
+     * Set config to Legiti
+     *
+     * @param authToken
+     * @return void
+     */
+    fun setup(authToken: String)
 
     /**
      * Verify if config exists

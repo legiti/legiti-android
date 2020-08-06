@@ -1,0 +1,27 @@
+{
+  "name": "legiti-android",
+  "version": "1.0.3",
+  "description": "Legiti Antifraud Library for Android",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/legiti/legiti-android.git"
+  },
+  "author": "Legiti Dev Team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/legiti/legiti-android/issues"
+  },
+  "homepage": "https://github.com/legiti/legiti-android#readme",
+  "devDependencies": {
+    "git-cz": "^4.7.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/git-cz"
+    }
+  }
+}
