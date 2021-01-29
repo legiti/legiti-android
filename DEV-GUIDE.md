@@ -37,3 +37,6 @@ To publish a new version of the Legiti Android Library you need to follow this s
 1. Rename the file `legiti/keystore.gradle.default` to `legiti/keystore.gradle`
 1. Change the placeholder file (You can find the values in 1password)
 1. Inside the repository run the `./gradlew bintrayUpload` command
+
+## Snowplow releases
+https://github.com/snowplow/snowplow-android-tracker/releases
