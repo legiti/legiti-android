@@ -16,3 +16,4 @@
 /inspetor-android.iml
 /legiti-android.iml
 /node_modules
+*.gpg
