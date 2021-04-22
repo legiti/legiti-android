@@ -33,10 +33,10 @@ Legiti.sharedInstance().setup(authToken, true)
 
 ## How to publish
 To publish a new version of the Legiti Android Library you need to follow this steps:
-1. Update the version of the library in `Legiti/deploy.gradle` (should be in line 8)
-1. Add the sonotype configs to `local.properties` (in the root of the project). You can find all configs in 1password "Android Lib Local Properties"
+1. Update the version of the library in `Legiti/build.gradle` (should be in line 86)
+1. Add the sonatype configs to `local.properties` (in the root of the project). You can find all configs in 1password "Android Lib Local Properties"
 1. Download the GPG Key (you can find it in 1password "Android Lib GPG File") in the root of the project
-1. Inside the repository run the `./gradlew legiti:publishReleasePublicationToSonotypeRepository` command
+1. Inside the repository run the `make publish`
 
 ## Snowplow releases
 https://github.com/snowplow/snowplow-android-tracker/releases
