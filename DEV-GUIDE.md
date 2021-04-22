@@ -38,5 +38,7 @@ To publish a new version of the Legiti Android Library you need to follow this s
 1. Download the GPG Key (you can find it in 1password "Android Lib GPG File") in the root of the project
 1. Inside the repository run the `make publish`
 
+PS: This is the [tutorial](https://getstream.io/blog/publishing-libraries-to-mavencentral-2021/) we used for setting up publishing
+
 ## Snowplow releases
 https://github.com/snowplow/snowplow-android-tracker/releases
