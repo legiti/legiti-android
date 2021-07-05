@@ -1,14 +1,16 @@
 package com.legiti.helpers
 
+import com.snowplowanalytics.snowplow.emitter.BufferOption
+import com.snowplowanalytics.snowplow.network.HttpMethod
+
 object LegitiDependencies {
     //Emitter and Tracker basic config
     const val DEFAULT_BASE64_OPTION: Boolean = true
-    const val DEFAULT_COLLECTOR_URL: String = "heimdall-prod.lgtcdn.net/" //Remember to add the "/" to the end of the url
+    const val DEFAULT_COLLECTOR_URL: String = "https://heimdall-prod.lgtcdn.net/" //Remember to add the "/" to the end of the url
     const val DEFAULT_COLLECTOR_PROD_PATH: String = "post"
     const val DEFAULT_COLLECTOR_STAGING_PATH: String = "post-staging"
-    val DEFAULT_HTTP_METHOD_TYPE: HttpMethodType = HttpMethodType.POST
-    val DEFAULT_PROTOCOL_TYPE: RequestSecurityProtocol = RequestSecurityProtocol.HTTPS
-    val DEFAULT_BUFFER_SIZE_OPTION: BufferOptionSize = BufferOptionSize.SINGLE
+    val DEFAULT_HTTP_METHOD_TYPE: HttpMethod = HttpMethod.POST
+    val DEFAULT_BUFFER_SIZE_OPTION: BufferOption = BufferOption.Single
 
     // Schema versions
     const val FRONTEND_CONTEXT_SCHEMA_VERSION:       String = "iglu:com.legiti/legiti_context_frontend/jsonschema/1-0-0"
