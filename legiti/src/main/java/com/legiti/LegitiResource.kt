@@ -1,19 +1,19 @@
 package com.legiti
 
 import android.content.Context
-import com.snowplowanalytics.snowplow.tracker.Tracker
-import com.snowplowanalytics.snowplow.tracker.events.SelfDescribing
-import com.snowplowanalytics.snowplow.tracker.payload.SelfDescribingJson
+import com.snowplowanalytics.snowplow.controller.TrackerController
+import com.snowplowanalytics.snowplow.event.SelfDescribing
+import com.snowplowanalytics.snowplow.event.ScreenView
+import com.snowplowanalytics.snowplow.payload.SelfDescribingJson
 import java.util.*
 import com.legiti.helpers.*
 import com.legiti.services.LegitiResourceService
-import com.snowplowanalytics.snowplow.tracker.events.ScreenView
 import kotlin.collections.HashMap
 
 internal class LegitiResource(config: LegitiConfig, androidContext: Context):
     LegitiResourceService {
 
-    private var spTracker: Tracker
+    private var spTracker: TrackerController
     private var androidContext: Context
     private var legitiDeviceData: HashMap<String, Any?>
 
@@ -84,12 +84,9 @@ internal class LegitiResource(config: LegitiConfig, androidContext: Context):
             ScreenView.builder()
                 .name(page_title)
                 .id(UUID.randomUUID().toString())
-                .customContext(spContexts)
+                .contexts(spContexts)
                 .build() ?: throw fail("Legiti Exception 9000: Internal error.")
         )
-
-        // Making sure there are no more events to be sent
-        this.spTracker.emitter?.flush()
 
         return true
     }
@@ -107,16 +104,13 @@ internal class LegitiResource(config: LegitiConfig, androidContext: Context):
         this.spTracker.track(
             SelfDescribing.builder()
                 .eventData(legitiData)
-                .customContext(spContexts)
+                .contexts(spContexts)
                 .build() ?: throw fail("Legiti Exception 9000: Internal error.")
         )
-
-        // Making sure there are no more events to be sent
-        this.spTracker.emitter?.flush()
     }
 
     private fun setupActionContext(action: String): SelfDescribingJson {
-        val contextMap: HashMap<String, String>? = hashMapOf(
+        val contextMap: HashMap<String, String> = hashMapOf(
             "action" to action
         )
 

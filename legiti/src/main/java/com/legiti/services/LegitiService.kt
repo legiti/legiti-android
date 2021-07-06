@@ -35,13 +35,6 @@ interface LegitiService {
     fun trackLogout(userEmail: String, userId: String?)
 
     /**
-     * Send password reset data to Legiti
-     *
-     * @param userId
-     */
-    fun trackPasswordReset(userId: String)
-
-    /**
      * Send password recovery data to Legiti
      *
      * @param userEmail
@@ -64,15 +57,6 @@ interface LegitiService {
      * @return void
      */
     fun setContext(context: Context)
-
-    /**
-     * Set config to Legiti
-     *
-     * @param authToken
-     * @param legitiDevEnv
-     * @return void
-     */
-    fun setup(authToken: String, legitiDevEnv: Boolean = false)
 
     /**
      * Set config to Legiti
