@@ -17,8 +17,11 @@ class LegitiClient : LegitiService {
     private var legitiResource: LegitiResource?
     private var legitiConfig: LegitiConfig?
     private var androidContext: Context?
+    private var legitiFingerprint: LegitiFingerprint
 
     init {
+        this.legitiFingerprint = LegitiFingerprint()
+        this.legitiFingerprint.execute()
         this.legitiResource = null
         this.legitiConfig = null
         this.androidContext = null
@@ -45,7 +48,7 @@ class LegitiClient : LegitiService {
             this.androidContext = context
         }
 
-        this.legitiResource = LegitiResource(config!!, context)
+        this.legitiResource = LegitiResource(config!!, context, this.legitiFingerprint)
     }
 
     override fun isConfigured(): Boolean {
