@@ -77,7 +77,7 @@ dependencies {
 ext {
     PUBLISH_GROUP_ID = 'com.legiti'
     PUBLISH_ARTIFACT_ID = 'legiti'
-    PUBLISH_VERSION = '1.2.0'
+    PUBLISH_VERSION = '1.2.1'
 }
 
 apply from: "${rootProject.projectDir}/scripts/publish-module.gradle"

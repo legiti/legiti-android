@@ -103,11 +103,6 @@ class UnitTests {
     }
 
     @Test(expected = InvalidCredentials::class)
-    fun testPassResetWithoutConfig() {
-        LegitiClient().trackPasswordReset("123")
-    }
-
-    @Test(expected = InvalidCredentials::class)
     fun testOrderCreationWithoutConfig() {
         LegitiClient().trackOrderCreation("123")
     }

@@ -10,18 +10,20 @@ import com.legiti.helpers.*
 import com.legiti.services.LegitiResourceService
 import kotlin.collections.HashMap
 
-internal class LegitiResource(config: LegitiConfig, androidContext: Context):
+internal class LegitiResource(config: LegitiConfig, androidContext: Context, legitiFingerprint: LegitiFingerprint):
     LegitiResourceService {
 
     private var spTracker: TrackerController
     private var androidContext: Context
     private var legitiDeviceData: HashMap<String, Any?>
+    private var legitiFingerprint: LegitiFingerprint
 
     var currentUserId: String? = null
 
     init {
         SnowplowManager.init(config)
         this.androidContext = androidContext
+        this.legitiFingerprint = legitiFingerprint
         this.spTracker = SnowplowManager.setupTracker(this.androidContext) ?: throw fail("Legiti Exception 9000: Internal error.")
         this.legitiDeviceData = LegitiDeviceData(androidContext).getDeviceData()
     }
@@ -128,6 +130,7 @@ internal class LegitiResource(config: LegitiConfig, androidContext: Context):
     private fun getFingerprintContext(): SelfDescribingJson {
         val deviceData = this.legitiDeviceData
         deviceData["logged_user_id"] = this.currentUserId
+        deviceData["device_fingerprint"] = this.legitiFingerprint.deviceFingerprint
 
         return SelfDescribingJson(
             LegitiDependencies.FRONTEND_FINGERPRINT_SCHEMA_VERSION,
